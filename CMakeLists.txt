@@ -66,6 +66,17 @@ set(CANINE_SINGLE_LEG_SOURCES
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
+
+# ====== Momentum Inverted Pendulum ======  #
+set(MOMENTUM_INVERTED_PENDULUM_SOURCES
+        src/MomentumInvertedPendulum/MIPSimulation.cpp
+        src/MomentumInvertedPendulum/MIPRobot.cpp
+        src/MomentumInvertedPendulum/MIPPDController.cpp
+        src/MomentumInvertedPendulum/MIPLQRController.cpp)
+
+add_executable(camel-momentum_inverted_pendulum_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_SOURCES})
+target_link_libraries(camel-momentum_inverted_pendulum_simulation ${CAMEL_LIBS})
+# ====== Momentum Inverted Pendulum ====== /#
 ## Simulation /##
 
 ## Operation  ##

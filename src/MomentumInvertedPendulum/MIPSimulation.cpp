@@ -1,27 +1,29 @@
 //
-// Created by jaehoon on 22. 3. 31.. dkswogns46@gmail.com
+// Created by user on 22. 6. 9.
 //
 
-#include "SingleLeggedSimulation.h"
+#include "MIPSimulation.h"
 #include "include/SimulationUI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
+#include "MIPLQRController.h"
 #include <QApplication>
 #include <cmath>
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
-std::string name = "single_leg";
+std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_momentum_inverted_pendulum.urdf";
+std::string name = "MIP";
 raisim::World world;
 
 double simulationDuration = 1.0;
 double dT = 0.005;
-SingleLeggedSimulation sim = SingleLeggedSimulation(&world, dT);
-SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
+MIPSimulation sim = MIPSimulation(&world, dT);
+MIPRobot robot = MIPRobot(&world, urdfPath, name);
+//MIPPDController controller = MIPPDController(&robot);
+MIPLQRController controller = MIPLQRController(&robot);
 
-//SingleLeggedPDController controller = SingleLeggedPDController(&robot);
-SingleLeggedIDController controller = SingleLeggedIDController(&robot, dT);
+
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
 int iteration = 0;
@@ -34,13 +36,14 @@ void raisimSimulation() {
         if (iteration % divider == 0) {
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
             MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-            MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition;
+            MainUI->data_y1_desired[MainUI->data_idx] = 0;
             MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
-            MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity;
+            MainUI->data_y2_desired[MainUI->data_idx] = 0;
             MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[1];
-            MainUI->data_y3_red[MainUI->data_idx] = controller.torque[2];
+            MainUI->data_y3_red[MainUI->data_idx] = controller.torque[1];
             MainUI->data_idx += 1;
         }
+
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
         MainUI->button1 = false;

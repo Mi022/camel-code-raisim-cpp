@@ -17,7 +17,7 @@ void thread1task(bool *button1Pressed, bool *button2Pressed, bool *button3Presse
     char *canName = "can8";
     CanMotorX8Pro canX8pro(canName, canName_temp, bitRate);
 
-    std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_RMDX8_pro.urdf";
+    std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_RMDX8_pro.urdf";
     std::string name = "RMDX8Pro";
     raisim::World world;
     RMDX8ProOperation realRobot = RMDX8ProOperation(&world, 30);

@@ -10,7 +10,7 @@
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
+std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
 std::string name = "cutePendulum";
 raisim::World world;
 
@@ -22,7 +22,6 @@ SimplePendulumPDController controller = SimplePendulumPDController(&robot);
 
 void raisimSimulation() {
     // TODO : Relieve CPU. Now, CPU usage is 100% !!!!!
-    double dT = world.getTimeStep();
     double oneCycleSimTime = 0;
     int divider = ceil(simulationDuration / dT / 200);
     int i = 0;

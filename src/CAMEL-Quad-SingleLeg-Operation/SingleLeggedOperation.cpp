@@ -40,7 +40,7 @@ double intr = 1.0;
 LoadCell sensorLoadcell;
 double sensoredForce = 0.0;
 
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
 std::string name = "singleLeg";
 raisim::World world;
 SingleLeggedOperation realRobot = SingleLeggedOperation(&world, 250);

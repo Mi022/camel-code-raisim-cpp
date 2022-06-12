@@ -31,17 +31,6 @@ public:
         setTrajectory();
         setPDGain(7.0, 0.4);
         torque.setZero();
-        externalForce.setZero();
-        forcePosition.setZero();
-
-        forcePosition[0] = 0.0;
-        forcePosition[1] = 0.0;
-        forcePosition[2] = 0.08;
-
-        externalForce[0] = 0.0;
-        externalForce[1] = 5.0;
-        externalForce[2] = 0.0;
-
         i = 0;
     }
 
@@ -54,6 +43,8 @@ public:
 
 private:
     int i;
+    void generateExternalForce();
+    void addNoise();
 };
 
 

@@ -51,48 +51,14 @@ void MIPLQRController::findS() {
 }
 
 bool MIPLQRController::IsSEnough(Eigen::Matrix3d S, Eigen::Matrix3d Snext) {
-    if(abs(S(0,0) - Snext(0, 0)) < 0.001){
-        if(abs(S(0,1) - Snext(0, 1)) < 0.001){
-            if(abs(S(0,2) - Snext(0, 2)) < 0.001){
-                if(abs(S(1,0) - Snext(1, 0)) < 0.001){
-                    if(abs(S(1,1) - Snext(1, 1)) < 0.001){
-                        if(abs(S(1,2) - Snext(1, 2)) < 0.001){
-                            if(abs(S(2,0) - Snext(2, 0)) < 0.001){
-                                if(abs(S(2,1) - Snext(2, 1)) < 0.001){
-                                    if(abs(S(2,2) - Snext(2, 2)) < 0.001){
-                                        return true;
-                                    }
-                                    else{
-                                        return false;
-                                    }
-                                }
-                                else{
-                                    return false;
-                                }
-                            }
-                            else{
-                                return false;
-                            }
-                        }
-                        else{
-                            return false;
-                        }
-                    }
-                    else{
-                        return false;
-                    }
-                }
-                else{
-                    return false;
-                }
-            }
-            else{
-                return false;
-            }
+    bool tempJudge = true;
+    for(int r = 0; r<3; r++){
+        for(int c = 0; c<3; c++){
+            tempJudge = tempJudge && abs(S(r,c) - Snext(r, c)) < 0.001;
         }
-        else{
-            return false;
-        }
+    }
+    if(tempJudge){
+        return true;
     }
     else{
         return false;
@@ -103,7 +69,7 @@ void MIPLQRController::findK() {
     K = B.transpose()*S*A/temp;
 }
 
-void MIPLQRController::setExternalForce() {
+void MIPLQRController::generateExternalForce() {
     raisim::Vec<3> externalForce;
     raisim::Vec<3> forcePosition;
 
@@ -125,22 +91,7 @@ void MIPLQRController::setExternalForce() {
     i++;
 }
 
-void MIPLQRController::doControl() {
-    updateState();
-    setExternalForce();
-    if(SExist)
-    {
-        computeControlInput();
-        setControlInput();
-    }
-}
-
-void MIPLQRController::updateState() {
-//    for ideal
-//    position = getRobot()->robot->getGeneralizedCoordinate();
-//    velocity = getRobot()->robot->getGeneralizedVelocity();
-
-    //    for adding noise
+void MIPLQRController::addNoise() {
     std::random_device rd;
 
     // random_device 를 통해 난수 생성 엔진을 초기화 한다.
@@ -150,10 +101,30 @@ void MIPLQRController::updateState() {
     std::uniform_int_distribution<int> dis(0, 200);
     double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001;
     double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01;
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    double noiseMotorVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.001;
+
     position[0] += noisePosition;
     velocity[0] += noiseVelocity;
+    velocity[1] += noiseMotorVelocity;
+}
+
+void MIPLQRController::doControl() {
+    updateState();
+//    generateExternalForce();
+    if(SExist)
+    {
+        computeControlInput();
+        setControlInput();
+    }
+}
+
+void MIPLQRController::updateState() {
+//    for ideal
+    position = getRobot()->robot->getGeneralizedCoordinate();
+    velocity = getRobot()->robot->getGeneralizedVelocity();
+
+//    for adding noise
+//    addNoise();
 
     X[0] = position[0];
     X[1] = velocity[0];

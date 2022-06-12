@@ -24,8 +24,8 @@ public:
     MIPLQRController(Robot *robot) : Controller(robot) {
         i = 0;
         setMatrix();
-        setSNGain(1.0, 100.0, 1.0);
-        setQGain(10.0, 1000.0, 1.0);
+        setSNGain(100.0, 100.0, 100.0);
+        setQGain(10.0, 100.0, 1.0);
         setRGain(1.0);
         torque.setZero();
         S.setZero();
@@ -36,21 +36,6 @@ public:
         else{
             std::cout<<"there is no S"<<std::endl;
         }
-
-
-//            to implement external force
-//            externalForce.setZero();
-//            forcePosition.setZero();
-//
-//            forcePosition[0] = 0.0;
-//            forcePosition[1] = 0.0;
-//            forcePosition[2] = 0.08;
-//
-//            externalForce[0] = 0.0;
-//            externalForce[1] = 4.0;
-//            externalForce[2] = 0.0;
-
-//            i = 0;
     }
 
     void doControl() override;
@@ -78,7 +63,8 @@ private:
     void findS();
     void findK();
     bool IsSEnough(Eigen::Matrix3d SN, Eigen::Matrix3d Snext);
-    void setExternalForce();
+    void generateExternalForce();
+    void addNoise();
 };
 
 

@@ -21,8 +21,11 @@ void MIPPDController::setTrajectory() {
 }
 
 void MIPPDController::updateState() {
+//    for ideal
 //    position = getRobot()->robot->getGeneralizedCoordinate();
 //    velocity = getRobot()->robot->getGeneralizedVelocity();
+
+//    for adding noise
     std::random_device rd;
 
     // random_device 를 통해 난수 생성 엔진을 초기화 한다.

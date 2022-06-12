@@ -6,6 +6,7 @@
 #define RAISIM_MIPLQRCONTROLLER_H
 
 #include "include/CAMEL/Controller.h"
+#include <Eigen/Core>
 
 class MIPLQRController : public Controller {
 public:
@@ -21,10 +22,10 @@ public:
     double torqueLimit = 3.5;
 
     MIPLQRController(Robot *robot) : Controller(robot) {
-//            setPDGain(7.0, 0.4);
+        i = 0;
         setMatrix();
-        setSNGain(100.0, 100.0, 100.0);
-        setQGain(1.0, 1.0, 1.0);
+        setSNGain(1.0, 100.0, 1.0);
+        setQGain(10.0, 1000.0, 1.0);
         setRGain(1.0);
         torque.setZero();
         S.setZero();
@@ -59,7 +60,7 @@ public:
     void setControlInput() override;
 
 private:
-//    int i;
+    int i;
     Eigen::Matrix3d SN;
     Eigen::Matrix3d Q;
     double R;
@@ -77,6 +78,7 @@ private:
     void findS();
     void findK();
     bool IsSEnough(Eigen::Matrix3d SN, Eigen::Matrix3d Snext);
+    void setExternalForce();
 };
 
 

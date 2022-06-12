@@ -39,7 +39,7 @@ public:
         forcePosition[2] = 0.08;
 
         externalForce[0] = 0.0;
-        externalForce[1] = 4.0;
+        externalForce[1] = 5.0;
         externalForce[2] = 0.0;
 
         i = 0;

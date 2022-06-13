@@ -1,20 +1,20 @@
 <?xml version="1.0" ?>
 <robot name = "camel_momentum_inverted_pendulum">
 
-  <material name="black">
-    <color rgba="0.0 0.0 0.0 1.0"/>
+  <material name="red">
+    <color rgba="0.914 0.263 0.212 0.9"/>
   </material>
 
-  <material name="gray">
-    <color rgba="0.5 0.5 0.5 1.0"/>
+  <material name="stylish">
+    <color rgba="0.243 0.271 0.318 0.9"/>
   </material>
 
-  <material name="Aquamarine">
-    <color rgba="0.364 0.733 0.608 1.0"/>
+  <material name="lime">
+    <color rgba="0.804 0.863 0.223 0.9"/>
   </material>
 
-  <material name="Aqua">
-    <color rgba="0.0 0.733 0.733 1.0"/>
+  <material name="blue">
+    <color rgba="0.329 0.463 0.890 0.9 "/>
   </material>
 
   <link name="world"/>
@@ -46,7 +46,7 @@
       <geometry>
         <box size="0.015 0.030 0.08"/>
       </geometry>
-      <material name="Aquamarine"/>
+      <material name="blue"/>
     </visual>
 
     <inertial>
@@ -76,7 +76,7 @@
       <geometry>
         <cylinder length="0.0385" radius="0.0372"/>
       </geometry>
-      <material name="black"/>
+      <material name="red"/>
     </visual>
 
     <inertial>

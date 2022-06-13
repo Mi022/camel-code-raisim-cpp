@@ -97,11 +97,11 @@ void MIPLQRController::addNoise() {
     // random_device 를 통해 난수 생성 엔진을 초기화 한다.
     std::mt19937 gen(rd());
 
-    // 0 부터 99 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
+    // 0 부터 200 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
     std::uniform_int_distribution<int> dis(0, 200);
-    double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001;
-    double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01;
-    double noiseMotorVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.001;
+    double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001; //0.15
+    double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01; //1.6
+    double noiseMotorVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.001; //35.9
 
     position[0] += noisePosition;
     velocity[0] += noiseVelocity;
@@ -110,7 +110,7 @@ void MIPLQRController::addNoise() {
 
 void MIPLQRController::doControl() {
     updateState();
-//    generateExternalForce();
+    generateExternalForce();
     if(SExist)
     {
         computeControlInput();

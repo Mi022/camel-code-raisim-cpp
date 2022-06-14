@@ -116,3 +116,4 @@ target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
 
 add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
+add_executable(camel-test_write_CSV src/Test/Test_WriteCSV.cpp)

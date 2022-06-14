@@ -9,6 +9,8 @@
 #include <QApplication>
 #include <cmath>
 
+#include <fstream>
+
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
@@ -16,13 +18,15 @@ std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\cam
 std::string name = "MIP";
 raisim::World world;
 
-double simulationDuration = 1.0;
+std::ofstream myfile;
+
+double simulationDuration = 1.5;
 double dT = 0.005;
 MIPSimulation sim = MIPSimulation(&world, dT);
 MIPRobot robot = MIPRobot(&world, urdfPath, name);
 //MIPPDController controller = MIPPDController(&robot);
-//MIPLQRController controller = MIPLQRController(&robot);
-MIPPDDController controller = MIPPDDController(&robot);
+MIPLQRController controller = MIPLQRController(&robot);
+//MIPPDDController controller = MIPPDDController(&robot);
 
 
 double oneCycleSimTime = 0;
@@ -40,8 +44,10 @@ void raisimSimulation() {
             MainUI->data_y1_desired[MainUI->data_idx] = 0;
             MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
             MainUI->data_y2_desired[MainUI->data_idx] = 0;
-            MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[1];
-            MainUI->data_y3_red[MainUI->data_idx] = controller.torque[1];
+            MainUI->data_y3_blue[MainUI->data_idx] = robot.getQD()[1];
+            std::cout<<robot.getQD()[1]<<std::endl;
+            myfile << robot.getQD()[1] <<"," ;
+            MainUI->data_y3_red[MainUI->data_idx] = 0;
             MainUI->data_idx += 1;
         }
 
@@ -54,6 +60,7 @@ void raisimSimulation() {
         MainUI->plotWidget2();
         MainUI->plotWidget3();
         MainUI->data_idx = 0;
+        myfile.close();
     }
 }
 
@@ -81,6 +88,7 @@ void *rt_simulation_thread(void *arg) {
 }
 
 int main(int argc, char *argv[]) {
+    myfile.open ("motorVelocity.csv");
     QApplication a(argc, argv);
     MainWindow w;
     raisim::RaisimServer server(&world);

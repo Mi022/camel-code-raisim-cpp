@@ -111,7 +111,7 @@ void MIPLQRController::addNoise() {
 
 void MIPLQRController::doControl() {
     updateState();
-    generateExternalForce();
+//    generateExternalForce();
     if(SExist)
     {
         computeControlInput();

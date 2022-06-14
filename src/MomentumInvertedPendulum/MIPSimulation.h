@@ -8,6 +8,7 @@
 #include "include/CAMEL/Simulation.h"
 #include "MIPRobot.h"
 #include "MIPPDController.h"
+#include "MIPPDDController.h"
 #include "MIPLQRController.h"
 
 class MIPSimulation : public Simulation{

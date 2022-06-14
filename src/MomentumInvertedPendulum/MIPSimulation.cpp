@@ -21,7 +21,8 @@ double dT = 0.005;
 MIPSimulation sim = MIPSimulation(&world, dT);
 MIPRobot robot = MIPRobot(&world, urdfPath, name);
 //MIPPDController controller = MIPPDController(&robot);
-MIPLQRController controller = MIPLQRController(&robot);
+//MIPLQRController controller = MIPLQRController(&robot);
+MIPPDDController controller = MIPPDDController(&robot);
 
 
 double oneCycleSimTime = 0;

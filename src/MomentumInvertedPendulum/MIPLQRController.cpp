@@ -67,6 +67,7 @@ bool MIPLQRController::IsSEnough(Eigen::Matrix3d S, Eigen::Matrix3d Snext) {
 void MIPLQRController::findK() {
     double temp = B.transpose()*S*B + R;
     K = B.transpose()*S*A/temp;
+    cout<<"K : "<<K<<endl;
 }
 
 void MIPLQRController::generateExternalForce() {

@@ -8,7 +8,7 @@
 void MIPRobot::initialize() {
     Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
-    initialJointPosition[0] = 0.2; //0.4 for configuration figure
+    initialJointPosition[0] = 0.1; //0.4 for configuration figure
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
 

@@ -22,13 +22,13 @@ public:
         U.setZero();
         torque.setZero();
         this->dT = dT;
-        setQGain(1.5, 0.001, 0.001);
-        setRGain(0.00001);
+        setQGain(1.0, 0.001, 0.001);
+        setRGain(0.05);
 
         delta = 1e-6;
-        stepSize = 0.1;
-        iteration = 10000;
-        terminateCondition = 1e-7;
+        stepSize = 0.01;
+        iteration = 1000;
+        terminateCondition = 1e-5;
     }
 
     void doControl() override;
@@ -36,7 +36,6 @@ public:
     void updateState() override;
     void computeControlInput() override;
     void setControlInput() override;
-    void setPDGain(double PGain, double DGain);
 
 private:
     Matrix3d Q;

@@ -44,9 +44,10 @@ double MIPMPCController::computeJ(VectorXd U) {
 }
 
 void MIPMPCController::stateSpaceEquation(double u) {
-    X_temp[0] = X_temp[0] + dT*X_temp[1] + dT*dT/2*132.1654*sin(X_temp[0])  - dT*dT/0.0035*u;
-    X_temp[1] = 132.1654*dT*sin(X_temp[0]) + X_temp[1] -dT/0.001741*u;
-    X_temp[2] = -132.1654*dT*sin(X_temp[0]) + X_temp[2] + dT*4.8884e+03*u;
+    double theta_0 = X_temp[0];
+    X_temp[0] = theta_0 + dT*X_temp[1] + dT*dT/2*132.1654*sin(theta_0)  - dT*dT/0.0035*u;
+    X_temp[1] = 132.1654*dT*sin(theta_0) + X_temp[1] -dT/0.001741*u;
+    X_temp[2] = -132.1654*dT*sin(theta_0) + X_temp[2] + dT*4.8884e+03*u;
 
 //    std::cout<<"test X next: "<<X<<std::endl;
 }
@@ -54,6 +55,7 @@ void MIPMPCController::stateSpaceEquation(double u) {
 bool MIPMPCController::IsBreak(int i){
     double RMS = pow((DJ.transpose()*DJ)(0)/MPCHorizen,0.5);
     if(RMS < terminateCondition){
+        cout<<"DJ : "<<DJ<<endl;
         cout<<"RMS : "<<RMS<<endl;
         cout<<"Iteration : "<<i<<endl;
         cout<<"terminate Condition"<<endl;
@@ -97,7 +99,7 @@ void MIPMPCController::computeControlInput() {
         doing = IsBreak(i);
         i++;
     }
-    std::cout<<"torques : "<<U<<std::endl;
+    std::cout<<"torques : "<<U[0]<<std::endl;
     torque[1] = U[0];
 
     if(torque[1] > torqueLimit)
@@ -112,5 +114,5 @@ void MIPMPCController::computeControlInput() {
 
 void MIPMPCController::setControlInput() {
     getRobot()->robot->setGeneralizedForce(torque);
-//    U.setZero();
+    U.setZero();
 }

@@ -21,7 +21,7 @@ void MIPPDController::generateExternalForce() {
     forcePosition[2] = 0.08;
 
     externalForce[0] = 0.0;
-    externalForce[1] = 9.6; //maximum external force for once
+    externalForce[1] = 1.9; //maximum external force for once
     externalForce[2] = 0.0;
 
     if(i%400 == 0 || i == 0){
@@ -39,7 +39,7 @@ void MIPPDController::addNoise() {
 
     // 0 부터 99 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
     std::uniform_int_distribution<int> dis(0, 200);
-    double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001;//0.04
+    double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001;//0.05
     double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01;//0.6
 
     position[0] += noisePosition;
@@ -63,7 +63,7 @@ void MIPPDController::updateState() {
     position = getRobot()->robot->getGeneralizedCoordinate();
     velocity = getRobot()->robot->getGeneralizedVelocity();
 
-//    addNoise();
+    addNoise();
 }
 
 void MIPPDController::computeControlInput() {

@@ -101,8 +101,8 @@ void MIPLQRController::addNoise() {
     // 0 부터 200 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
     std::uniform_int_distribution<int> dis(0, 200);
     double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001; //0.15
-    double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01; //1.6
-    double noiseMotorVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.001; //35.9
+    double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01; //1.4
+    double noiseMotorVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.001; //35.5
 
     position[0] += noisePosition;
     velocity[0] += noiseVelocity;
@@ -111,7 +111,7 @@ void MIPLQRController::addNoise() {
 
 void MIPLQRController::doControl() {
     updateState();
-//    generateExternalForce();
+    generateExternalForce();
     if(SExist)
     {
         computeControlInput();
@@ -125,7 +125,7 @@ void MIPLQRController::updateState() {
     velocity = getRobot()->robot->getGeneralizedVelocity();
 
 //    for adding noise
-//    addNoise();
+    addNoise();
 
     X[0] = position[0];
     X[1] = velocity[0];

@@ -73,7 +73,8 @@ set(MOMENTUM_INVERTED_PENDULUM_SOURCES
         src/MomentumInvertedPendulum/MIPRobot.cpp
         src/MomentumInvertedPendulum/MIPPDController.cpp
         src/MomentumInvertedPendulum/MIPLQRController.cpp
-        src/MomentumInvertedPendulum/MIPPDDController.cpp)
+        src/MomentumInvertedPendulum/MIPPDDController.cpp
+        src/MomentumInvertedPendulum/MIPMPCController.cpp)
 
 add_executable(camel-momentum_inverted_pendulum_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_SOURCES})
 target_link_libraries(camel-momentum_inverted_pendulum_simulation ${CAMEL_LIBS})

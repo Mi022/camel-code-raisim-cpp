@@ -18,16 +18,18 @@ std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\cam
 std::string name = "MIP";
 raisim::World world;
 
-std::ofstream myfile;
+std::ofstream myfile1;
+std::ofstream myfile2;
+std::ofstream myfile3;
 
-double simulationDuration = 1.5;
+double simulationDuration = 1.0;
 double dT = 0.005;
 MIPSimulation sim = MIPSimulation(&world, dT);
 MIPRobot robot = MIPRobot(&world, urdfPath, name);
 //MIPPDController controller = MIPPDController(&robot);
-MIPLQRController controller = MIPLQRController(&robot);
+//MIPLQRController controller = MIPLQRController(&robot);
 //MIPPDDController controller = MIPPDDController(&robot);
-
+MIPMPCController controller = MIPMPCController(&robot, dT);
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
@@ -37,6 +39,7 @@ void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
         controller.doControl();
+        std::cout<<"test"<<std::endl;
         world.integrate();
         if (iteration % divider == 0) {
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
@@ -44,10 +47,12 @@ void raisimSimulation() {
             MainUI->data_y1_desired[MainUI->data_idx] = 0;
             MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
             MainUI->data_y2_desired[MainUI->data_idx] = 0;
-            MainUI->data_y3_blue[MainUI->data_idx] = robot.getQD()[1];
-            std::cout<<robot.getQD()[1]<<std::endl;
-            myfile << robot.getQD()[1] <<"," ;
-            MainUI->data_y3_red[MainUI->data_idx] = 0;
+            MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[1];
+
+//            myfile1 << robot.getQ()[0] <<"," ;
+//            myfile2 << robot.getQD()[0] <<"," ;
+//            myfile3 << robot.getQD()[1] <<"," ;
+            MainUI->data_y3_red[MainUI->data_idx] = robot.getQD()[1];
             MainUI->data_idx += 1;
         }
 
@@ -60,7 +65,9 @@ void raisimSimulation() {
         MainUI->plotWidget2();
         MainUI->plotWidget3();
         MainUI->data_idx = 0;
-        myfile.close();
+//        myfile1.close();
+//        myfile2.close();
+//        myfile3.close();
     }
 }
 
@@ -88,7 +95,9 @@ void *rt_simulation_thread(void *arg) {
 }
 
 int main(int argc, char *argv[]) {
-    myfile.open ("motorVelocity.csv");
+//    myfile1.open ("rodAngleLQR.csv");
+//    myfile2.open ("rodAngularVelocityLQR.csv");
+//    myfile3.open ("motorAngularVelocityLQR.csv");
     QApplication a(argc, argv);
     MainWindow w;
     raisim::RaisimServer server(&world);

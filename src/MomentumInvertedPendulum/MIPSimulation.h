@@ -10,6 +10,7 @@
 #include "MIPPDController.h"
 #include "MIPPDDController.h"
 #include "MIPLQRController.h"
+#include "MIPMPCController.h"
 
 class MIPSimulation : public Simulation{
 

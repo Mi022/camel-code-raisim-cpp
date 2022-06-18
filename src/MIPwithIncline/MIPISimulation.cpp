@@ -22,7 +22,7 @@ std::ofstream myfile1;
 std::ofstream myfile2;
 std::ofstream myfile3;
 
-double simulationDuration = 10.0;
+double simulationDuration = 20.0;
 double dT = 0.005;
 MIPISimulation sim = MIPISimulation(&world, dT);
 MIPIRobot robot = MIPIRobot(&world, urdfPath, name);

@@ -1,11 +1,11 @@
 //
-// Created by user on 22. 6. 9.
+// Created by user on 22. 6. 18.
 //
 
-#include "MIPSimulation.h"
+#include "MIPISimulation.h"
 #include "include/SimulationUI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
-#include "MIPLQRController.h"
+#include "MIPILQRController.h"
 #include <QApplication>
 #include <cmath>
 
@@ -14,8 +14,8 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_momentum_inverted_pendulum.urdf";
-std::string name = "MIP";
+std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_momentum_inverted_pendulum_with_incline.urdf";
+std::string name = "MIPI";
 raisim::World world;
 
 std::ofstream myfile1;
@@ -24,12 +24,10 @@ std::ofstream myfile3;
 
 double simulationDuration = 1.0;
 double dT = 0.005;
-MIPSimulation sim = MIPSimulation(&world, dT);
-MIPRobot robot = MIPRobot(&world, urdfPath, name);
-//MIPPDController controller = MIPPDController(&robot);
-MIPLQRController controller = MIPLQRController(&robot);
-//MIPPDDController controller = MIPPDDController(&robot);
-//MIPMPCController controller = MIPMPCController(&robot, dT);
+MIPISimulation sim = MIPISimulation(&world, dT);
+MIPIRobot robot = MIPIRobot(&world, urdfPath, name);
+MIPILQRController controller = MIPILQRController(&robot);
+
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);

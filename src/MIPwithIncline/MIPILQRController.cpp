@@ -126,8 +126,8 @@ void MIPILQRController::inclinePDcontrol() {
 void MIPILQRController::calEstPlane() {
     double PGain = 100.0;
     double DGain = 40.0;
-//    estPlane = asin((0.001741*(rodAcc + PGain*X[0] + DGain*X[1]))/0.2301) - position[1];
-    estPlane = asin((0.001741*rodAcc)/0.2301) - position[1];
+    estPlane = asin((0.001741*(rodAcc + PGain*X[0] + DGain*X[1]))/0.2301) - position[1];
+//    estPlane = asin((0.001741*rodAcc)/0.2301) - position[1];
 }
 
 bool MIPILQRController::IsTorqueZero() {

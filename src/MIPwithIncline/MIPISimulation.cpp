@@ -22,11 +22,11 @@ std::ofstream myfile1;
 std::ofstream myfile2;
 std::ofstream myfile3;
 
-double simulationDuration = 1.0;
+double simulationDuration = 10.0;
 double dT = 0.005;
 MIPISimulation sim = MIPISimulation(&world, dT);
 MIPIRobot robot = MIPIRobot(&world, urdfPath, name);
-MIPILQRController controller = MIPILQRController(&robot);
+MIPILQRController controller = MIPILQRController(&robot, &world);
 
 
 double oneCycleSimTime = 0;
@@ -45,12 +45,12 @@ void raisimSimulation() {
             MainUI->data_y1_desired[MainUI->data_idx] = 0;
             MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
             MainUI->data_y2_desired[MainUI->data_idx] = 0;
-            MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[1];
+            MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[2];
 
 //            myfile1 << robot.getQ()[0] <<"," ;
 //            myfile2 << robot.getQD()[0] <<"," ;
 //            myfile3 << robot.getQD()[1] <<"," ;
-            MainUI->data_y3_red[MainUI->data_idx] = robot.getQD()[1];
+            MainUI->data_y3_red[MainUI->data_idx] = robot.getQD()[2];
             MainUI->data_idx += 1;
         }
 

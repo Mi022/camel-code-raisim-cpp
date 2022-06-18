@@ -111,13 +111,25 @@ void MIPILQRController::addNoise() {
 
 void MIPILQRController::inclinePDcontrol() {
     //set desired position
-    double desiredPosition = 0.1;
-    double desiredVelocity = 0.0;
+    double desiredPosition = 0.05*sin(robotWorld->getWorldTime()/1.0) + 0.05;
+    double desiredVelocity = 0.05/1.0*cos(robotWorld->getWorldTime()/1.0);
     //compute torque
     double PositionError = desiredPosition - inclineX[0];
     double VelocityError = desiredVelocity - inclineX[1];
 
     torque[0] = 100.0*PositionError + 20.0*VelocityError;
+}
+
+void MIPILQRController::calEstPlane() {
+    estPlane = asin((0.001741*rodAcc)/0.2301) - position[1];
+}
+
+bool MIPILQRController::IsTorqueZero() {
+    if(abs(torque[2]) < 1e-6)
+    {
+        return true;
+    }
+    return false;
 }
 
 void MIPILQRController::doControl() {
@@ -132,14 +144,21 @@ void MIPILQRController::doControl() {
 }
 
 void MIPILQRController::updateState() {
+    double tempVelo = velocity[1];
 //    for ideal
     position = getRobot()->robot->getGeneralizedCoordinate();
     velocity = getRobot()->robot->getGeneralizedVelocity();
+    rodAcc = (velocity[1] - tempVelo)/0.005;
 
 //    for adding noise
 //    addNoise();
 
-    X[0] = position[1];
+    //for plane angle
+    if(IsTorqueZero())
+    {
+        calEstPlane();
+    }
+    X[0] = position[1] + estPlane;
     X[1] = velocity[1];
     X[2] = velocity[2];
 

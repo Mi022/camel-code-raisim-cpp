@@ -10,8 +10,8 @@ void MIPIRobot::initialize() {
     Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
     std::cout<<robot->getGeneralizedCoordinateDim()<<std::endl;
     initialJointPosition.setZero();
-    initialJointPosition[0] = 0.05; //0.4 for configuration figure
-    initialJointPosition[1] = 0.0; //0.4 for configuration figure
+    initialJointPosition[0] = 1.7; //0.4 for configuration figure
+    initialJointPosition[1] = -1.6; //0.4 for configuration figure
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
 

@@ -44,6 +44,8 @@ public:
     void computeControlInput() override;
     void setControlInput() override;
 
+    double getEstPlane();
+
 private:
     int i;
     Eigen::Matrix3d SN;
@@ -58,6 +60,7 @@ private:
     Eigen::VectorXd inclineX = Eigen::VectorXd(2);
     double estPlane = 0.0;
     double rodAcc = 0.0;
+    double temp = 0.0;
 
     void setSNGain(double SN11, double SN22, double SN33);
     void setQGain(double Q11, double Q22, double Q33);

@@ -11,7 +11,7 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
 std::string name = "single_leg";
 raisim::World world;
 
@@ -20,9 +20,10 @@ double dT = 0.005;
 SingleLeggedSimulation sim = SingleLeggedSimulation(&world, dT);
 SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
 
-SingleLeggedPDController controller = SingleLeggedPDController(&robot);
+//SingleLeggedPDController controller = SingleLeggedPDController(&robot);
 //SingleLeggedIDController controller = SingleLeggedIDController(&robot, dT);
 //SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
+SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&robot, dT);
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
@@ -83,6 +84,7 @@ int main(int argc, char *argv[]) {
     MainWindow w;
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
+    //controller.doControl();
     int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);
     w.show();

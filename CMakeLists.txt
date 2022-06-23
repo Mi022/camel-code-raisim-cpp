@@ -16,6 +16,10 @@ find_package(Eigen3 REQUIRED HINTS ${Eigen3_HINT})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../rsc" DESTINATION ${CMAKE_BINARY_DIR}/camel-code-raisim-cpp)
 
 include_directories(${EIGEN3_INCLUDE_DIRS})
+include_directories("qpOASES/include")
+
+add_subdirectory(qpOASES)
+
 
 set(CAMEL_LIBS
         Qt5::Widgets
@@ -50,10 +54,11 @@ target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})
 set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp)
+        src/A1/A1JointPDController.cpp src/hsTest/test.cpp)
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
 target_link_libraries(camel-a1 ${CAMEL_LIBS})
+
 # ====== A1 ======/ #
 
 # ====== Canine Single Leg ======  #
@@ -62,10 +67,11 @@ set(CANINE_SINGLE_LEG_SOURCES
         src/CAMEL-Quad-SingleLeg/SingleLeggedRobot.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedPDController.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedIDController.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCController.cpp)
+        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCController.cpp
+        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCqpoases.cpp)
 
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
-target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
+target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS} qpOASES)
 # ====== Canine Single Leg ====== /#
 ## Simulation /##
 
@@ -105,3 +111,13 @@ target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
 
 add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
+
+
+# ====== Hosun Test ======  #
+set(HS_SOURCES
+        src/hsTest/test.cpp)
+
+add_executable(hs-test ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${HS_SOURCES})
+target_link_libraries(hs-test ${CAMEL_LIBS} qpOASES)
+
+# ====== Hosun Test ======/ #

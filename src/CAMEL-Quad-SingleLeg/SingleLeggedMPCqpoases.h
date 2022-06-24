@@ -6,7 +6,8 @@
 #define RAISIM_SINGLELEGGEDMPCQPOASES_H
 
 #include "include/CAMEL/Controller.h"
-#include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
+//#include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
+#include "include/TrajectoryGenerator/SincurveTrajectoryGenerator.h"
 #include <qpOASES.hpp>
 #include <unsupported/Eigen/MatrixFunctions>
 
@@ -33,7 +34,7 @@ public:
         xd.setZero();
 
         updateState();
-        mTrajectoryGenerator.updateTrajectory(position[0], 0.35, getRobot()->getWorldTime(), 1.0);
+        mTrajectoryGenerator.updateTrajectory(position[0], getRobot()->getWorldTime(), 1.0);
         mDT = dT;
     }
     void doControl() override;
@@ -46,7 +47,9 @@ public:
     void matrix_to_real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
 
 private:
-    QuinticTrajectoryGenerator mTrajectoryGenerator;
+    //QuinticTrajectoryGenerator mTrajectoryGenerator;
+    SincurveTrajectoryGenerator mTrajectoryGenerator;
+
     double mLumpedMass = 2.009;
     double mGravity = -9.81;
     double mDT;

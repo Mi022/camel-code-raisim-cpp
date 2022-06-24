@@ -30,6 +30,7 @@ set(CAMEL_LIBS
 set(CAMEL_SOURCES
         include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
         include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
+        include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp
         include/CAN/CanMotorX8ProV2.h
         include/Optimizer/GradientDescentOptimizer.cpp
         include/Sensor/LoadCell.cpp
@@ -54,7 +55,7 @@ target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})
 set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp src/hsTest/test.cpp)
+        src/A1/A1JointPDController.cpp src/hsTest/test.cpp include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp include/TrajectoryGenerator/SincurveTrajectoryGenerator.h)
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
 target_link_libraries(camel-a1 ${CAMEL_LIBS})
@@ -102,7 +103,9 @@ target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
 ## Operation /##
 
-add_executable(camel-test_trajectory_generation src/Test/Test_trajectoryGenerator.cpp include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp)
+add_executable(camel-test_trajectory_generation src/Test/Test_trajectoryGenerator.cpp include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
+                                                                                      include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
+                                                                                      include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp)
 add_executable(camel-rmdx8test_torque src/Test/Test_RMDX8Pro.cpp)
 add_executable(camel-test_real_time_thread src/Test/Test_RealTimeThread.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_real_time_thread ${CAMEL_LIBS})

@@ -68,7 +68,7 @@ void SingleLeggedMPCqpoases::getMatrices(){
     K.setIdentity();
     K *= 1e-6;
 
-    float tempWeight[2] = {4.0, 0.4};
+    float tempWeight[2] = {5.0, 0.3};
     Eigen::Matrix<double, 3,1> weightMat;
     for(int i=0; i<2;i++)
     {
@@ -85,8 +85,8 @@ void SingleLeggedMPCqpoases::getMatrices(){
     //std::cout << Aqp << std::endl << std::endl;
     //std::cout << "Bqp" << std::endl;
     //std::cout << Bqp << std::endl << std::endl;
-    std::cout << "x0" << std::endl;
-    std::cout << x0 << std::endl << std::endl;
+    //std::cout << "x0" << std::endl;
+    //std::cout << x0 << std::endl << std::endl;
     //std::cout << "xd" << std::endl;
     //std::cout << xd << std::endl << std::endl;
     //std::cout << "H" << std::endl;
@@ -147,7 +147,7 @@ void SingleLeggedMPCqpoases::qpSolver()
     std::cout << q_red[2] << std::endl;*/
 
     calculatedForce = q_red[0];
-    std::cout << calculatedForce << std::endl;
+    //std::cout << calculatedForce << std::endl;
 
     free(H_qpoases);
     free(g_qpoases);

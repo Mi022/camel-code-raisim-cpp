@@ -16,14 +16,26 @@ class A1MPCController : public Controller {
 public:
     raisim::VecDyn position = raisim::VecDyn(19);
     raisim::VecDyn velocity = raisim::VecDyn(18);
-
-    Eigen::VectorXd torque = Eigen::VectorXd(18);
+    raisim::VecDyn torque = raisim::VecDyn(18);
 
     double torqueLimit = 20.0;
+
+    double dz_dth1 = 0.0;
+    double dz_dth2 = 0.0;
+    double calculatedForceZ[4] = {0.0,};
 
     A1MPCController(Robot *robot, double dT) : Controller(robot){
         mDT = dT;
         K.setIdentity();
+
+        Aqp.setZero();
+        Bqp.setZero();
+        L.setZero();
+        H.setZero();
+        g.setZero();
+        U_b.setZero();
+        fmat.setZero();
+
     }
     void doControl() override;
     void updateState() override;
@@ -41,7 +53,7 @@ public:
 private:
     double mLumpedMass = 11.f;
     double mGravity = -9.81;
-    int mMPCHorizon = 2;
+    int mMPCHorizon = 5;
     double mDT;
 
     double alpha = 1e-6;

@@ -60,23 +60,19 @@ void A1MPCController::getMetrices(){
     Eigen::Matrix<double,13,12> Bc;
 
     ss_mats(Ac, Bc);
-    std::cout << Ac << std::endl;
-    std::cout << Bc << std::endl;
-
     c2qp(Ac,Bc);
 
     //weights
     Eigen::Matrix<double, 13,1> weightMat;
-    weightMat << 0.25, 0.25, 10, 2, 2, 20, 0, 0, 0.3, 0.2, 0.2, 0.2, 0.f;
+    weightMat << 1.0, 1.0, 1.0,
+                 0.1, 0.1, 50.0,
+                 0.1, 0.1, 1.0,
+                 1.0, 1.0, 1.0,
+                 0.f;
     L.diagonal() = weightMat.replicate(mMPCHorizon,1);
 
     H = 2*(Bqp.transpose()*L*Bqp + alpha*K);
     g = 2*Bqp.transpose()*L*(Aqp*x0 - xd);
-
-    std::cout << Aqp << std::endl;
-    std::cout << Bqp << std::endl;
-    std::cout << H << std::endl;
-    std::cout << g << std::endl;
 
     int k = 0;
     for(int i = 0; i < mMPCHorizon; i++)
@@ -314,6 +310,10 @@ void A1MPCController::qpSolver(){
         }
         std::cout << std::endl;
     }
+    calculatedForceZ[0] = q_soln[2];
+    calculatedForceZ[1] = q_soln[5];
+    calculatedForceZ[2] = q_soln[8];
+    calculatedForceZ[3] = q_soln[11];
 
     free(H_qpoases);
     free(g_qpoases);
@@ -330,9 +330,60 @@ void A1MPCController::qpSolver(){
     free(q_red);
 }
 
-void A1MPCController::computeControlInput() {}
+void A1MPCController::computeControlInput() {
+    torque[0] = 0.0;
+    torque[1] = 0.0;
+    torque[2] = 0.0;
+    torque[3] = 0.0;
+    torque[4] = 0.0;
+    torque[5] = 0.0;
 
-void A1MPCController::setControlInput() {}
+    for(int i=0; i<19; i++)
+        std::cout << position[i] << std::endl;
+
+    //FR
+    dz_dth1 = -0.2*sin(position[8]) - 0.2*sin(position[8] + position[9]);
+    dz_dth2 = -0.2*sin(position[8] + position[9]);
+    torque[6] = 0.0;
+    torque[7] = dz_dth1 * calculatedForceZ[0];
+    torque[8] = dz_dth2 * calculatedForceZ[0];
+
+    //FL
+    dz_dth1 = -0.2*sin(position[11]) - 0.2*sin(position[11] + position[12]);
+    dz_dth2 = -0.2*sin(position[11] + position[12]);
+    torque[9] = 0.0;
+    torque[10] = dz_dth1 * calculatedForceZ[1];
+    torque[11] = dz_dth2 * calculatedForceZ[1];
+
+    //RR
+    dz_dth1 = -0.2*sin(position[14]) - 0.2*sin(position[14] + position[15]);
+    dz_dth2 = -0.2*sin(position[14] + position[15]);
+    torque[12] = 0.0;
+    torque[13] = dz_dth1 * calculatedForceZ[2];
+    torque[14] = dz_dth2 * calculatedForceZ[2];
+
+    //RL
+    dz_dth1 = -0.2*sin(position[17]) - 0.2*sin(position[17] + position[18]);
+    dz_dth2 = -0.2*sin(position[17] + position[18]);
+    torque[15] = 0.0;
+    torque[16] = dz_dth1 * calculatedForceZ[3];
+    torque[17] = dz_dth2 * calculatedForceZ[3];
+}
+
+void A1MPCController::setControlInput() {
+    for (int i = 0; i < 18; i++) {
+        if(torque[i] > torqueLimit)
+        {
+            torque[i] = torqueLimit;
+        }
+        else if(torque[i] < -torqueLimit)
+        {
+            torque[i] = -torqueLimit;
+        }
+        std::cout << torque[i] << std::endl;
+    }
+    getRobot()->robot->setGeneralizedForce(torque);
+}
 
 //=============================================================
 template <class T>
@@ -380,10 +431,10 @@ void A1MPCController::ss_mats(Eigen::Matrix<double,13,13>& A, Eigen::Matrix<doub
     Eigen::Matrix<double,3,3> I_inv = I_world.inverse();
 
     Eigen::Matrix<double,4,3> R_feet;
-    R_feet <<  0.1805,-0.127,-p[2], //FR
-               0.1805, 0.127,-p[2], //FL
-               -0.1805,-0.127,-p[2], //RR
-               -0.1805, 0.127,-p[2]; //RL
+    R_feet <<  0.183,-0.127,-p[2], //FR
+               0.183, 0.127,-p[2], //FL
+               -0.183,-0.127,-p[2], //RR
+               -0.183, 0.127,-p[2]; //RL
     B.setZero();
     for(int n=0; n<4; n++)
     {

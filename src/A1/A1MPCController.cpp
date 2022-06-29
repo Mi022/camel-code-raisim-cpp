@@ -32,7 +32,7 @@ void A1MPCController::updateState(){
 
     quat_to_euler(quat, q);
 
-    x0 << 0, 0, 0,
+    x0 << q[0], q[1], q[2],
           p[0], p[1], p[2],
           w[0], w[1], w[2],
           v[0], v[1], v[2],
@@ -430,11 +430,29 @@ void A1MPCController::ss_mats(Eigen::Matrix<double,13,13>& A, Eigen::Matrix<doub
                0, 0, 0.064713601;
     Eigen::Matrix<double,3,3> I_inv = I_world.inverse();
 
+    auto FRfootFrameIndex = getRobot()->robot->getFrameIdxByName("FR_foot_fixed");
+    auto FLfootFrameIndex = getRobot()->robot->getFrameIdxByName("FL_foot_fixed");
+    auto RRfootFrameIndex = getRobot()->robot->getFrameIdxByName("RR_foot_fixed");
+    auto RLfootFrameIndex = getRobot()->robot->getFrameIdxByName("RL_foot_fixed");
+
+    raisim::Vec<3> footPosition[4];
+    getRobot()->robot->getFramePosition(FRfootFrameIndex, footPosition[0]);
+    getRobot()->robot->getFramePosition(FLfootFrameIndex, footPosition[1]);
+    getRobot()->robot->getFramePosition(RRfootFrameIndex, footPosition[2]);
+    getRobot()->robot->getFramePosition(RLfootFrameIndex, footPosition[3]);
+
+    for(int i=0; i<4; i++) {
+        for (int j = 0; j < 3; j++){
+            footPosition[i][j] -= p[j];
+        }
+    }
+
     Eigen::Matrix<double,4,3> R_feet;
-    R_feet <<  0.183,-0.127,-p[2], //FR
-               0.183, 0.127,-p[2], //FL
-               -0.183,-0.127,-p[2], //RR
-               -0.183, 0.127,-p[2]; //RL
+    R_feet <<  footPosition[0][0], footPosition[0][1], footPosition[0][2], //FR
+               footPosition[1][0], footPosition[1][1], footPosition[1][2], //FL
+               footPosition[2][0], footPosition[2][1], footPosition[2][2], //RR
+               footPosition[3][0], footPosition[3][1], footPosition[3][2]; //RL
+    std::cout <<R_feet << std::endl;
     B.setZero();
     for(int n=0; n<4; n++)
     {

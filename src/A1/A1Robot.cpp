@@ -11,7 +11,7 @@ void A1Robot::initialize() {
 
     // base_x,y,z
     initialJointPosition[0] = 0.0;
-    initialJointPosition[1] = -1.5;
+    initialJointPosition[1] = 0.0;
     initialJointPosition[2] = 0.3590;
 
     // base_rotation [quaternion]

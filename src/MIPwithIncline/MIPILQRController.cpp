@@ -111,8 +111,8 @@ void MIPILQRController::addNoise() {
 
 void MIPILQRController::inclinePDcontrol() {
     //set desired position
-    double amplitude = 1.0;
-    double period = 300*M_PI;//1.5
+    double amplitude = 0.05;
+    double period = 2*M_PI;//1.5
     double alpha = period/(2*M_PI);
 //    double desiredPosition = temp;
 //    double desiredVelocity = 0;
@@ -126,6 +126,9 @@ void MIPILQRController::inclinePDcontrol() {
     double desiredPosition = 1.7;//rad
     double desiredVelocity = 0;
 
+    desiredPosition = amplitude*sin(robotWorld->getWorldTime()/alpha) + amplitude;
+    desiredVelocity = amplitude/alpha*cos(robotWorld->getWorldTime()/alpha);
+
     //compute torque
     double PositionError = desiredPosition - inclineX[0];
     double VelocityError = desiredVelocity - inclineX[1];
@@ -137,8 +140,8 @@ void MIPILQRController::inclinePDcontrol() {
 void MIPILQRController::calEstPlane() {
     double PGain = 100.0;
     double DGain = 40.0;
-//    estPlane = asin((0.001741*(rodAcc + PGain*X[0] + DGain*X[1]))/0.2301) - position[1];
-    estPlane = asin((0.001741*rodAcc)/0.2301) - position[1];
+    estPlane = asin((0.001741*(rodAcc + PGain*X[0] + DGain*X[1]))/0.2301) - position[1];
+//    estPlane = asin((0.001741*rodAcc)/0.2301) - position[1];
 }
 
 bool MIPILQRController::IsTorqueZero() {

@@ -29,6 +29,7 @@ set(CAMEL_SOURCES
         include/CAN/CanMotorX8ProV2.h
         include/Optimizer/GradientDescentOptimizer.cpp
         include/Sensor/LoadCell.cpp
+        include/Sensor/MPU9250.cpp
         include/RT/rb_utils.cpp)
 
 set(CAMEL_SIMULATION_UI_SOURCES
@@ -128,3 +129,5 @@ target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
 add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
 add_executable(camel-test_write_CSV src/Test/Test_WriteCSV.cpp)
+add_executable(camel-test_sensor_MPU9250 src/Test/Test_SensorMPU9250.cpp ${CAMEL_SOURCES})
+target_link_libraries(camel-test_sensor_MPU9250 ${CAMEL_LIBS})

@@ -55,7 +55,7 @@ target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})
 set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp src/hsTest/test.cpp include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp include/TrajectoryGenerator/SincurveTrajectoryGenerator.h)
+        src/A1/A1JointPDController.cpp)
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
 target_link_libraries(camel-a1 ${CAMEL_LIBS})
@@ -114,13 +114,3 @@ target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
 
 add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
-
-
-# ====== Hosun Test ======  #
-set(HS_SOURCES
-        src/hsTest/test.cpp)
-
-add_executable(hs-test ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${HS_SOURCES})
-target_link_libraries(hs-test ${CAMEL_LIBS} qpOASES)
-
-# ====== Hosun Test ======/ #

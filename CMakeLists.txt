@@ -55,10 +55,11 @@ target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})
 set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp)
+        src/A1/A1JointPDController.cpp
+        src/A1/A1MPCController.cpp)
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
-target_link_libraries(camel-a1 ${CAMEL_LIBS})
+target_link_libraries(camel-a1 ${CAMEL_LIBS} qpOASES)
 
 # ====== A1 ======/ #
 

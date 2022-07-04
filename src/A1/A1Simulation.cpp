@@ -76,9 +76,14 @@ void thread1task(raisim::World *world, A1Robot *robot, A1MPCController *controll
                 world->integrate();
                 if (i % divider == 0) {
                     MainUI->data_x[MainUI->data_idx] = world->getWorldTime();
-                    MainUI->data_y1[MainUI->data_idx] = robot->getQ()[0];
-                    MainUI->data_y2[MainUI->data_idx] = robot->getQD()[0];
+                    MainUI->data_y1[MainUI->data_idx] = robot->getQ()[2];
+                    MainUI->data_y1_desired[MainUI->data_idx] = controller->desiredPosition;
+                    MainUI->data_y2[MainUI->data_idx] = robot->getQD()[2];
+                    MainUI->data_y2_desired[MainUI->data_idx] = controller->desiredVelocity;
                     MainUI->data_idx += 1;
+
+                    MainUI->plotWidget1();
+                    MainUI->plotWidget2();
                 }
                 i++;
                 timeChecker = false;
@@ -106,8 +111,8 @@ int main(int argc, char *argv[]) {
     std::string name = "cuteA1";
     raisim::World world;
     double simulationDuration = 3.0;
-    double dT = 0.001;
-    A1Simulation sim = A1Simulation(&world, 0.001);
+    double dT = 0.005;
+    A1Simulation sim = A1Simulation(&world, dT);
     A1Robot robotA1 = A1Robot(&world, urdfPath, name);
     //A1JointPDController PDcontroller = A1JointPDController(&robotA1);
     A1MPCController MPCcontroller = A1MPCController(&robotA1, dT);

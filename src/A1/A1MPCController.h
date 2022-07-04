@@ -18,11 +18,17 @@ public:
     raisim::VecDyn velocity = raisim::VecDyn(18);
     raisim::VecDyn torque = raisim::VecDyn(18);
 
-    double torqueLimit = 20.0;
+    double l1 = 0.04;
+    double l2 = 0.2;
+    double l3 = 0.2;
 
-    double dz_dth1 = 0.0;
-    double dz_dth2 = 0.0;
-    double calculatedForceZ[4] = {0.0,};
+    double torqueLimit = 20.0;
+    Eigen::Matrix<double,3,1> f[4];
+    Eigen::Matrix<double,3,3> robotJacobian[4];
+    Eigen::Matrix<double,3,1> robottorque[4];
+
+    double desiredPosition;
+    double desiredVelocity;
 
     A1MPCController(Robot *robot, double dT) : Controller(robot){
         mDT = dT;
@@ -35,6 +41,8 @@ public:
         g.setZero();
         U_b.setZero();
         fmat.setZero();
+
+        torque.setZero();
 
     }
     void doControl() override;
@@ -49,11 +57,12 @@ public:
     void ss_mats(Eigen::Matrix<double,13,13>& Ac, Eigen::Matrix<double,13,12>& Bc);
     void c2qp(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,13,12> B);
     void matrix_to_real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
+    void getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, bool side);
 
 private:
     double mLumpedMass = 11.f;
     double mGravity = -9.81;
-    int mMPCHorizon = 5;
+    int mMPCHorizon = 10;
     double mDT;
 
     double alpha = 1e-6;

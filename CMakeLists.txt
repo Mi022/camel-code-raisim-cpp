@@ -50,7 +50,7 @@ target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})
 set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp)
+        src/A1/A1JointPDController.cpp src/Robotarm/RobotarmSimulation.cpp)
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
 target_link_libraries(camel-a1 ${CAMEL_LIBS})
@@ -67,6 +67,17 @@ set(CANINE_SINGLE_LEG_SOURCES
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
+
+# ====== Robotic Arm ======  #
+
+set(Robot_Arm_SOURCES
+        src/Robotarm/RobotarmSimulation.cpp)
+
+add_executable(camel-robot-arm_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${Robot_Arm_SOURCES})
+target_link_libraries(camel-robot-arm_simulation ${CAMEL_LIBS})
+
+# ====== Robotic Arm ====== /#
+
 ## Simulation /##
 
 ## Operation  ##

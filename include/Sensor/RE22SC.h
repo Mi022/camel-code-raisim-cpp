@@ -86,23 +86,17 @@ private:
     int mNumBytes;
     int mReaded[10];
     int mLineFeedCode = 10;
-    int mDotCode = 46;
-    int mCommaCode = 44;
     int mCarraigeReturnCode = 13;
-    int mNegativeValueCode = 45;
-    int mNull = 0;
     int mReadedData = 0;
     int mIdx = 0;
 
     char mReadBuf[1];
 
     bool mIsDataStore = true;
-    bool mIsNegativeValue = false;
 
     struct termios mTty;
-    double mGyroX;
-    double mGyroY;
-    double mGyroZ;
+
+    void lowPassFilter();
 };
 
 #endif //RAISIM_RE22SC_H

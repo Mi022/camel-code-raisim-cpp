@@ -30,6 +30,7 @@ set(CAMEL_SOURCES
         include/Optimizer/GradientDescentOptimizer.cpp
         include/Sensor/LoadCell.cpp
         include/Sensor/MPU9250.cpp
+        include/Sensor/RE22SC.cpp
         include/RT/rb_utils.cpp)
 
 set(CAMEL_SIMULATION_UI_SOURCES
@@ -131,3 +132,5 @@ target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
 add_executable(camel-test_write_CSV src/Test/Test_WriteCSV.cpp)
 add_executable(camel-test_sensor_MPU9250 src/Test/Test_SensorMPU9250.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_sensor_MPU9250 ${CAMEL_LIBS})
+add_executable(camel-test_sensor_RE22SC src/Test/Test_encoderRE22SC.cpp ${CAMEL_SOURCES})
+target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})

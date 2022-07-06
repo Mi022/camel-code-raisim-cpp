@@ -13,6 +13,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <math.h>
+#include <Eigen/Core>
 
 class MPU9250 {
 
@@ -23,6 +24,10 @@ public:
 
     MPU9250() {
         mSerialPort = open("/dev/ttyACM0", O_RDWR);
+        // Check for errors
+        if (mSerialPort < 0) {
+            printf("Error %i from open: %s\n", errno, strerror(errno));
+        }
         if (tcgetattr(mSerialPort, &mTty) != 0) {
             printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
             isConnected = false;
@@ -77,6 +82,7 @@ public:
     void readData();
     void nulling();
     void flushData(int num);
+    void getGyroXYZ();
 
     int getRawData() { return mReadedData; }
 
@@ -89,8 +95,11 @@ private:
     int mDotCode = 46;
     int mCommaCode = 44;
     int mNegativeValueCode = 45;
-    int mReadedData = 0;
+    int mCarriageReturnCode = 13;
+    double mReadedData = 0;
     int mIdx = 0;
+    int mDotIdx = 0;
+    int mGyroIdx = 0;
 
     char mReadBuf[1];
 
@@ -98,9 +107,7 @@ private:
     bool mIsNegativeValue = false;
 
     struct termios mTty;
-    double mGyroX;
-    double mGyroY;
-    double mGyroZ;
+    Eigen::VectorXd mGyroXYZ = Eigen::VectorXd(3); //[0]: x, [1]: y, [2]: z
 };
 
 #endif //RAISIM_MPU9250_H

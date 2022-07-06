@@ -8,33 +8,36 @@ void MPU9250::readData() {
     mReadedData = 0;
     while (true) {
         mNumBytes = read(mSerialPort, &mReadBuf, sizeof(mReadBuf));
-        std::cout<<mReadBuf[0]<<std::endl;
         if (mNumBytes == 1) {
             if (mReadBuf[0] == mLineFeedCode) {
-                std::cout<<"LineFeedCode!"<<std::endl;
-//                break;
+                mGyroIdx++;
+                break;
             } else if (mReadBuf[0] == mCommaCode) {
                 mIsDataStore = false;
-                std::cout<<"CommaCode!"<<std::endl;
+                mGyroIdx++;
+                break;
+            } else if (mReadBuf[0] == mCarriageReturnCode) {
+                mCarriageReturnCode = false;
             } else if (mReadBuf[0] == mDotCode) {
                 mIsDataStore = false;
-                std::cout<<"DotCode!"<<std::endl;
+                mDotIdx = mIdx;
             } else if (mReadBuf[0] == mNegativeValueCode) {
                 mIsNegativeValue = true;
-                std::cout<<"Negative Value!"<<std::endl;
             } else if (mIsDataStore) {
-//                mReaded[mIdx] = (mReadBuf[0] - 48);
-//                mIdx++;
+                mReaded[mIdx] = (mReadBuf[0] - 48);
+                mIdx++;
             }
         }
+        //reset
+        mIsDataStore = true;
     }
-//
-//    for (int i = 0; i < mIdx; i++) {
-//        mReadedData += mReaded[i] * pow(10.0, mIdx - i - 1);
-//    }
-//    if (mIsNegativeValue) {
-//        mReadedData = -1.0 * mReadedData;
-//    }
+    for (int i = 0; i < mIdx; i++) {
+        mReadedData += mReaded[i] * pow(10.0, mDotIdx-i-1);
+    }
+    if (mIsNegativeValue) {
+        mReadedData = -1.0 * mReadedData;
+    }
+    mGyroXYZ[mGyroIdx-1] = mReadedData;
 
     // reset
     mIdx = 0;
@@ -42,8 +45,17 @@ void MPU9250::readData() {
     mIsNegativeValue = false;
 }
 
-void MPU9250::flushData(int num) {
-    for (int i = 0; i < num; i++) {
+void MPU9250::getGyroXYZ() {
+    mGyroIdx = 0;
+    while(mGyroIdx<3){
         readData();
+    }
+    std::cout << "mGyroXYZ" << std::endl;
+    std::cout << mGyroXYZ[0] <<"   \t"<< mGyroXYZ[1] <<"   \t"<< mGyroXYZ[2] << std::endl;
+}
+
+void MPU9250::flushData(int num) {
+    while(true){
+        getGyroXYZ();
     }
 }

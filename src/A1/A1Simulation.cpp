@@ -65,7 +65,7 @@ void thread2task() {
 }
 
 int main(int argc, char *argv[]) {
-    std::string urdfPath = "\\home\\jaehoon\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
+    std::string urdfPath = "\\home\\ljm\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
     std::string name = "cuteA1";
     raisim::World world;
     double simulationDuration = 3.0;

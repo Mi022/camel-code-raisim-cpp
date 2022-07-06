@@ -67,6 +67,19 @@ set(CANINE_SINGLE_LEG_SOURCES
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
+
+# ====== wheeledRobot ======  #
+set(WHEELEDROBOT_SOURCES
+        src/WheeledRobot/wheeledRobotController.cpp
+        src/WheeledRobot/wheeledRobotSimulation.cpp
+        src/WheeledRobot/wheeledRobot.cpp)
+        #src/WheeledRobot/camel_wheeledRobot.cpp)
+
+
+add_executable(camel-wheeledRobot_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${WHEELEDROBOT_SOURCES})
+target_link_libraries(camel-wheeledRobot_simulation ${CAMEL_LIBS})
+# ====== wheeledRobot ====== /#
+
 ## Simulation /##
 
 ## Operation  ##

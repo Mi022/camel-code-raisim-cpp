@@ -6,5 +6,4 @@
 int main () {
     RE22SC IMU;
 
-
 }

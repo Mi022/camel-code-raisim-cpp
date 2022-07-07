@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <math.h>
 
+#define BETA 0.9
 class RE22SC {
 
 public:
@@ -71,14 +72,18 @@ public:
         }
         std::cout << "Success to initialize USB serial COM communication for RE22SC." << std::endl;
 
-        flushData(10);
+        flushData();
     }
 
     void readData();
-    void nulling();
-    void flushData(int num);
+    void flushData();
 
-    int getRawData() { return mReadedData; }
+    int getReadedData() {return mReadedData;}
+    double getDegreeData();
+    double getRadianData();
+    int getRawReadedData() {return mRawData;}
+    double getRawDegreeData();
+    double getRawRadianData();
 
 
 private:
@@ -88,11 +93,14 @@ private:
     int mLineFeedCode = 10;
     int mCarraigeReturnCode = 13;
     int mReadedData = 0;
+    int mRawData = 0;
+    int mpreviousData = 0;
     int mIdx = 0;
 
     char mReadBuf[1];
 
     bool mIsDataStore = true;
+    bool mFilterFlag = false;
 
     struct termios mTty;
 

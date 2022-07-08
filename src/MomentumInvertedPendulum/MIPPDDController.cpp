@@ -4,9 +4,10 @@
 
 #include "MIPPDDController.h"
 
-void MIPPDDController::setPDGain(double PGain, double DGain) {
-    this->PGain = PGain;
-    this->DGain = DGain;
+void MIPPDDController::setPDDGain(double PGain, double DGain, double DDGain) {
+    this->mPGain = PGain;
+    this->mDGain = DGain;
+    this->mDDGain = DDGain;
 }
 
 void MIPPDDController::generateExternalForce() {
@@ -42,8 +43,8 @@ void MIPPDDController::addNoise() {
     double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001;//0.04
     double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01;//0.6
 
-    position[0] += noisePosition;
-    velocity[0] += noiseVelocity;
+    mPosition[0] += noisePosition;
+    mVelocity[0] += noiseVelocity;
 
 }
 
@@ -55,32 +56,48 @@ void MIPPDDController::doControl() {
 }
 
 void MIPPDDController::setTrajectory() {
-    desiredJointPosition[0] = 0.0;
-    desiredJointVelocity[0] = 0.0;
+    mDesiredJointPosition[0] = 0.0;
+    mDesiredJointVelocity[0] = 0.0;
 }
 
 void MIPPDDController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    mPosition = getRobot()->robot->getGeneralizedCoordinate();
+    mVelocity = getRobot()->robot->getGeneralizedVelocity();
 //    addNoise();
 }
 
 void MIPPDDController::computeControlInput() {
-    positionError[0] = desiredJointPosition[0] - position[0];
-    velocityError[0] = desiredJointVelocity[0] - velocity[0];
-    motorVelocityError = desiredMotorVelocity - velocity[1];
-    torque[1] = -PGain*positionError[0] - DGain*velocityError[0] -0.0254538*motorVelocityError;
+    mPositionError[0] = mDesiredJointPosition[0] - mPosition[0];
+    mVelocityError[0] = mDesiredJointVelocity[0] - mVelocity[0];
+    mMotorVelocityError = mDesiredMotorVelocity - mVelocity[1];
+    mTorque[1] = -mPGain * mPositionError[0] - mDGain * mVelocityError[0] - mDDGain * mMotorVelocityError;
 
-    if(torque[1] > torqueLimit)
+    if(mTorque[1] > mTorqueLimit)
     {
-        torque[1] = torqueLimit;
+        mTorque[1] = mTorqueLimit;
     }
-    else if(torque[1] < -torqueLimit)
+    else if(mTorque[1] < -mTorqueLimit)
     {
-        torque[1] = -torqueLimit;
+        mTorque[1] = -mTorqueLimit;
     }
 }
 
 void MIPPDDController::setControlInput() {
-    getRobot()->robot->setGeneralizedForce(torque);
+    getRobot()->robot->setGeneralizedForce(mTorque);
+}
+
+const Eigen::VectorXd &MIPPDDController::getTorque() const {
+    return mTorque;
+}
+
+const Eigen::VectorXd &MIPPDDController::getDesiredJointPosition() const {
+    return mDesiredJointPosition;
+}
+
+const Eigen::VectorXd &MIPPDDController::getDesiredJointVelocity() const {
+    return mDesiredJointVelocity;
+}
+
+double MIPPDDController::getDesiredMotorVelocity() const {
+    return mDesiredMotorVelocity;
 }

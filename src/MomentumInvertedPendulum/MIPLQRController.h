@@ -16,8 +16,8 @@ public:
 
 
 
-//    raisim::Vec<3> externalForce;
-//    raisim::Vec<3> forcePosition;
+//    raisim::Vec<3> mExternalForce;
+//    raisim::Vec<3> mForcePosition;
 
     double torqueLimit = 3.5;
 

@@ -5,29 +5,24 @@
 #include "RE22SC.h"
 
 void RE22SC::readData() {
-    mReadedData = 0;
+    mReadData = 0;
     while (true) {
         mNumBytes = read(mSerialPort, &mReadBuf, sizeof(mReadBuf));
         if (mNumBytes == 1) {
             if (mReadBuf[0] == mLineFeedCode) {
                 break;
-            } else if (mReadBuf[0] == mCarraigeReturnCode) {
+            } else if (mReadBuf[0] == mCarriageReturnCode) {
                 mIsDataStore = false;
             } else if (mIsDataStore) {
-                mReaded[mIdx] = (mReadBuf[0] - 48);
+                mRead[mIdx] = (mReadBuf[0] - 48);
                 mIdx++;
             }
         }
     }
     for (int i = 0; i < mIdx; i++) {
-        mReadedData += mReaded[i] * pow(10.0, mIdx - i - 1);
+        mReadData += mRead[i] * pow(10.0, mIdx - i - 1);
     }
-    mRawData = mReadedData;
-    lowPassFilter();
-
-    std::cout<<"ReadedData : "<<mReadedData<<std::endl;
-    std::cout<<"DegreeData : "<<getDegreeData()<<std::endl;
-    std::cout<<"RadianData : "<<getRadianData()<<std::endl;
+    mRawData = mReadData;
 
     // reset
     mIdx = 0;
@@ -35,32 +30,43 @@ void RE22SC::readData() {
 }
 
 void RE22SC::lowPassFilter() {
-    if(mFilterFlag)
-    {
-        mReadedData = BETA*mpreviousData + (1-BETA)*mReadedData;
+    if(abs(mPreviousData - mReadData) > REVOLUTE){
+        mFilteredData = mReadData;
+    }else{
+        mFilteredData = BETA * mPreviousData + (1 - BETA) * mReadData;
     }
-    else mFilterFlag = true;
-    mpreviousData = mReadedData;
+    mPreviousData = mFilteredData;
 }
 
-void RE22SC::flushData() {
-    while(true){
+void RE22SC::initializing() {
+    for(int i = 0; i < N_INITIALIZING; i++)
+    {
         readData();
     }
+    while(abs(mPreviousData - mReadData) > DIFFERENCE_INITIALIZING){
+        readData();
+        mPreviousData = mReadData;
+    }
+    std::cout<<"finish initializing RE22SC data"<<std::endl;
+}
+
+void RE22SC::readFilteredData() {
+    readData();
+    lowPassFilter();
 }
 
 double RE22SC::getRawDegreeData() {
-    return mRawData*360.0/1024.0;
+    return mRawData*ENC2DEG;
 }
 
 double RE22SC::getRawRadianData() {
-    return mRawData*2.0*M_PI/1024.0;
+    return mRawData*ENC2RAD;
 }
 
-double RE22SC::getDegreeData() {
-    return mReadedData*360.0/1024.0;
+double RE22SC::getFilteredDegree() {
+    return mFilteredData*ENC2DEG;
 }
 
-double RE22SC::getRadianData() {
-    return mReadedData*2.0*M_PI/1024.0;
+double RE22SC::getFilteredRadian() {
+    return mFilteredData*ENC2RAD;
 }

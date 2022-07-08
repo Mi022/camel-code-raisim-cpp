@@ -14,13 +14,21 @@
 #include <unistd.h>
 #include <math.h>
 
-#define BETA 0.9
+#define DT 0.005
+#define CUT_OFF_FREQUENCY 100
+#define BETA exp(-CUT_OFF_FREQUENCY*DT)
+#define N_INITIALIZING 1000
+#define DIFFERENCE_INITIALIZING 30
+#define REVOLUTE 900
+#define ENC2RAD 2.0*M_PI/1024.0
+#define ENC2DEG 360.0/1024
+//TODD: change Beta to cut-off frequency
 class RE22SC {
 
 public:
     bool isConnected = true;
     bool isTtySet = true;
-    bool isReaded = true;
+    bool isRead = true;
 
     RE22SC() {
         mSerialPort = open("/dev/ttyACM0", O_RDWR);
@@ -68,19 +76,20 @@ public:
         // n is the number of bytes read. n may be 0 if no bytes were received, and can also be -1 to signal an error.
         if (mNumBytes < 0) {
             printf("Error reading: %s", strerror(errno));
-            isReaded = false;
+            isRead = false;
         }
         std::cout << "Success to initialize USB serial COM communication for RE22SC." << std::endl;
 
-        flushData();
+        initializing();
     }
 
     void readData();
-    void flushData();
+    void readFilteredData();
 
-    int getReadedData() {return mReadedData;}
-    double getDegreeData();
-    double getRadianData();
+    int getReadData() {return mReadData;}
+    int getFilteredData() {return mFilteredData;}
+    double getFilteredDegree();
+    double getFilteredRadian();
     int getRawReadedData() {return mRawData;}
     double getRawDegreeData();
     double getRawRadianData();
@@ -89,22 +98,23 @@ public:
 private:
     int mSerialPort;
     int mNumBytes;
-    int mReaded[10];
+    int mRead[10];
     int mLineFeedCode = 10;
-    int mCarraigeReturnCode = 13;
-    int mReadedData = 0;
+    int mCarriageReturnCode = 13;
+    int mReadData = 0;
+    int mFilteredData = 0;
     int mRawData = 0;
-    int mpreviousData = 0;
+    int mPreviousData = 0;
     int mIdx = 0;
 
     char mReadBuf[1];
 
     bool mIsDataStore = true;
-    bool mFilterFlag = false;
 
     struct termios mTty;
 
     void lowPassFilter();
+    void initializing();
 };
 
 #endif //RAISIM_RE22SC_H

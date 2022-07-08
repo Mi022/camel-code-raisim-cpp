@@ -9,22 +9,12 @@
 #include <QApplication>
 #include <cmath>
 
-#include <fstream>
-
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
 std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_momentum_inverted_pendulum_with_incline.urdf";
 std::string name = "MIPI";
 raisim::World world;
-
-std::ofstream myfile1;
-std::ofstream myfile2;
-std::ofstream myfile3;
-std::ofstream myfile4;
-std::ofstream myfile5;
-std::ofstream myfile6;
-std::ofstream myfile7;
 
 double simulationDuration = 25.0;
 double dT = 0.005;
@@ -49,14 +39,6 @@ void raisimSimulation() {
             MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
             MainUI->data_y2_desired[MainUI->data_idx] = 0;
             MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[2];
-
-            myfile1 << robot.getQ()[1] <<"," ;
-            myfile2 << robot.getQD()[1] <<"," ;
-            myfile3 << robot.getQD()[2] <<"," ;
-            myfile4 << robot.getQ()[0] <<"," ;
-            myfile5 << robot.getQD()[0] <<"," ;
-            myfile6 << controller.getEstPlane() <<"," ;
-            myfile7 << controller.torque[2] <<"," ;
             MainUI->data_y3_red[MainUI->data_idx] = robot.getQD()[2];
             MainUI->data_idx += 1;
         }
@@ -70,13 +52,6 @@ void raisimSimulation() {
         MainUI->plotWidget2();
         MainUI->plotWidget3();
         MainUI->data_idx = 0;
-        myfile1.close();
-        myfile2.close();
-        myfile3.close();
-        myfile4.close();
-        myfile5.close();
-        myfile6.close();
-        myfile7.close();
     }
 }
 
@@ -104,13 +79,6 @@ void *rt_simulation_thread(void *arg) {
 }
 
 int main(int argc, char *argv[]) {
-    myfile1.open ("rodAngle.csv");
-    myfile2.open ("rodAngularVelocity.csv");
-    myfile3.open ("motorAngularVelocity.csv");
-    myfile4.open ("tiltAngle.csv");
-    myfile5.open ("tiltAngularVelocity.csv");
-    myfile6.open ("tiltEstimated.csv");
-    myfile7.open ("motorTorque.csv");
     QApplication a(argc, argv);
     MainWindow w;
     raisim::RaisimServer server(&world);

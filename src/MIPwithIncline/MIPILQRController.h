@@ -15,8 +15,8 @@ public:
     raisim::VecDyn velocity = raisim::VecDyn(3);
     raisim::World *robotWorld;
 
-//    raisim::Vec<3> externalForce;
-//    raisim::Vec<3> forcePosition;
+//    raisim::Vec<3> mExternalForce;
+//    raisim::Vec<3> mForcePosition;
 
     double torqueLimit = 3.5;
 

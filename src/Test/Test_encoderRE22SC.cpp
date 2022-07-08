@@ -14,7 +14,7 @@
 #define DT 0.005
 
 extern MainWindow *MainUI;
-pthread_t thread_ploting;
+pthread_t thread_plotting;
 pthread_t thread_encoder;
 
 double oneCyclePlotingTime = 0;
@@ -80,7 +80,7 @@ void *rt_encoder_thread(void *arg){
 int main (int argc, char *argv[]) {
     QApplication a(argc, argv);
     MainWindow w;
-    int thread_id_timeChecker = generate_rt_thread(thread_ploting, rt_simulation_thread, "simulation_thread", 0, 99,
+    int thread_id_timeChecker = generate_rt_thread(thread_plotting, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);
     int thread_id_encoder = generate_rt_thread(thread_encoder, rt_encoder_thread, "encoder_thread", 1, 98,
                                                    NULL);

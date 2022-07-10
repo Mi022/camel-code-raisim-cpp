@@ -5,30 +5,18 @@
 #include "MIPPDController.h"
 
 void MIPPDController::setPDGain(double PGain, double DGain) {
-    this->PGain = PGain;
-    this->DGain = DGain;
+    this->mPGain = PGain;
+    this->mDGain = DGain;
 }
 
 void MIPPDController::generateExternalForce() {
-    raisim::Vec<3> externalForce;
-    raisim::Vec<3> forcePosition;
+    raisim::Vec<3> externalForce = {0.0, 1.9, 0.0};
+    raisim::Vec<3> forcePosition = {0.0, 0.0, 0.08};
 
-    externalForce.setZero();
-    forcePosition.setZero();
-
-    forcePosition[0] = 0.0;
-    forcePosition[1] = 0.0;
-    forcePosition[2] = 0.08;
-
-    externalForce[0] = 0.0;
-    externalForce[1] = 1.9; //maximum external force for once
-    externalForce[2] = 0.0;
-
-    if(i%400 == 0 || i == 0){
-        std::cout<<"force"<<std::endl;
+    if(mIteration%FORCE_DURATION == 0 || mIteration == 0){
         getRobot()->robot->setExternalForce(1, forcePosition, externalForce);
     }
-    i++;
+    mIteration++;
 }
 
 void MIPPDController::addNoise() {
@@ -37,14 +25,13 @@ void MIPPDController::addNoise() {
     // random_device 를 통해 난수 생성 엔진을 초기화 한다.
     std::mt19937 gen(rd());
 
-    // 0 부터 99 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
-    std::uniform_int_distribution<int> dis(0, 200);
-    double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001;//0.05
-    double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01;//0.6
+    // -100 부터 100 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
+    std::uniform_int_distribution<int> dis(-RANDOM_BOUNDARY, RANDOM_BOUNDARY);
+    double noisePosition = double(dis(gen)) / RANDOM_BOUNDARY * MAX_POSITION_NOISE;
+    double noiseVelocity = double(dis(gen)) / RANDOM_BOUNDARY * MAX_VELOCITY_NOISE;
 
-    position[0] += noisePosition;
-    velocity[0] += noiseVelocity;
-
+    mPosition[0] += noisePosition;
+    mVelocity[0] += noiseVelocity;
 }
 
 void MIPPDController::doControl() {
@@ -55,33 +42,37 @@ void MIPPDController::doControl() {
 }
 
 void MIPPDController::setTrajectory() {
-    desiredJointPosition[0] = 0.0;
-    desiredJointVelocity[0] = 0.0;
+    mDesiredRodPosition = 0.0;
+    mDesiredRodVelocity = 0.0;
 }
 
 void MIPPDController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    mPosition = getRobot()->robot->getGeneralizedCoordinate();
+    mVelocity = getRobot()->robot->getGeneralizedVelocity();
 
     addNoise();
 }
 
 void MIPPDController::computeControlInput() {
-    positionError[0] = desiredJointPosition[0] - position[0];
-    velocityError[0] = desiredJointVelocity[0] - velocity[0];
+    mPositionError = mDesiredRodPosition - mPosition[0];
+    mVelocityError = mDesiredRodVelocity - mVelocity[0];
 
-    torque[1] = -PGain*positionError[0] - DGain*velocityError[0];
+    mTorque[1] = -mPGain * mPositionError - mDGain * mVelocityError;
 
-    if(torque[1] > torqueLimit)
+    if(mTorque[1] > mTorqueLimit)
     {
-        torque[1] = torqueLimit;
+        mTorque[1] = mTorqueLimit;
     }
-    else if(torque[1] < -torqueLimit)
+    else if(mTorque[1] < -mTorqueLimit)
     {
-        torque[1] = -torqueLimit;
+        mTorque[1] = -mTorqueLimit;
     }
 }
 
 void MIPPDController::setControlInput() {
- getRobot()->robot->setGeneralizedForce(torque);
+ getRobot()->robot->setGeneralizedForce(mTorque);
+}
+
+const Eigen::VectorXd &MIPPDController::getTorque() const {
+    return mTorque;
 }

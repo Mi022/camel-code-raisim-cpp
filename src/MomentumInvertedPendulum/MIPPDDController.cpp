@@ -33,7 +33,6 @@ void MIPPDDController::addNoise() {
 
     mPosition[0] += noisePosition;
     mVelocity[0] += noiseVelocity;
-
 }
 
 void MIPPDDController::doControl() {

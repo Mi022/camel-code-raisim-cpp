@@ -38,7 +38,6 @@ void MIPILQRController::findS() {
     mS = mA.transpose() * (snext - snext * mB / temp * mB.transpose() * snext) * mA + mQ;
     while(!IsSEnough(mS, snext)){
          iteration++;
-         cout<<"check: "<<iteration<<endl;
          if(iteration > 10000)
          {
              mIsSExist = false;
@@ -46,7 +45,6 @@ void MIPILQRController::findS() {
          }
          snext = mS;
          mS = mA.transpose() * (snext - snext * mB / (mB.transpose() * snext * mB + mR) * mB.transpose() * snext) * mA + mQ;
-         cout<<"check S :\n"<<mS<<endl;
     }
 }
 
@@ -100,8 +98,6 @@ void MIPILQRController::addNoise() {
 }
 
 void MIPILQRController::inclinePDcontrol() {
-    //set desiredIncline mPosition
-
 //    setInclineUnitTrajectory(0.05, 0.0);
 //    setInclineSinTrajectory(0.05, 10.0);
     setInclineRisingTrajectory(0.05, 10.0);

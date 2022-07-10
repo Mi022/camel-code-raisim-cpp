@@ -27,7 +27,7 @@ public:
         mTorque.setZero();
         mS.setZero();
         findS();
-        if(mSExist) {
+        if(mIsSExist) {
             findK();
         }
         else{

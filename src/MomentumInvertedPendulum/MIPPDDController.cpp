@@ -11,25 +11,13 @@ void MIPPDDController::setPDDGain(double PGain, double DGain, double DDGain) {
 }
 
 void MIPPDDController::generateExternalForce() {
-    raisim::Vec<3> externalForce;
-    raisim::Vec<3> forcePosition;
+    raisim::Vec<3> externalForce = {0.0, 9.6, 0.0};
+    raisim::Vec<3> forcePosition = {0.0, 0.0, 0.08};
 
-    externalForce.setZero();
-    forcePosition.setZero();
-
-    forcePosition[0] = 0.0;
-    forcePosition[1] = 0.0;
-    forcePosition[2] = 0.08;
-
-    externalForce[0] = 0.0;
-    externalForce[1] = 9.6; //maximum external force for once
-    externalForce[2] = 0.0;
-
-    if(i%400 == 0 || i == 0){
-        std::cout<<"force"<<std::endl;
+    if(mIteration%FORCE_DURATION == 0 || mIteration == 0){
         getRobot()->robot->setExternalForce(1, forcePosition, externalForce);
     }
-    i++;
+    mIteration++;
 }
 
 void MIPPDDController::addNoise() {
@@ -38,10 +26,10 @@ void MIPPDDController::addNoise() {
     // random_device 를 통해 난수 생성 엔진을 초기화 한다.
     std::mt19937 gen(rd());
 
-    // 0 부터 99 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
-    std::uniform_int_distribution<int> dis(0, 200);
-    double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001;//0.04
-    double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01;//0.6
+    // -100 부터 100 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
+    std::uniform_int_distribution<int> dis(-RANDOM_BOUNDARY, RANDOM_BOUNDARY);
+    double noisePosition = (double(dis(gen)) / RANDOM_BOUNDARY ) * MAX_POSITION_NOISE;
+    double noiseVelocity = (double(dis(gen)) / RANDOM_BOUNDARY ) * MAX_VELOCITY_NOISE;
 
     mPosition[0] += noisePosition;
     mVelocity[0] += noiseVelocity;
@@ -50,6 +38,7 @@ void MIPPDDController::addNoise() {
 
 void MIPPDDController::doControl() {
     updateState();
+    addNoise();
     generateExternalForce();
     computeControlInput();
     setControlInput();
@@ -63,7 +52,6 @@ void MIPPDDController::setTrajectory() {
 void MIPPDDController::updateState() {
     mPosition = getRobot()->robot->getGeneralizedCoordinate();
     mVelocity = getRobot()->robot->getGeneralizedVelocity();
-//    addNoise();
 }
 
 void MIPPDDController::computeControlInput() {

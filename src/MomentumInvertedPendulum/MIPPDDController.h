@@ -7,6 +7,11 @@
 
 #include "include/CAMEL/Controller.h"
 
+#define FORCE_DURATION 400
+#define MAX_POSITION_NOISE 0.001 //withstand 0.04
+#define MAX_VELOCITY_NOISE 0.01 //withstand 0.6
+#define RANDOM_BOUNDARY 100
+
 class MIPPDDController : public Controller{
 public:
 
@@ -15,7 +20,7 @@ public:
         setPDDGain(6.08431, 0.607407, 0.0254538);
         setTorqueLimit(3.5);
         mTorque.setZero();
-        i = 0;
+        mIteration = 0;
     }
 
     void doControl() override;
@@ -49,7 +54,7 @@ private:
     double mDDGain;
     double mTorqueLimit;
 
-    int i;
+    int mIteration;
     void generateExternalForce();
     void addNoise();
 };

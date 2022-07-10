@@ -5,65 +5,53 @@
 #include "MIPMPCController.h"
 
 void MIPMPCController::setQGain(double Q11, double Q22, double Q33) {
-    Q <<    Q11, 0.0, 0.0,
+    mQ <<    Q11, 0.0, 0.0,
             0.0, Q22, 0.0,
             0.0, 0.0, Q33;
 }
 
 void MIPMPCController::setRGain(double R) {
-    this -> R = R;
+    this -> mR = R;
 }
 
 void MIPMPCController::updateU(){
-    U = U - stepSize*DJ;
-//    std::cout<<"test U: "<<U<<std::endl;
+    mU = mU - STEP_SIZE*mDJ;
 }
 
 void MIPMPCController::computeDJ(){
-    VectorXd Udelta = VectorXd(MPCHorizen);
-    for(int i = 0; i<MPCHorizen; i++){
-        Udelta = U;
-        Udelta[i] = U[i] + delta;
-        DJ[i] = (computeJ(Udelta) - computeJ(U))/delta;
-//        std::cout<<" cost function: "<<computeJ(Udelta) <<"  "<< computeJ(U)<<std::endl;
+    VectorXd Udelta = VectorXd(mMPCHorizen);
+    for(int i = 0; i<mMPCHorizen; i++){
+        Udelta = mU;
+        Udelta[i] = mU[i] + DELTA;
+        mDJ[i] = (computeJ(Udelta) - computeJ(mU))/DELTA;
     }
-//    std::cout<<"test DJ : "<<DJ<<std::endl;
 }
 
 double MIPMPCController::computeJ(VectorXd U) {
     double J = 0;
-    X_temp = X;
-    for(int i = 0; i<MPCHorizen; i++){
+    mX_temp = mX;
+    for(int i = 0; i<mMPCHorizen; i++){
         stateSpaceEquation(U[i]);
-        X_bar = X_temp;
-        X_bar[0] -= desirePosition;
-        J += X_temp.transpose()*Q*X_temp + U[i]*R*U[i];
+        mX_bar = mX_temp;
+        mX_bar[0] -= mDesirePosition;
+        J += mX_temp.transpose()*mQ*mX_temp + U[i]*mR*U[i];
     }
-//    std::cout<<"test J : "<<J<<std::endl;
     return J;
 }
 
 void MIPMPCController::stateSpaceEquation(double u) {
-    double theta_0 = X_temp[0];
-    X_temp[0] = theta_0 + dT*X_temp[1] + dT*dT/2*132.1654*sin(theta_0)  - dT*dT/0.0035*u;
-    X_temp[1] = 132.1654*dT*sin(theta_0) + X_temp[1] -dT/0.001741*u;
-    X_temp[2] = -132.1654*dT*sin(theta_0) + X_temp[2] + dT*4.8884e+03*u;
-
-//    std::cout<<"test X next: "<<X<<std::endl;
+    double theta_0 = mX_temp[0];
+    mX_temp[0] = theta_0 + mDT*mX_temp[1] + mDT*mDT/2*132.1654*sin(theta_0)  - mDT*mDT/0.0035*u;
+    mX_temp[1] = 132.1654*mDT*sin(theta_0) + mX_temp[1] -mDT/0.001741*u;
+    mX_temp[2] = -132.1654*mDT*sin(theta_0) + mX_temp[2] + mDT*4.8884e+03*u;
 }
 
 bool MIPMPCController::IsBreak(int i){
-    double RMS = pow((DJ.transpose()*DJ)(0)/MPCHorizen,0.5);
-    if(RMS < terminateCondition){
-        cout<<"DJ : "<<DJ<<endl;
-        cout<<"RMS : "<<RMS<<endl;
-        cout<<"Iteration : "<<i<<endl;
-        cout<<"terminate Condition"<<endl;
+    double RMS = pow((mDJ.transpose()*mDJ)(0)/mMPCHorizen,0.5);
+    if(RMS < TERMINATE_CONDITION){
         return false;
     }
-    if(i> iteration){
-        cout<<"RMS : "<<RMS<<endl;
-        cout<<"maximun iteration"<<endl;
+    if(i> ITERATION){
         return false;
     }
     return true;
@@ -72,21 +60,20 @@ bool MIPMPCController::IsBreak(int i){
 void MIPMPCController::doControl() {
     updateState();
     computeControlInput();
-//    std::cout<<"test"<<std::endl;
     setControlInput();
 }
 
 void MIPMPCController::setTrajectory() {
-
+    mDesirePosition = 0.2;
 }
 
 void MIPMPCController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    mPosition = getRobot()->robot->getGeneralizedCoordinate();
+    mVelocity = getRobot()->robot->getGeneralizedVelocity();
 
-    X[0] = position[0];
-    X[1] = velocity[0];
-    X[2] = velocity[1];
+    mX[0] = mPosition[0];
+    mX[1] = mVelocity[0];
+    mX[2] = mVelocity[1];
 }
 
 void MIPMPCController::computeControlInput() {
@@ -99,20 +86,27 @@ void MIPMPCController::computeControlInput() {
         doing = IsBreak(i);
         i++;
     }
-    std::cout<<"torques : "<<U[0]<<std::endl;
-    torque[1] = U[0];
+    mTorque[1] = mU[0];
 
-    if(torque[1] > torqueLimit)
+    if(mTorque[1] > mTorqueLimit)
     {
-        torque[1] = torqueLimit;
+        mTorque[1] = mTorqueLimit;
     }
-    else if(torque[1] < -torqueLimit)
+    else if(mTorque[1] < -mTorqueLimit)
     {
-        torque[1] = -torqueLimit;
+        mTorque[1] = -mTorqueLimit;
     }
 }
 
 void MIPMPCController::setControlInput() {
-    getRobot()->robot->setGeneralizedForce(torque);
-    U.setZero();
+    getRobot()->robot->setGeneralizedForce(mTorque);
+    mU.setZero();
+}
+
+const VectorXd &MIPMPCController::getTorque() const {
+    return mTorque;
+}
+
+void MIPMPCController::setTorqueLimit(double torqueLimit) {
+    mTorqueLimit = torqueLimit;
 }

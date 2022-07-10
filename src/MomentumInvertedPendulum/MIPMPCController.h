@@ -7,28 +7,21 @@
 
 #include "include/CAMEL/Controller.h"
 
+#define DELTA 1e-6
+#define STEP_SIZE 0.01
+#define ITERATION 1000
+#define TERMINATE_CONDITION 1e-5
+
 using namespace Eigen;
-using namespace std;
+
 class MIPMPCController : public Controller {
 public:
-    VectorXd torque = VectorXd(2);
-    raisim::VecDyn position = raisim::VecDyn(2);
-    raisim::VecDyn velocity = raisim::VecDyn(2);
-    double desirePosition = 0.2;
-
-    double torqueLimit = 3.5;
-
     MIPMPCController(Robot *robot, double dT) : Controller(robot) {
-        U.setZero();
-        torque.setZero();
-        this->dT = dT;
+        mU.setZero();
+        mTorque.setZero();
+        this->mDT = dT;
         setQGain(1.0, 0.001, 0.001);
         setRGain(0.05);
-
-        delta = 1e-6;
-        stepSize = 0.01;
-        iteration = 1000;
-        terminateCondition = 1e-5;
     }
 
     void doControl() override;
@@ -37,21 +30,24 @@ public:
     void computeControlInput() override;
     void setControlInput() override;
 
-private:
-    Matrix3d Q;
-    double R;
-    double stepSize;
-    double delta;
-    int MPCHorizen = 5;
-    int iteration;
-    double terminateCondition;
+    const VectorXd &getTorque() const;
+    void setTorqueLimit(double torqueLimit);
 
-    VectorXd U = VectorXd(MPCHorizen);
-    VectorXd X = VectorXd(3);
-    VectorXd X_temp = VectorXd(3);
-    VectorXd X_bar = VectorXd(3);
-    VectorXd DJ = VectorXd(MPCHorizen);
-    double dT;
+private:
+    raisim::VecDyn mPosition = raisim::VecDyn(2);
+    raisim::VecDyn mVelocity = raisim::VecDyn(2);
+    VectorXd mTorque = VectorXd(2);
+    double mTorqueLimit = 3.5;
+    double mDesirePosition;
+    Matrix3d mQ;
+    double mR;
+    int mMPCHorizen = 5;
+    VectorXd mU = VectorXd(mMPCHorizen);
+    VectorXd mX = VectorXd(3);
+    VectorXd mX_temp = VectorXd(3);
+    VectorXd mX_bar = VectorXd(3);
+    VectorXd mDJ = VectorXd(mMPCHorizen);
+    double mDT;
 
     void setQGain(double Q11, double Q22, double Q33);
     void setRGain(double R);
@@ -60,7 +56,6 @@ private:
     double computeJ(VectorXd U);
     void stateSpaceEquation(double u);
     bool IsBreak(int i);
-
 };
 
 

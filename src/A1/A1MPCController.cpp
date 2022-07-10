@@ -5,7 +5,7 @@
 #include "A1MPCController.h"
 
 #define BIG_NUMBER 5e10
-#define F_MAX 120
+#define F_MAX 240
 #define MU 0.6
 
 char var_elim[2000];
@@ -42,7 +42,7 @@ void A1MPCController::updateState(){
 void A1MPCController::setTrajectory() {
     std::cout << "Set trajectory function" << std::endl;
     double tempXd[13] = {0.f, 0.f, 0.f,
-                         0.f, 0.f, 0.3590,
+                         0.f, 0.f, 0.369,
                          0.f, 0.f, 0.f,
                          0.f, 0.f, 0.f,
                          0.f};
@@ -53,8 +53,9 @@ void A1MPCController::setTrajectory() {
             xd(13*i+j,0) = tempXd[j];
         }
     }
-    desiredPosition = xd(5,0);
-    desiredVelocity = xd(11,0);
+    desiredPositionX = xd(3,0);
+    desiredPositionY = xd(4,0);
+    desiredPositionZ = xd(5,0);
 }
 
 void A1MPCController::getMetrices(){
@@ -66,15 +67,16 @@ void A1MPCController::getMetrices(){
 
     //weights
     Eigen::Matrix<double, 13,1> weightMat;
-    weightMat << 0, 0, 0,
-                 0, 0, 4,
-                 0, 0, 0,
-                 0, 0, 1,
+    weightMat << 0.5, 0.5, 1,
+                 10, 2, 50,
+                 0, 0.1, 1,
+                 0.1, 5, 0.2,
                  0.f;
     L.diagonal() = weightMat.replicate(mMPCHorizon,1);
 
     H = 2*(Bqp.transpose()*L*Bqp + alpha*K);
     g = 2*Bqp.transpose()*L*(Aqp*x0 - xd);
+
 
     int k = 0;
     for(int i = 0; i < mMPCHorizon; i++)
@@ -105,6 +107,7 @@ void A1MPCController::getMetrices(){
     {
         fmat.block(i*5,i*3,5,3) = f_block; //Such like diagonal matrix
     }
+
 }
 
 int8_t near_zero(float a)
@@ -197,7 +200,6 @@ void A1MPCController::qpSolver(){
         {
             if(near_one(c_row[j])) //f_block third column values
             {
-                //std::cout << i << "\t" << j << "\t" <<c_row[j] << std::endl;
                 new_vars -= 3;
                 new_cons -= 5;
                 int cs = (j*5)/3 -3;
@@ -300,14 +302,13 @@ void A1MPCController::qpSolver(){
     }
 
     // [Fx,Fy,Fz]
-    std::cout << "[F values] " << std::endl;
     for(int leg = 0; leg < 4; leg++)
     {
-        std::cout << "Leg " << leg+1 << ": ";
         for(int axis = 0; axis < 3; axis++)
         {
+
             f[leg][axis] = q_soln[leg*3 + axis];
-            std::cout << f[leg][axis] << "\t";
+            std::cout << f[leg][axis] << "  ";
         }
         std::cout << std::endl;
     }
@@ -333,11 +334,12 @@ void A1MPCController::computeControlInput() {
     getJacobian(robotJacobian[2], position[13],position[14],position[15],1);
     getJacobian(robotJacobian[3], position[16],position[17],position[18],-1);
 
+
     for(int i=0; i<4; i++)
     {
         robotJacobian[i].transposeInPlace();
         robottorque[i] = robotJacobian[i]*f[i];
-        torque[i*3+6] = 0;
+        torque[i*3+6] = robottorque[i][0];
         torque[i*3+7] = robottorque[i][1];
         torque[i*3+8] = robottorque[i][2];
     }
@@ -354,7 +356,6 @@ void A1MPCController::setControlInput() {
             torque[i] = -torqueLimit;
         }
     }
-    std::cout << torque << std::endl;
     getRobot()->robot->setGeneralizedForce(torque);
 }
 
@@ -391,16 +392,24 @@ void A1MPCController::quat_to_euler(Eigen::Matrix<double,4,1>& quat, Eigen::Matr
 }
 
 void A1MPCController::ss_mats(Eigen::Matrix<double,13,13>& A, Eigen::Matrix<double,13,12>& B){
+    Eigen::Matrix<double,3,3> R_yaw;
+    double yc = cos(q[2]);
+    double ys = sin(q[2]);
+
+    R_yaw <<  yc,  -ys,   0,
+            ys,  yc,   0,
+            0,   0,   1;
+
     A.setZero();
     A(3,9) = 1.f;
     A(4,10) = 1.f;
     A(5,11) = 1.f;
     A(11,12) = 1.f;
+    A.block(0,6,3,3) = R_yaw.transpose();
 
-    Eigen::Matrix<double,3,3> I_world;
-    I_world << 0.01683993, 0, 0,
-               0, 0.056579028, 0,
-               0, 0, 0.064713601;
+    raisim::Mat<3,3> bdyInertia = getRobot()->robot->getInertia()[0];
+    Eigen::Matrix<double,3,3> I_world = bdyInertia.e();
+    I_world = R_yaw*I_world*R_yaw.transpose();
     Eigen::Matrix<double,3,3> I_inv = I_world.inverse();
 
     auto FRfootFrameIndex = getRobot()->robot->getFrameIdxByName("FR_foot_fixed");
@@ -470,22 +479,20 @@ void A1MPCController::c2qp(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,1
     }
 }
 
-void A1MPCController::getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, bool side){
+void A1MPCController::getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side){
     double s1 = std::sin(hip);
     double s2 = std::sin(thigh);
-    double s3 = std::sin(calf);
 
     double c1 = std::cos(hip);
     double c2 = std::cos(thigh);
-    double c3 = std::cos(calf);
 
-    double s32 = s3*c2-c3*s2;
-    double c32 = c3*c2+s3*s2;
+    double s32 = std::sin(calf+thigh);
+    double c32 = std::cos(calf+thigh);
 
-    J << 0,                             -l2*c2-l3*c32,        l3*c32,
-         side*l1*s1+l2*c1*c2+l3*c1*c32, -l2*s1*s2+l3*s1*s32, -l3*s1*s32,
-         (-1)*side*l1*c1-l2*s1*c2-l3*s1*c32, -l2*c1*s2+l3*c1*s32, -l3*c1*s32;
-
+    //right leg side = 1 / left leg side = -1
+    J << 0,                             l2*c2+l3*c32,        l3*c32,
+    (-1)*side*l1*s1-l2*c1*c2-l3*c1*c32, l2*s1*s2+l3*s1*s32, l3*s1*s32,
+         side*l1*c1-l2*s1*c2-l3*s1*c32, -l2*c1*s2-l3*c1*s32, -l3*c1*s32;
 }
 
 

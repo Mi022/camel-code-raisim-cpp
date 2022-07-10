@@ -32,6 +32,7 @@ public:
         Aqp.setZero();
         Bqp.setZero();
         xd.setZero();
+        torque.setZero();
 
         updateState();
         mTrajectoryGenerator.updateTrajectory(position[0], getRobot()->getWorldTime(), 1.0);

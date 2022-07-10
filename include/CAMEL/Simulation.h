@@ -14,7 +14,8 @@ public:
     Simulation(raisim::World *world, double dT) {
         this->mWorld = world;
         mWorld->setTimeStep(dT);
-        mWorld->addGround();
+        auto ground = mWorld->addGround(0, "gnd");
+        ground->setAppearance("wheat");
     }
 
 private:

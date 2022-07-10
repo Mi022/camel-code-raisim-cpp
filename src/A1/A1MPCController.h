@@ -18,7 +18,7 @@ public:
     raisim::VecDyn velocity = raisim::VecDyn(18);
     raisim::VecDyn torque = raisim::VecDyn(18);
 
-    double l1 = 0.04;
+    double l1 = 0.085;
     double l2 = 0.2;
     double l3 = 0.2;
 
@@ -27,8 +27,10 @@ public:
     Eigen::Matrix<double,3,3> robotJacobian[4];
     Eigen::Matrix<double,3,1> robottorque[4];
 
-    double desiredPosition;
-    double desiredVelocity;
+
+    double desiredPositionX = 0.f;
+    double desiredPositionY = 0.f;
+    double desiredPositionZ = 0.f;
 
     A1MPCController(Robot *robot, double dT) : Controller(robot){
         mDT = dT;
@@ -57,15 +59,15 @@ public:
     void ss_mats(Eigen::Matrix<double,13,13>& Ac, Eigen::Matrix<double,13,12>& Bc);
     void c2qp(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,13,12> B);
     void matrix_to_real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
-    void getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, bool side);
+    void getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side);
 
 private:
-    double mLumpedMass = 11.f;
+    double mLumpedMass = 30;
     double mGravity = -9.81;
-    int mMPCHorizon = 10;
+    int mMPCHorizon = 5;
     double mDT;
 
-    double alpha = 1e-6;
+    double alpha = 1e-10;
 
     Eigen::Matrix<double, 4, 1> quat;
     Eigen::Matrix<double, 3, 1> p;

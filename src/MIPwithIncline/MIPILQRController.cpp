@@ -8,45 +8,45 @@
 using namespace std;
 
 void MIPILQRController::setMatrix() {
-    A <<    1.00165, 0.005, 0.0,
+    mA <<    1.00165, 0.005, 0.0,
             0.6606, 1.0, 0.0,
             -0.6606, 0.0, 1.0;
-    B <<    0.00718,
+    mB <<    0.00718,
             -2.872,
             24.442;
 }
 void MIPILQRController::setSNGain(double SN11, double SN22, double SN33) {
-    SN<<    SN11, 0.0, 0.0,
+    mSN<<    SN11, 0.0, 0.0,
             0.0, SN22, 0.0,
             0.0, 0.0, SN33;
 }
 
 void MIPILQRController::setQGain(double Q11, double Q22, double Q33) {
-    Q <<    Q11, 0.0, 0.0,
+    mQ <<    Q11, 0.0, 0.0,
             0.0, Q22, 0.0,
             0.0, 0.0, Q33;
 }
 
 void MIPILQRController::setRGain(double R) {
-    this -> R = R;
+    this -> mR = R;
 }
 
 void MIPILQRController::findS() {
     int iteration = 0;
-    Eigen::Matrix3d snext = SN;
-    double temp = B.transpose() * snext * B + R;
-    S = A.transpose() * (snext - snext * B / temp * B.transpose() * snext) * A + Q;
-    while(!IsSEnough(S, snext)){
+    Eigen::Matrix3d snext = mSN;
+    double temp = mB.transpose() * snext * mB + mR;
+    mS = mA.transpose() * (snext - snext * mB / temp * mB.transpose() * snext) * mA + mQ;
+    while(!IsSEnough(mS, snext)){
          iteration++;
          cout<<"check: "<<iteration<<endl;
          if(iteration > 10000)
          {
-             SExist = false;
+             mIsSExist = false;
              break;
          }
-         snext = S;
-         S = A.transpose() * (snext - snext * B / (B.transpose() * snext * B + R) * B.transpose() * snext) * A + Q;
-         cout<<"check S :\n"<<S<<endl;
+         snext = mS;
+         mS = mA.transpose() * (snext - snext * mB / (mB.transpose() * snext * mB + mR) * mB.transpose() * snext) * mA + mQ;
+         cout<<"check S :\n"<<mS<<endl;
     }
 }
 
@@ -65,31 +65,17 @@ bool MIPILQRController::IsSEnough(Eigen::Matrix3d S, Eigen::Matrix3d Snext) {
     }
 }
 void MIPILQRController::findK() {
-    double temp = B.transpose()*S*B + R;
-    K = B.transpose()*S*A/temp;
-    cout<<"K : "<<K<<endl;
+    double temp = mB.transpose()*mS*mB + mR;
+    mK = mB.transpose()*mS*mA/temp;
 }
 
 void MIPILQRController::generateExternalForce() {
-    raisim::Vec<3> externalForce;
-    raisim::Vec<3> forcePosition;
+    raisim::Vec<3> externalForce = {0.0, 9.6, 0.0};
+    raisim::Vec<3> forcePosition = {0.0, 0.0, 0.08};
 
-    externalForce.setZero();
-    forcePosition.setZero();
-
-    forcePosition[0] = 0.0;
-    forcePosition[1] = 0.0;
-    forcePosition[2] = 0.08;
-
-    externalForce[0] = 0.0;
-    externalForce[1] = 9.6;
-    externalForce[2] = 0.0;
-
-    if(i%400 == 0 || i == 0){
-        std::cout<<"force"<<std::endl;
+    if(mItertaion%FORCE_DURATION == 0 || mItertaion == 0){
         getRobot()->robot->setExternalForce(1, forcePosition, externalForce);
     }
-    i++;
 }
 
 void MIPILQRController::addNoise() {
@@ -99,69 +85,82 @@ void MIPILQRController::addNoise() {
     std::mt19937 gen(rd());
 
     // 0 부터 200 까지 균등하게 나타나는 난수열을 생성하기 위해 균등 분포 정의.
-    std::uniform_int_distribution<int> dis(0, 200);
-    double noisePosition = (double(dis(gen)) / 100.0 - 1.0) * 0.001; //0.15
-    double noiseVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.01; //1.4
-    double noiseMotorVelocity = (double(dis(gen)) / 100.0 - 1.0) * 0.001; //35.5
+    std::uniform_int_distribution<int> dis(-RANDOM_BOUNDARY, RANDOM_BOUNDARY);
+    double noisePosition = double(dis(gen)) / RANDOM_BOUNDARY * MAX_POSITION_NOISE; //0.15
+    double noiseVelocity = double(dis(gen)) / RANDOM_BOUNDARY * MAX_VELOCITY_NOISE; //1.4
+    double noiseMotorVelocity = double(dis(gen)) / RANDOM_BOUNDARY * MAX_MOTOR_VELOCITY_NOISE; //35.5
 
-    position[0] += noisePosition;
-    velocity[0] += noiseVelocity;
-    velocity[1] += noiseMotorVelocity;
+    mPosition[1] += noisePosition;
+    mVelocity[1] += noiseVelocity;
+    mVelocity[2] += noiseMotorVelocity;
+
+    mX[0] = mPosition[1] + mEstPlane;
+    mX[1] = mVelocity[1];
+    mX[2] = mVelocity[2];
 }
 
 void MIPILQRController::inclinePDcontrol() {
-    //set desired position
-    double amplitude = 0.05;
-    double period = 2*M_PI;//1.5
-    double alpha = period/(2*M_PI);
-//    double desiredPosition = temp;
-//    double desiredVelocity = 0;
-//
-//    if(i%1000 < 100)
-//    {
-//        desiredPosition = amplitude*sin(robotWorld->getWorldTime()/alpha - M_PI/2) + amplitude;
-//        desiredVelocity = amplitude/alpha*cos(robotWorld->getWorldTime()/alpha);
-//        temp = desiredPosition;
-//    }
-    double desiredPosition = 1.7;//rad
-    double desiredVelocity = 0;
+    //set desiredIncline mPosition
 
-    desiredPosition = amplitude*sin(robotWorld->getWorldTime()/alpha) + amplitude;
-    desiredVelocity = amplitude/alpha*cos(robotWorld->getWorldTime()/alpha);
+//    setInclineUnitTrajectory(0.05, 0.0);
+//    setInclineSinTrajectory(0.05, 10.0);
+    setInclineRisingTrajectory(0.05, 10.0);
 
-    //compute torque
-    double PositionError = desiredPosition - inclineX[0];
-    double VelocityError = desiredVelocity - inclineX[1];
+    double PGain = 200.0;
+    double DGain = 40.0;
+    double PositionError = mDesiredInclinePosition - mInclineX[0];
+    double VelocityError = mDesiredInclineVelocity - mInclineX[1];
 
-    torque[0] = 100.0*PositionError + 20.0*VelocityError;
-    i++;
+    mTorque[0] = PGain*PositionError + DGain*VelocityError;
+    mItertaion++;
+}
+
+void MIPILQRController::setInclineUnitTrajectory(double desiredPosition, double desiredVelocity) {
+    mDesiredInclinePosition = desiredPosition;
+    mDesiredInclineVelocity = desiredVelocity;
+}
+
+void MIPILQRController::setInclineSinTrajectory(double amplitude, double period) {
+    mDesiredInclinePosition = amplitude*sin(robotWorld->getWorldTime()/period*(2*M_PI)) + amplitude;
+    mDesiredInclineVelocity = amplitude/period*(2*M_PI)*cos(robotWorld->getWorldTime()/period*(2*M_PI));
+}
+
+void MIPILQRController::setInclineRisingTrajectory(double stepSize, double period) {
+    int intPeriod = period/mDT;
+    if(mItertaion == 0)
+    {
+        mReference = mInclineX[0] + stepSize/2;
+    }
+    if((mItertaion%intPeriod) < (intPeriod/2))
+    {
+        mDesiredInclinePosition = stepSize/2*sin(robotWorld->getWorldTime()/period*(2*M_PI) - M_PI/2) + mReference;
+        mDesiredInclineVelocity = stepSize/2/period*(2*M_PI)*cos(robotWorld->getWorldTime()/period*(2*M_PI));
+    }else{
+        mReference = mInclineX[0] + stepSize/2;
+        mDesiredInclineVelocity = 0.0;
+    }
 }
 
 void MIPILQRController::calEstPlane() {
     double PGain = 100.0;
     double DGain = 40.0;
-    estPlane = asin((0.001741*(rodAcc + PGain*X[0] + DGain*X[1]))/0.2301) - position[1];
-//    estPlane = asin((0.001741*rodAcc)/0.2301) - position[1];
+    mEstPlane = asin((0.001741*(mRodAcc + PGain*mX[0] + DGain*mX[1]))/0.2301) - mPosition[1];
 }
 
 bool MIPILQRController::IsTorqueZero() {
-    if(abs(torque[2]) < 1e-6)
+    if(abs(mTorque[2]) < 1e-6)
     {
-        std::cout<<"torque : "<<torque[2]<<"\ttime: "<<robotWorld->getWorldTime()<<std::endl;
         return true;
     }
     return false;
 }
 
-double MIPILQRController::getEstPlane() {
-    return estPlane;
-}
-
 void MIPILQRController::doControl() {
     updateState();
+//    addNoise();
     inclinePDcontrol();
 //    generateExternalForce();
-    if(SExist)
+    if(mIsSExist)
     {
         computeControlInput();
         setControlInput();
@@ -169,46 +168,54 @@ void MIPILQRController::doControl() {
 }
 
 void MIPILQRController::updateState() {
-    double tempVelo = velocity[1];
-//    for ideal
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
-    rodAcc = (velocity[1] - tempVelo)/0.005;
-
-//    for adding noise
-//    addNoise();
+    double tempVelo = mVelocity[1];
+    mPosition = getRobot()->robot->getGeneralizedCoordinate();
+    mVelocity = getRobot()->robot->getGeneralizedVelocity();
+    mRodAcc = (mVelocity[1] - tempVelo)/0.005;
 
     //for plane angle
     if(IsTorqueZero())
     {
         calEstPlane();
     }
-    X[0] = position[1] + estPlane;
-    X[1] = velocity[1];
-    X[2] = velocity[2];
+    mX[0] = mPosition[1] + mEstPlane;
+    mX[1] = mVelocity[1];
+    mX[2] = mVelocity[2];
 
     //incline state
-    inclineX[0] = position[0];
-    inclineX[1] = velocity[0];
+    mInclineX[0] = mPosition[0];
+    mInclineX[1] = mVelocity[0];
 }
 
 void MIPILQRController::computeControlInput() {
-//    torque[2] = - (K[0]*X[0] + K[1]*X[1] + K[2]*X[2]);
-    torque[2] = -K*X;
-    if(torque[2] > torqueLimit)
+    mTorque[2] = -mK*mX;
+    if(mTorque[2] > torqueLimit)
     {
-        torque[2] = torqueLimit;
+        mTorque[2] = torqueLimit;
     }
-    else if(torque[2] < -torqueLimit)
+    else if(mTorque[2] < -torqueLimit)
     {
-        torque[2] = -torqueLimit;
+        mTorque[2] = -torqueLimit;
     }
 }
 
 void MIPILQRController::setControlInput() {
-    getRobot()->robot->setGeneralizedForce(torque);
+    getRobot()->robot->setGeneralizedForce(mTorque);
 }
 
 void MIPILQRController::setTrajectory() {
 
+}
+
+
+const Eigen::VectorXd &MIPILQRController::getTorque() const {
+    return mTorque;
+}
+
+double MIPILQRController::getDesiredInclinePosition() const {
+    return mDesiredInclinePosition;
+}
+
+double MIPILQRController::getEstPlane() const {
+    return mEstPlane;
 }

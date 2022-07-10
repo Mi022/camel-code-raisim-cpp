@@ -16,11 +16,11 @@ std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\cam
 std::string name = "MIPI";
 raisim::World world;
 
-double simulationDuration = 25.0;
+double simulationDuration = 4.0;
 double dT = 0.005;
 MIPISimulation sim = MIPISimulation(&world, dT);
 MIPIRobot robot = MIPIRobot(&world, urdfPath, name);
-MIPILQRController controller = MIPILQRController(&robot, &world);
+MIPILQRController controller = MIPILQRController(&robot, &world, dT);
 
 
 double oneCycleSimTime = 0;
@@ -35,10 +35,10 @@ void raisimSimulation() {
         if (iteration % divider == 0) {
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
             MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-            MainUI->data_y1_desired[MainUI->data_idx] = 0;
-            MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
+            MainUI->data_y1_desired[MainUI->data_idx] = controller.getDesiredInclinePosition();
+            MainUI->data_y2[MainUI->data_idx] = robot.getQ()[1];
             MainUI->data_y2_desired[MainUI->data_idx] = 0;
-            MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[2];
+            MainUI->data_y3_blue[MainUI->data_idx] = controller.getTorque()[2];
             MainUI->data_y3_red[MainUI->data_idx] = robot.getQD()[2];
             MainUI->data_idx += 1;
         }

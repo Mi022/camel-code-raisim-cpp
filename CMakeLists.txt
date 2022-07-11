@@ -93,6 +93,16 @@ set(MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES
 add_executable(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES})
 target_link_libraries(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_LIBS})
 # ====== Momentum Inverted Pendulum ====== /#
+
+# ====== Canine Two Leg ======  #
+set(CANINE_TWO_LEG_SOURCES
+        src/CAMEL-Quad-TwoLeg/TwoLeggedSimulation.cpp
+        src/CAMEL-Quad-TwoLeg/TwoLeggedRobot.cpp
+        src/CAMEL-Quad-TwoLeg/TwoLeggedPDController.cpp)
+
+add_executable(camel-canine_two_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_TWO_LEG_SOURCES})
+target_link_libraries(camel-canine_two_leg_simulation ${CAMEL_LIBS})
+# ====== Canine Two Leg ====== /#
 ## Simulation /##
 
 ## Operation  ##

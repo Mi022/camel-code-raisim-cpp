@@ -78,41 +78,13 @@
     </inertial>
   </link>
 
-  <link name="calf1">
+  <link name="calf">
     <visual>
       <origin rpy="0 0 0" xyz="0.425 -0.25 -0.3"/>
       <geometry>
-        <mesh filename="calf1.stl"/>
+        <mesh filename="calf.stl"/>
       </geometry>
       <material name="gray1"/>
-    </visual>
-    <inertial>
-      <mass value="3.0"/>
-      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
-    </inertial>
-  </link>
-
-  <link name="calf2">
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <mesh filename="calf2.stl"/>
-      </geometry>
-      <material name="gray2"/>
-    </visual>
-    <inertial>
-      <mass value="3.0"/>
-      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
-    </inertial>
-  </link>
-
-  <link name="calf3">
-    <visual>
-      <origin rpy="0 0 0" xyz="0.375 0.55 0"/>
-      <geometry>
-        <mesh filename="calf3.stl"/>
-      </geometry>
-      <material name="gray3"/>
     </visual>
     <inertial>
       <mass value="3.0"/>
@@ -130,28 +102,7 @@
   <joint name="J2" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="thigh"/>
-    <child link="calf1"/>
+    <child link="calf"/>
     <axis xyz="1 0 0"/>
-  </joint>
-
-  <joint name="J3" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="shoulder"/>
-    <child link="calf3"/>
-    <axis xyz="1 0 0"/>
-  </joint>
-
-  <joint name="J4" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="calf3"/>
-    <child link="calf2"/>
-    <axis xyz="0 0 0"/>
-  </joint>
-
-  <joint name="J5" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="calf2"/>
-    <child link="calf1"/>
-    <axis xyz="0 0 0"/>
   </joint>
 </robot>

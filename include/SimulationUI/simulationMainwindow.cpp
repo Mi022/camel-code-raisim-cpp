@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget->addGraph();
     ui->widget->graph(1)->setName("desired position");
     ui->widget->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+    ui->widget->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_2->legend->setVisible(true);
     ui->widget_2->legend->setFont(QFont("Helvetica", 9));
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_2->addGraph();
     ui->widget_2->graph(1)->setName("desired velocity");
     ui->widget_2->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+    ui->widget_2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_3->legend->setVisible(true);
     ui->widget_3->legend->setFont(QFont("Helvetica", 9));
@@ -44,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_3->addGraph();
     ui->widget_3->graph(1)->setName("torque knee");
     ui->widget_3->graph(1)->setPen(QPen(QColor(255, 0, 0)));
-
+    ui->widget_3->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 }
 
 MainWindow::~MainWindow() {

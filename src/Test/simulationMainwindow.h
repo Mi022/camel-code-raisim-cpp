@@ -33,11 +33,13 @@ public:
     double data_y3_blue[201];
     double data_widget3_min = -0.01;
     double data_widget3_max = 0.01;
+    QTimer dataTimer;
 
 public slots:
     void plotWidget1();
     void plotWidget2();
     void plotWidget3();
+    void realtimeDataSlot();
 
 private slots:
     void on_pushButton_clicked();

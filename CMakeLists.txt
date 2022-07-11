@@ -29,7 +29,8 @@ set(CAMEL_SOURCES
         include/CAN/CanMotorX8ProV2.h
         include/Optimizer/GradientDescentOptimizer.cpp
         include/Sensor/LoadCell.cpp
-        include/RT/rb_utils.cpp)
+        include/RT/rb_utils.cpp
+        include/SimulationUI/qcustomplot.cpp)
 
 set(CAMEL_SIMULATION_UI_SOURCES
         include/SimulationUI/qcustomplot.cpp
@@ -74,7 +75,7 @@ target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 set(RMDX8PRO_SOURCES
         src/RMDX8PRO/RMDX8ProOperation.cpp
         src/RMDX8PRO/mainwindow.cpp
-        src/RMDX8PRO/qcustomplot.cpp)
+        )
 
 add_executable(camel-rmdx8operation ${CAMEL_SOURCES} ${RMDX8PRO_SOURCES})
 target_link_libraries(camel-rmdx8operation ${CAMEL_LIBS})
@@ -86,7 +87,6 @@ set(CANINE_SINGLE_LEG_OPERATION_SOURCES
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedRobotOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/mainwindow.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/qcustomplot.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedPDControllerOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp)
@@ -107,4 +107,6 @@ add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAM
 target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
 add_executable(camel-test_urdf src/Test/Test_urdf.cpp)
 target_link_libraries(camel-test_urdf ${CAMEL_LIBS})
+add_executable(camel-test_real_time_graph src/Test/Test_RealTimeGraph.cpp src/Test/simulationMainwindow.cpp ${CAMEL_SOURCES})
+target_link_libraries(camel-test_real_time_graph ${CAMEL_LIBS})
 ## TEST FILES /##

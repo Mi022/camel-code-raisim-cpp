@@ -16,7 +16,7 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
-#include "qcustomplot.h"
+#include "include/SimulationUI/qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 

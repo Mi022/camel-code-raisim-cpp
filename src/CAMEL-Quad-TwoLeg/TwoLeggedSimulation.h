@@ -9,17 +9,10 @@
 #include "TwoLeggedRobot.h"
 #include "TwoLeggedPDController.h"
 
-<<<<<<< HEAD
 class TwoLeggedSimulation : public Simulation {
 
 public:
     TwoLeggedSimulation(raisim::World *world, double dT) : Simulation(world, dT) { ; }
-=======
-class SingleLeggedSimulation : public Simulation {
-
-public:
-    SingleLeggedSimulation(raisim::World *world, double dT) : Simulation(world, dT) { ; }
->>>>>>> initialize standup branch
 
 private:
 

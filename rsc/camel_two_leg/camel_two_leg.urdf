@@ -1,7 +1,5 @@
-<!-- author : Hwayoung Song -->
-
 <?xml version="1.0" ?>
-<robot name="camel_single_leg_bot">
+<robot name="camel_two_leg_bot">
   <material name="black">
     <color rgba="0.0 0.0 0.0 1.0"/>
   </material>
@@ -18,134 +16,146 @@
       <color rgba="0.35 0.35 0.35 0.90"/>
   </material>
 
+  <link name="world"/>
+  <joint name="base_static_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
 
   <link name="base">
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <box size="0.025 0.025 1.0"/>
+        <box size="0.001 0.001 0.001"/>
       </geometry>
-      <material name="light_gray"/>
     </visual>
-
-    <collision>
-        <origin rpy="0 0 0" xyz="0 0 0.5"/>
-      <geometry>
-        <box size="0.025 0.025 1.0"/>
-      </geometry>
-    </collision>
-
-    <inertial>
-      <mass value="10"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
-    </inertial>
   </link>
+<!--  <joint name="floating_base" type="fixed">-->
+<!--    <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--    <parent link="base"/>-->
+<!--    <child link="trunk"/>-->
+<!--  </joint>-->
 
-  <joint name="linear_guide" type="prismatic">
-    <origin rpy="0 0 0" xyz="0 -0.025 0.0"/>
-    <parent link="base"/>
-    <child link="hip_1"/>
-    <axis xyz="0 0 1"/>
-  </joint>
+<!--  <link name="trunk">-->
+<!--    <visual>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--      <geometry>-->
+<!--        <box size="0.267 0.194 0.114"/>-->
+<!--      </geometry>-->
+<!--      <material name="light_gray"/>-->
+<!--    </visual>-->
+<!--    <collision>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--      <geometry>-->
+<!--        <box size="0.267 0.194 0.114"/>-->
+<!--      </geometry>-->
+<!--    </collision>-->
+<!--    <inertial>-->
+<!--      <origin rpy="0 0 0" xyz="0.012731 0.002186 0.000515"/>-->
+<!--      <mass value="4.713"/>-->
+<!--      <inertia ixx="0.01683993" ixy="8.3902e-05" ixz="0.000597679" iyy="0.056579028" iyz="2.5134e-05" izz="0.064713601"/>-->
+<!--    </inertial>-->
+<!--  </link>-->
 
-  <link name="hip_1">
-    <visual>
-      <origin rpy="0 0 1.570796" xyz="-0.12 0.040 0.0"/>
-      <geometry>
-        <mesh filename="base_link.STL" />
-      </geometry>
-      <material name="black1"/>
-    </visual>
+<!--  <link name="hip_1">-->
+<!--    <visual>-->
+<!--      <origin rpy="0 0 1.570796" xyz="-0.12 0.040 0.0"/>-->
+<!--      <geometry>-->
+<!--        <mesh filename="base_link.STL" />-->
+<!--      </geometry>-->
+<!--      <material name="black1"/>-->
+<!--    </visual>-->
 
-    <collision>
-      <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
-      <geometry>
-        <cylinder length="0.034" radius="0.049"/>
-      </geometry>
-    </collision>
+<!--    <collision>-->
+<!--      <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>-->
+<!--      <geometry>-->
+<!--        <cylinder length="0.034" radius="0.049"/>-->
+<!--      </geometry>-->
+<!--    </collision>-->
 
-    <inertial>
-      <mass value="0.7835"/>
-      <inertia ixx="0.000545773" ixy="0.0" ixz="0.0" iyy="0.000940592" iyz="0.0" izz="0.000545773"/>
-    </inertial>
-  </link>
+<!--    <inertial>-->
+<!--      <mass value="0.7835"/>-->
+<!--      <inertia ixx="0.000545773" ixy="0.0" ixz="0.0" iyy="0.000940592" iyz="0.0" izz="0.000545773"/>-->
+<!--    </inertial>-->
+<!--  </link>-->
 
-  <joint name="hip_pitch" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.090 0.0"/>
-    <parent link="hip_1"/>
-    <child link="hip_2"/>
-    <axis xyz="0 -1 0"/>
-  </joint>
+<!--  <joint name="hip_pitch" type="revolute">-->
+<!--    <origin rpy="0 0 0" xyz="0 -0.090 0.0"/>-->
+<!--    <parent link="hip_1"/>-->
+<!--    <child link="hip_2"/>-->
+<!--    <axis xyz="0 -1 0"/>-->
+<!--  </joint>-->
 
-  <link name="hip_2">
-      <visual>
-        <origin rpy="3.141592 -0.40840696 0" xyz="0.0 0.050 0.0"/>
-        <geometry>
-          <mesh filename="link_1.STL" />
-        </geometry>
-        <material name="black1"/>
-      </visual>
+<!--  <link name="hip_2">-->
+<!--      <visual>-->
+<!--        <origin rpy="3.141592 -0.40840696 0" xyz="0.0 0.050 0.0"/>-->
+<!--        <geometry>-->
+<!--          <mesh filename="link_1.STL" />-->
+<!--        </geometry>-->
+<!--        <material name="black1"/>-->
+<!--      </visual>-->
 
-      <collision>
-        <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
-        <geometry>
-          <cylinder length="0.034" radius="0.049"/>
-        </geometry>
-      </collision>
+<!--      <collision>-->
+<!--        <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>-->
+<!--        <geometry>-->
+<!--          <cylinder length="0.034" radius="0.049"/>-->
+<!--        </geometry>-->
+<!--      </collision>-->
 
-      <inertial>
-        <mass value="0.7835"/>
-        <inertia ixx="0.000545773" ixy="0.0" ixz="0.0" iyy="0.000940592" iyz="0.0" izz="0.000545773"/>
-      </inertial>
-  </link>
+<!--      <inertial>-->
+<!--        <mass value="0.7835"/>-->
+<!--        <inertia ixx="0.000545773" ixy="0.0" ixz="0.0" iyy="0.000940592" iyz="0.0" izz="0.000545773"/>-->
+<!--      </inertial>-->
+<!--  </link>-->
 
-  <joint name="hip_upper" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <parent link="hip_2"/>
-        <child link="upper_leg"/>
-  </joint>
+<!--  <joint name="hip_upper" type="fixed">-->
+<!--        <origin rpy="0 0 0" xyz="0 0 0"/>-->
+<!--        <parent link="hip_2"/>-->
+<!--        <child link="upper_leg"/>-->
+<!--  </joint>-->
 
-  <link name="upper_leg">
+<!--  <link name="upper_leg">-->
 
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 -0.115"/>
-      <geometry>
-        <box size="0.03 0.02 0.23"/>
-      </geometry>
-    </collision>
+<!--    <collision>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 -0.115"/>-->
+<!--      <geometry>-->
+<!--        <box size="0.03 0.02 0.23"/>-->
+<!--      </geometry>-->
+<!--    </collision>-->
 
-    <inertial>
-      <mass value="0.221"/>
-      <inertia ixx="0.000981608" ixy="0.0" ixz="0.0" iyy="0.000990817" iyz="0.0" izz="0.000023942"/>
-    </inertial>
-  </link>
+<!--    <inertial>-->
+<!--      <mass value="0.221"/>-->
+<!--      <inertia ixx="0.000981608" ixy="0.0" ixz="0.0" iyy="0.000990817" iyz="0.0" izz="0.000023942"/>-->
+<!--    </inertial>-->
+<!--  </link>-->
 
-  <joint name="knee_pitch" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.23"/>
-    <parent link="upper_leg"/>
-    <child link="lower_leg"/>
-    <axis xyz="0 -1 0"/>
-  </joint>
+<!--  <joint name="knee_pitch" type="revolute">-->
+<!--    <origin rpy="0 0 0" xyz="0 0 -0.23"/>-->
+<!--    <parent link="upper_leg"/>-->
+<!--    <child link="lower_leg"/>-->
+<!--    <axis xyz="0 -1 0"/>-->
+<!--  </joint>-->
 
-  <link name="lower_leg">
-    <visual>
-      <origin rpy="0 -2.748893 0" xyz="0 0.015 0"/>
-      <geometry>
-        <mesh filename="link_2.STL" />
-      </geometry>
-      <material name="black2"/>
-    </visual>
+<!--  <link name="lower_leg">-->
+<!--    <visual>-->
+<!--      <origin rpy="0 -2.748893 0" xyz="0 0.015 0"/>-->
+<!--      <geometry>-->
+<!--        <mesh filename="link_2.STL" />-->
+<!--      </geometry>-->
+<!--      <material name="black2"/>-->
+<!--    </visual>-->
 
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 -0.23"/>
-      <geometry>
-        <sphere radius="0.015"/>
-      </geometry>
-    </collision>
+<!--    <collision>-->
+<!--      <origin rpy="0 0 0" xyz="0 0 -0.23"/>-->
+<!--      <geometry>-->
+<!--        <sphere radius="0.015"/>-->
+<!--      </geometry>-->
+<!--    </collision>-->
 
-    <inertial>
-      <mass value="0.221"/>
-      <inertia ixx="0.000981608" ixy="0.0" ixz="0.0" iyy="0.000990817" iyz="0.0" izz="0.000023942"/>
-    </inertial>
-  </link>
+<!--    <inertial>-->
+<!--      <mass value="0.221"/>-->
+<!--      <inertia ixx="0.000981608" ixy="0.0" ixz="0.0" iyy="0.000990817" iyz="0.0" izz="0.000023942"/>-->
+<!--    </inertial>-->
+<!--  </link>-->
 </robot>

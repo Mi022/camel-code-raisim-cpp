@@ -67,6 +67,18 @@ set(CANINE_SINGLE_LEG_SOURCES
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
+
+# ====== Dong Dog one leg ======  #
+set(DONG_DOG_SINGLE_LEG_SOURCES
+        src/Dongdog/DongdogsinglelegSimulation.cppSimulation.cpp
+        src/Dongdog/DongdogsinglelegRobot.cpp
+        src/Dongdog/DongdogsinglelegPDController.cpp)
+
+add_executable(camel-Dong-
+        dog-single-leg ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${SIMPLE_DongDog})
+target_link_libraries(DongDog ${CAMEL_LIBS})
+# ====== Dong Dog one leg ======/ #
+
 ## Simulation /##
 
 ## Operation  ##

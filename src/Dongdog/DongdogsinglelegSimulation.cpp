@@ -2,7 +2,7 @@
 // Created by jaehoon on 22. 3. 31..
 //
 
-#include "SimplePendulumSimulation.h"
+#include "DongdogsinglelegSimulation.h"
 #include "include/SimulationUI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>

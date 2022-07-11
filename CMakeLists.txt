@@ -40,6 +40,10 @@ set(CAMEL_SIMULATION_UI_SOURCES
         include/SimulationUI/qcustomplot.cpp
         include/SimulationUI/simulationMainwindow.cpp)
 
+set(CAMEL_A1_SIMULATION_UI_SOURCES
+        include/SimulationUI/qcustomplot.cpp
+        src/A1/mainwindow.cpp)
+
 ## Simulation ##
 # ====== Simple Pendulum ======  #
 set(SIMPLE_PENDULUM_SOURCES
@@ -56,9 +60,10 @@ set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
         src/A1/A1JointPDController.cpp
-        src/A1/A1MPCController.cpp)
+        src/A1/A1MPCController.cpp
+        )
 
-add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
+add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_A1_SIMULATION_UI_SOURCES} ${A1_SOURCES})
 target_link_libraries(camel-a1 ${CAMEL_LIBS} qpOASES)
 
 # ====== A1 ======/ #

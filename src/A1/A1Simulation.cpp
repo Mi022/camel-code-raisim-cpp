@@ -3,7 +3,7 @@
 //
 
 #include "A1Simulation.h"
-#include "include/SimulationUI/simulationMainwindow.h"
+#include "mainwindow.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 #include <cmath>
@@ -26,43 +26,45 @@ A1JointPDController PDcontroller = A1JointPDController(&robot);
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
 int iteration = 0;
-int count = 0;
 void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
-        if(count < 0)
-        {
-            PDcontroller.doControl();
-            world.integrate();
-            if (iteration % divider == 0) {
-                MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
-                MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-                //MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition;
-                MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
-                //MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity;
-                MainUI->data_y3[MainUI->data_idx] = PDcontroller.torque[7];
-                MainUI->data_y3_desired[MainUI->data_idx] = PDcontroller.torque[8];
-                MainUI->data_idx += 1;
-            }
-            iteration++;
+        MPCcontroller.doControl();
+        world.integrate();
+        if (iteration % divider == 0) {
+            MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
+            MainUI->data_y1[MainUI->data_idx] = MPCcontroller.p[0];
+            MainUI->data_y1_desired[MainUI->data_idx] = MPCcontroller.desiredPositionX;
+            MainUI->data_y2[MainUI->data_idx] = MPCcontroller.p[1];
+            MainUI->data_y2_desired[MainUI->data_idx] = MPCcontroller.desiredPositionY;
+            MainUI->data_y3[MainUI->data_idx] = MPCcontroller.p[2];
+            MainUI->data_y3_desired[MainUI->data_idx] = MPCcontroller.desiredPositionZ;
+
+            MainUI->data_y4[MainUI->data_idx] = MPCcontroller.q[0];
+            MainUI->data_y4_desired[MainUI->data_idx] = MPCcontroller.desiredRotationX;
+            MainUI->data_y5[MainUI->data_idx] = MPCcontroller.q[1];
+            MainUI->data_y5_desired[MainUI->data_idx] = MPCcontroller.desiredRotationY;
+            MainUI->data_y6[MainUI->data_idx] = MPCcontroller.q[2];
+            MainUI->data_y6_desired[MainUI->data_idx] = MPCcontroller.desiredRotationZ;
+
+            MainUI->data_hip_fr[MainUI->data_idx] = robot.getQ()[7];
+            MainUI->data_hip_fl[MainUI->data_idx] = robot.getQ()[10];
+            MainUI->data_hip_rr[MainUI->data_idx] = robot.getQ()[13];
+            MainUI->data_hip_rl[MainUI->data_idx] = robot.getQ()[16];
+
+            MainUI->data_thigh_fr[MainUI->data_idx] = robot.getQ()[8];
+            MainUI->data_thigh_fl[MainUI->data_idx] = robot.getQ()[11];
+            MainUI->data_thigh_rr[MainUI->data_idx] = robot.getQ()[14];
+            MainUI->data_thigh_rl[MainUI->data_idx] = robot.getQ()[17];
+
+            MainUI->data_calf_fr[MainUI->data_idx] = robot.getQ()[9];
+            MainUI->data_calf_fl[MainUI->data_idx] = robot.getQ()[12];
+            MainUI->data_calf_rr[MainUI->data_idx] = robot.getQ()[15];
+            MainUI->data_calf_rl[MainUI->data_idx] = robot.getQ()[18];
+
+            MainUI->data_idx += 1;
         }
-        else
-        {
-            MPCcontroller.doControl();
-            world.integrate();
-            if (iteration % divider == 0) {
-                MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
-                MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-                MainUI->data_y1_desired[MainUI->data_idx] = MPCcontroller.desiredPositionX;
-                MainUI->data_y2[MainUI->data_idx] = robot.getQ()[1];
-                MainUI->data_y2_desired[MainUI->data_idx] = MPCcontroller.desiredPositionY;
-                MainUI->data_y3[MainUI->data_idx] = robot.getQ()[2];
-                MainUI->data_y3_desired[MainUI->data_idx] = MPCcontroller.desiredPositionZ;
-                MainUI->data_idx += 1;
-            }
-            iteration++;
-        }
-        count++;
+        iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
         MainUI->button1 = false;
         iteration = 0;
@@ -70,6 +72,14 @@ void raisimSimulation() {
         MainUI->plotWidget1();
         MainUI->plotWidget2();
         MainUI->plotWidget3();
+
+        MainUI->plotWidget4();
+        MainUI->plotWidget5();
+        MainUI->plotWidget6();
+
+        MainUI->plotWidget7();
+        MainUI->plotWidget8();
+        MainUI->plotWidget9();
         MainUI->data_idx = 0;
     }
 }

@@ -56,6 +56,10 @@ void A1MPCController::setTrajectory() {
     desiredPositionX = xd(3,0);
     desiredPositionY = xd(4,0);
     desiredPositionZ = xd(5,0);
+
+    desiredRotationX = xd(0,0);
+    desiredRotationY = xd(1,0);
+    desiredRotationZ = xd(2,0);
 }
 
 void A1MPCController::getMetrices(){
@@ -67,10 +71,10 @@ void A1MPCController::getMetrices(){
 
     //weights
     Eigen::Matrix<double, 13,1> weightMat;
-    weightMat << 0.5, 0.5, 1,
-                 10, 2, 50,
-                 0, 0.1, 1,
-                 0.1, 5, 0.2,
+    weightMat << 0.1, 0.1, 1,
+                 20, 20, 50,
+                 0, 0, 1,
+                 0.2, 0.2, 0.2,
                  0.f;
     L.diagonal() = weightMat.replicate(mMPCHorizon,1);
 

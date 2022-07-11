@@ -27,10 +27,19 @@ public:
     Eigen::Matrix<double,3,3> robotJacobian[4];
     Eigen::Matrix<double,3,1> robottorque[4];
 
+    Eigen::Matrix<double, 4, 1> quat;
+    Eigen::Matrix<double, 3, 1> p;
+    Eigen::Matrix<double, 3, 1> v;
+    Eigen::Matrix<double, 3, 1> w;
+    Eigen::Matrix<double, 3, 1> q;
 
     double desiredPositionX = 0.f;
     double desiredPositionY = 0.f;
     double desiredPositionZ = 0.f;
+
+    double desiredRotationX = 0.f;
+    double desiredRotationY = 0.f;
+    double desiredRotationZ = 0.f;
 
     A1MPCController(Robot *robot, double dT) : Controller(robot){
         mDT = dT;
@@ -68,12 +77,6 @@ private:
     double mDT;
 
     double alpha = 1e-10;
-
-    Eigen::Matrix<double, 4, 1> quat;
-    Eigen::Matrix<double, 3, 1> p;
-    Eigen::Matrix<double, 3, 1> q;
-    Eigen::Matrix<double, 3, 1> v;
-    Eigen::Matrix<double, 3, 1> w;
 
     Eigen::MatrixXd x0 = Eigen::MatrixXd(13, 1);
     Eigen::MatrixXd xd = Eigen::MatrixXd(13*mMPCHorizon, 1);

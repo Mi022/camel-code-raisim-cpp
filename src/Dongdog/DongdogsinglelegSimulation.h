@@ -2,8 +2,8 @@
 // Created by jaehoon on 22. 3. 31..
 //
 
-#ifndef RAISIM_SIMPLEPENDULUMSIMULATION_H
-#define RAISIM_SIMPLEPENDULUMSIMULATION_H
+#ifndef RAISIM_DONGDOGSINGLELEGSIMULATION_H
+#define RAISIM_DONGDOGSINGLELEGSIMULATION_H
 
 #include "include/CAMEL/Simulation.h"
 #include "DongdogsinglelegRobot.h"
@@ -13,11 +13,11 @@
 //
 
 
-class SimplePendulumSimulation : public Simulation {
+class DongdogsinglelegSimulation : public Simulation {
 
 public:
 
-    SimplePendulumSimulation(raisim::World *world, double dT) : Simulation(world, dT) { ; }
+    DongdogsinglelegSimulation(raisim::World *world, double dT) : Simulation(world, dT) { ; }
 
 private:
 

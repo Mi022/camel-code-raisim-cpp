@@ -1,7 +1,3 @@
-//
-// Created by jaehoon on 22. 3. 31..
-//
-
 #include "DongdogsinglelegSimulation.h"
 #include "include/SimulationUI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
@@ -11,15 +7,14 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 std:: string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_dong_dog\\camel_dong_dog_one_leg.urdf";
-//std::string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
-std::string name = "cutePendulum";
+std::string name = "DongDog";
 raisim::World world;
 
 double simulationDuration = 5.0;
 double dT = 0.005;
-SimplePendulumSimulation sim = SimplePendulumSimulation(&world, dT);
-SimplePendulumRobot robot = SimplePendulumRobot(&world, urdfPath, name);
-SimplePendulumPDController controller = SimplePendulumPDController(&robot);
+DongdogsinglelegSimulation sim = DongdogsinglelegSimulation(&world, dT);
+DongdogsinglelegRobot robot = DongdogsinglelegRobot(&world, urdfPath, name);
+DongdogsinglelegPDController controller = DongdogsinglelegPDController(&robot);
 
 void raisimSimulation() {
     // TODO : Relieve CPU. Now, CPU usage is 100% !!!!!

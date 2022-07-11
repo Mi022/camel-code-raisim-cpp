@@ -24,7 +24,6 @@
     <child link="base"/>
   </joint>
 
-
   <link name="base">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -75,82 +74,81 @@
       <material name="gray2"/>
     </visual>
   </link>
+  <joint name="J2" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="thigh"/>
+    <child link="calf1"/>
+  </joint>
+
+  <link name="calf1">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="calf1.stl"/>
+      </geometry>
+      <material name="gray3"/>
+    </visual>
+  </link>
+
+  <joint name="J3" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="calf2"/>
+    <child link="calf3"/>
+  </joint>
+
+  <link name="calf2">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="calf2.stl"/>
+      </geometry>
+      <material name="gray2"/>
+    </visual>
+  </link>
+
+  <joint name="J4" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="shoulder"/>
+    <child link="calf3"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="calf3">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="calf3.stl"/>
+      </geometry>
+      <material name="gray3"/>
+    </visual>
+  </link>
+
+  <joint name="J5" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="calf3"/>
+    <child link="calf2"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 1"/>
+      <geometry>
+        <box size="1 1 1"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="base" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base"/>
+    <child link="shoulder"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
 
 
 </robot>
-
-<joint name="J2" type="revolute">
-<origin rpy="0 0 0" xyz="0 0 0"/>
-<parent link="thigh"/>
-<child link="calf1"/>
-</joint>
-
-<link name="calf1">
-<visual>
-  <origin rpy="0 0 0" xyz="0 0 0"/>
-  <geometry>
-    <mesh filename="calf1.stl"/>
-  </geometry>
-  <material name="gray3"/>
-</visual>
-</link>
-
-<joint name="J3" type="revolute">
-<origin rpy="0 0 0" xyz="0 0 0"/>
-<parent link="calf2"/>
-<child link="calf3"/>
-</joint>
-
-<link name="calf2">
-<visual>
-  <origin rpy="0 0 0" xyz="0 0 0"/>
-  <geometry>
-    <mesh filename="calf2.stl"/>
-  </geometry>
-  <material name="gray2"/>
-</visual>
-</link>
-
-<joint name="J4" type="revolute">
-<origin rpy="0 0 0" xyz="0 0 0"/>
-<parent link="shoulder"/>
-<child link="calf3"/>
-<axis xyz="0 0 0"/>
-</joint>
-
-<link name="calf3">
-<visual>
-  <origin rpy="0 0 0" xyz="0 0 0"/>
-  <geometry>
-    <mesh filename="calf3.stl"/>
-  </geometry>
-  <material name="gray3"/>
-</visual>
-</link>
-
-<joint name="J5" type="revolute">
-<origin rpy="0 0 0" xyz="0 0 0"/>
-<parent link="calf3"/>
-<child link="calf2"/>
-<axis xyz="0 0 0"/>
-</joint>
-
-
-
-<link name="base">
-<visual>
-  <origin rpy="0 0 0" xyz="0 0 1"/>
-  <geometry>
-    <box size="1 1 1"/>
-  </geometry>
-  <material name="black"/>
-</visual>
-</link>
-
-<joint name="base" type="prismatic">
-<origin rpy="0 0 0" xyz="0 0 0"/>
-<parent link="base"/>
-<child link="shoulder"/>
-<axis xyz="0 0 0"/>
-</joint>
-

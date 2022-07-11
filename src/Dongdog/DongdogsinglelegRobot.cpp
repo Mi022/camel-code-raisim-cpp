@@ -4,17 +4,17 @@
 
 #include "DongdogsinglelegRobot.h"
 
-void SimplePendulumRobot::initialize() {
+void DongdogsinglelegRobot::initialize() {
     Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
     initialJointPosition[0] = 1.57;
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
 
-double SimplePendulumRobot::getQ() {
+double DongdogsinglelegRobot::getQ() {
     return this->robot->getGeneralizedCoordinate()[0];
 }
 
-double SimplePendulumRobot::getQD() {
+double DongdogsinglelegRobot::getQD() {
     return this->robot->getGeneralizedVelocity()[0];
 }

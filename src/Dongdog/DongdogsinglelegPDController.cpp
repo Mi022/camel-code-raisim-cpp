@@ -4,34 +4,34 @@
 
 #include "DongdogsinglelegPDController.h"
 
-void SimplePendulumPDController::setPDGain(double PGain, double DGain) {
+void DongdogsinglelegPDController::setPDGain(double PGain, double DGain) {
     this->PGain = PGain;
     this->DGain = DGain;
 }
 
-void SimplePendulumPDController::doControl() {
+void DongdogsinglelegPDController::doControl() {
     setTrajectory();
     updateState();
     computeControlInput();
     setControlInput();
 }
 
-void SimplePendulumPDController::setTrajectory() {
+void DongdogsinglelegPDController::setTrajectory() {
     desiredPosition = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
     desiredVelocity = mTrajectoryGenerator.getVelocityTrajectory(getRobot()->getWorldTime());
 }
 
-void SimplePendulumPDController::updateState() {
+void DongdogsinglelegPDController::updateState() {
     position = getRobot()->robot->getGeneralizedCoordinate()[0];
     velocity = getRobot()->robot->getGeneralizedVelocity()[0];
 }
 
-void SimplePendulumPDController::computeControlInput() {
+void DongdogsinglelegPDController::computeControlInput() {
     positionError = desiredPosition - position;
     velocityError = desiredVelocity - velocity;
     torque[0] = PGain * positionError + DGain * velocityError;
 }
 
-void SimplePendulumPDController::setControlInput() {
+void DongdogsinglelegPDController::setControlInput() {
     getRobot()->robot->setGeneralizedForce(torque);
 }

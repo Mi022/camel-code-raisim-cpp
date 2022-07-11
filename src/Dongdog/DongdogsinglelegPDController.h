@@ -2,13 +2,13 @@
 // Created by jaehoon on 22. 4. 3..
 //
 
-#ifndef RAISIM_SIMPLEPENDULUMPDCONTROLLER_H
-#define RAISIM_SIMPLEPENDULUMPDCONTROLLER_H
+#ifndef RAISIM_DONGDOGSINGLELEGPDCONTROLLER_H
+#define RAISIM_DONGDOGSINGLELEGPDCONTROLLER_H
 
 #include "include/CAMEL/Controller.h"
 #include "include/TrajectoryGenerator/CubicTrajectoryGenerator.h"
 
-class SimplePendulumPDController : public Controller {
+class DongdogsinglelegPDController : public Controller {
 public:
     Eigen::VectorXd torque = Eigen::VectorXd(1);
     double position;
@@ -21,7 +21,7 @@ public:
     double PGain;
     double DGain;
 
-    SimplePendulumPDController(Robot *robot) : Controller(robot) {
+    DongdogsinglelegPDController(Robot *robot) : Controller(robot) {
         updateState();
         mTrajectoryGenerator.updateTrajectory(position, -90.0 / 180.0* 3.141592, getRobot() -> getWorldTime(), 5.0);
         setPDGain(200.0, 25.0);

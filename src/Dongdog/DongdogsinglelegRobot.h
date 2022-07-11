@@ -2,14 +2,14 @@
 // Created by jaehoon on 22. 4. 3..
 //
 
-#ifndef RAISIM_SIMPLEPENDULUMROBOT_H
-#define RAISIM_SIMPLEPENDULUMROBOT_H
+#ifndef RAISIM_DONGDOGSINGLELEGROBOT_H
+#define RAISIM_DONGDOGSINGLELEGROBOT_H
 
 #include "include/CAMEL/Robot.h"
 
-class SimplePendulumRobot : public Robot {
+class DongdogsinglelegRobot : public Robot {
 public:
-    SimplePendulumRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
+    DongdogsinglelegRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
         initialize();
     }
 

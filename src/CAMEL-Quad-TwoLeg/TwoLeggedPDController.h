@@ -8,7 +8,7 @@
 #include "include/CAMEL/Controller.h"
 #include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
 
-class SingleLeggedPDController : public Controller {
+class TwoLeggedPDController : public Controller {
 public:
     Eigen::VectorXd torque = Eigen::VectorXd(3);
     raisim::VecDyn position = raisim::VecDyn(3);
@@ -25,7 +25,7 @@ public:
     double DGain;
     double torqueLimit = 13.0;
 
-    SingleLeggedPDController(Robot *robot) : Controller(robot) {
+    TwoLeggedPDController(Robot *robot) : Controller(robot) {
         mTrajectoryGenerator.updateTrajectory(position[0], 0.35, getRobot()->getWorldTime(), 1.0);
         setPDGain(50.0, 1.5);
         torque[0] = 0.0;

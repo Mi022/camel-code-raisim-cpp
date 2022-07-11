@@ -4,12 +4,12 @@
 
 #include "TwoLeggedPDController.h"
 
-void SingleLeggedPDController::setPDGain(double PGain, double DGain) {
+void TwoLeggedPDController::setPDGain(double PGain, double DGain) {
     this->PGain = PGain;
     this->DGain = DGain;
 }
 
-void SingleLeggedPDController::doControl() {
+void TwoLeggedPDController::doControl() {
     updateState();
     setTrajectory();
     IKsolve();
@@ -17,17 +17,17 @@ void SingleLeggedPDController::doControl() {
     setControlInput();
 }
 
-void SingleLeggedPDController::setTrajectory() {
+void TwoLeggedPDController::setTrajectory() {
     desiredPosition = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
     desiredVelocity = mTrajectoryGenerator.getVelocityTrajectory(getRobot()->getWorldTime());
 }
 
-void SingleLeggedPDController::updateState() {
+void TwoLeggedPDController::updateState() {
     position = getRobot()->robot->getGeneralizedCoordinate();
     velocity = getRobot()->robot->getGeneralizedVelocity();
 }
 
-void SingleLeggedPDController::computeControlInput() {
+void TwoLeggedPDController::computeControlInput() {
     for (int i = 1; i < 3; i++) {
         positionError[i - 1] = desiredJointPosition[i - 1] - position[i];
         velocityError[i - 1] = desiredJointVelocity[i - 1] - velocity[i];
@@ -43,11 +43,11 @@ void SingleLeggedPDController::computeControlInput() {
     }
 }
 
-void SingleLeggedPDController::setControlInput() {
+void TwoLeggedPDController::setControlInput() {
     getRobot()->robot->setGeneralizedForce(torque);
 }
 
-void SingleLeggedPDController::IKsolve() {
+void TwoLeggedPDController::IKsolve() {
     desiredJointPosition[0] = acos(desiredPosition / 0.46);
     desiredJointPosition[1] = -2*desiredJointPosition[0];
     desiredJointVelocity.setZero();

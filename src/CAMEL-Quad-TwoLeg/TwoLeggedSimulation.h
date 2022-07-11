@@ -9,10 +9,10 @@
 #include "TwoLeggedRobot.h"
 #include "TwoLeggedPDController.h"
 
-class SingleLeggedSimulation : public Simulation {
+class TwoLeggedSimulation : public Simulation {
 
 public:
-    SingleLeggedSimulation(raisim::World *world, double dT) : Simulation(world, dT) { ; }
+    TwoLeggedSimulation(raisim::World *world, double dT) : Simulation(world, dT) { ; }
 
 private:
 

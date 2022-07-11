@@ -4,7 +4,7 @@
 
 #include "TwoLeggedRobot.h"
 
-void SingleLeggedRobot::initialize() {
+void TwoLeggedRobot::initialize() {
     Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
     initialJointPosition[0] = 0.23;  //prismatic joint
@@ -13,10 +13,10 @@ void SingleLeggedRobot::initialize() {
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
 
-raisim::VecDyn SingleLeggedRobot::getQ() {
+raisim::VecDyn TwoLeggedRobot::getQ() {
     return this->robot->getGeneralizedCoordinate();
 }
 
-raisim::VecDyn SingleLeggedRobot::getQD() {
+raisim::VecDyn TwoLeggedRobot::getQD() {
     return this->robot->getGeneralizedVelocity();
 }

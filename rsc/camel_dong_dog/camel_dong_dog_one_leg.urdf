@@ -10,7 +10,7 @@
   </material>
 
   <material name="gray1">
-    <color rgba="0.75 0.75 0.75 0.9"/>
+    <color rgba="0.75 0.75 0.75 1"/>
   </material>
 
   <material name="gray2">
@@ -32,7 +32,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <box size="0.25 0.25 2.5"/>
+        <box size="0.25 0.25 1"/>
       </geometry>
       <material name="black"/>
     </visual>

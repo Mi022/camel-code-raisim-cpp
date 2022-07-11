@@ -13,10 +13,10 @@ void SincurveTrajectoryGenerator::updateTrajectory(double currentPosition, doubl
 
 double SincurveTrajectoryGenerator::getPositionTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    return 0.1*sin(normalizedTime*2*3.14)+mReferencePose;
+    return 0.05*sin(normalizedTime*2*3.14)+mReferencePose;
 }
 
 double SincurveTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    return 0.1*cos(normalizedTime*2*3.14)*2*3.14;
+    return 0.05*cos(normalizedTime*2*3.14)*2*3.14;
 }

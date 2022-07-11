@@ -12,7 +12,7 @@ void A1Robot::initialize() {
     // base_x,y,z
     initialJointPosition[0] = 0.0;
     initialJointPosition[1] = 0.0;
-    initialJointPosition[2] = 0.369;
+    initialJointPosition[2] = 0.2964;
 
     // base_rotation [quaternion]
     initialJointPosition[3] = 1.0;
@@ -22,23 +22,23 @@ void A1Robot::initialize() {
 
     // FR_hip,thigh,calf
     initialJointPosition[7] = 0.0;
-    initialJointPosition[8] = 0.5;
-    initialJointPosition[9] = -0.9;
+    initialJointPosition[8] = 0.8683;
+    initialJointPosition[9] = -1.5679;
 
     // FL_hip,thigh,calf
     initialJointPosition[10] = -0.0;
-    initialJointPosition[11] = 0.5;
-    initialJointPosition[12] = -0.9;
+    initialJointPosition[11] = 0.8683;
+    initialJointPosition[12] = -1.5679;
 
     // RR_hip,thigh,calf
     initialJointPosition[13] = 0.0;
-    initialJointPosition[14] = 0.5;
-    initialJointPosition[15] = -0.9;
+    initialJointPosition[14] = 0.8683;
+    initialJointPosition[15] = -1.5679;
 
     // RL_hip,thigh,calf
     initialJointPosition[16] = -0.0;
-    initialJointPosition[17] = 0.5;
-    initialJointPosition[18] = -0.9;
+    initialJointPosition[17] = 0.8683;
+    initialJointPosition[18] = -1.5679;
 
     robot->setGeneralizedCoordinate(initialJointPosition);
     robot->setGeneralizedForce(Eigen::VectorXd::Zero(robot->getDOF()));

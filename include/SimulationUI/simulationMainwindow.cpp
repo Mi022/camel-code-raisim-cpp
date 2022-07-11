@@ -39,10 +39,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_3->legend->setVisible(true);
     ui->widget_3->legend->setFont(QFont("Helvetica", 9));
     ui->widget_3->addGraph();
-    ui->widget_3->graph(0)->setName("position Z");
+    ui->widget_3->graph(0)->setName("thigh torque");
     ui->widget_3->graph(0)->setPen(QPen(QColor(0, 0, 255)));
     ui->widget_3->addGraph();
-    ui->widget_3->graph(1)->setName("desired position Z");
+    ui->widget_3->graph(1)->setName("calf torque");
     ui->widget_3->graph(1)->setPen(QPen(QColor(255, 0, 0)));
 
 }
@@ -111,8 +111,8 @@ void MainWindow::plotWidget3() {
     QVector<double> y3_blue(201);
     for (int i = 0; i < 201; ++i) {
         x[i] = data_x[i];
-        y3_red[i] = data_y3[i];
-        y3_blue[i] = data_y3_desired[i];
+        y3_red[i] = data_y3_red[i];
+        y3_blue[i] = data_y3_blue[i];
         if (y3_red[i] < data_widget3_min) { data_widget3_min = y3_red[i]; }
         if (y3_red[i] > data_widget3_max) { data_widget3_max = y3_red[i]; }
         if (y3_blue[i] < data_widget3_min) { data_widget3_min = y3_blue[i]; }

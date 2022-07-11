@@ -41,17 +41,25 @@ void A1MPCController::updateState(){
 
 void A1MPCController::setTrajectory() {
     std::cout << "Set trajectory function" << std::endl;
-    double tempXd[13] = {0.f, 0.f, 0.f,
-                         0.f, 0.f, 0.369,
-                         0.f, 0.f, 0.f,
-                         0.f, 0.f, 0.f,
-                         0.f};
+    double currentTime = getRobot()->getWorldTime();
     for(int i = 0; i < mMPCHorizon ; i++)
     {
-        for(int j=0; j<13;j++)
-        {
-            xd(13*i+j,0) = tempXd[j];
-        }
+        xd(i*13,0) = 0.f;
+        xd(i*13+1,0) = 0.f;
+        xd(i*13+2,0) = 0.f;
+
+        xd(i*13+3,0) = 0.f;
+        xd(i*13+4,0) = 0.f;
+        xd(i*13+5,0) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
+
+        xd(i*13+6,0) = 0.f;
+        xd(i*13+7,0) = 0.f;
+        xd(i*13+8,0) = 0.f;
+
+        xd(i*13+9,0) = 0.f;
+        xd(i*13+10,0) = 0.f;
+        xd(i*13+11,0) = mTrajectoryGenerator.getVelocityTrajectory(currentTime + mDT * i);
+
     }
     desiredPositionX = xd(3,0);
     desiredPositionY = xd(4,0);
@@ -71,10 +79,10 @@ void A1MPCController::getMetrices(){
 
     //weights
     Eigen::Matrix<double, 13,1> weightMat;
-    weightMat << 0.1, 0.1, 1,
-                 20, 20, 50,
+    weightMat << 1, 1, 1,
+                 40, 40, 50,
                  0, 0, 1,
-                 0.2, 0.2, 0.2,
+                 0.1, 0.1, 0.2,
                  0.f;
     L.diagonal() = weightMat.replicate(mMPCHorizon,1);
 

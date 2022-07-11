@@ -19,12 +19,12 @@ void SingleLeggedMPCqpoases::setTrajectory() {
     double currentTime = getRobot()->getWorldTime();
     for(int i = 0; i < mMPCHorizon ; i++)
     {
-        /*xd(i*2,0) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
+        xd(i*2,0) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
         xd(i*2+1,0) = mTrajectoryGenerator.getVelocityTrajectory(currentTime + mDT * i);
-        xd(i*3+2,0) = 0.f;*/
-        xd(i*3,0) = 0.23;
+        xd(i*3+2,0) = 0.f;
+        /*xd(i*3,0) = 0.23;
         xd(i*3+1,0) = 0.f;
-        xd(i*3+2,0) = mGravity;
+        xd(i*3+2,0) = mGravity;*/
     }
     desiredPosition = xd(0,0);
     desiredVelocity = xd(1,0);

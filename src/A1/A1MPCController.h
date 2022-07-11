@@ -10,6 +10,9 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include <qpOASES.hpp>
 
+//#include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
+#include "include/TrajectoryGenerator/SincurveTrajectoryGenerator.h"
+
 using Eigen::Dynamic;
 
 class A1MPCController : public Controller {
@@ -55,6 +58,9 @@ public:
 
         torque.setZero();
 
+        updateState();
+        //mTrajectoryGenerator.updateTrajectory(position[2], 0.3, getRobot()->getWorldTime(), 2.0);
+        mTrajectoryGenerator.updateTrajectory(position[2], getRobot()->getWorldTime(), 1.0);
     }
     void doControl() override;
     void updateState() override;
@@ -71,6 +77,9 @@ public:
     void getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side);
 
 private:
+    //QuinticTrajectoryGenerator mTrajectoryGenerator;
+    SincurveTrajectoryGenerator mTrajectoryGenerator;
+
     double mLumpedMass = 30;
     double mGravity = -9.81;
     int mMPCHorizon = 5;

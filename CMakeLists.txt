@@ -39,9 +39,9 @@ set(CAMEL_SIMULATION_UI_SOURCES
 ## Simulation ##
 # ====== Simple Pendulum ======  #
 set(SIMPLE_PENDULUM_SOURCES
-        src/SimplePendulum/SimplePendulumSimulation.cpp
-        src/SimplePendulum/SimplePendulumRobot.cpp
-        src/SimplePendulum/SimplePendulumPDController.cpp)
+        src/Tutorial_SimplePendulum/SimplePendulumSimulation.cpp
+        src/Tutorial_SimplePendulum/SimplePendulumRobot.cpp
+        src/Tutorial_SimplePendulum/SimplePendulumPDController.cpp)
 
 add_executable(camel-simplePendulum ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${SIMPLE_PENDULUM_SOURCES})
 target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})

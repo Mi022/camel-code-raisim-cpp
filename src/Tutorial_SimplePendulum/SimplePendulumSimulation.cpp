@@ -10,50 +10,49 @@
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
-
-// 불러올 로봇의 urdf 경로
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
-
-// 로봇의 이름 설정(내가 원하는 대로)
+std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
 std::string name = "cutePendulum";
 raisim::World world;
 
-double simulationDuration = 5.0;    // Run 버튼 눌렀을 때, 시뮬레이션이 한 번 실행 되는 시간
-double dT = 0.005;                  // 시뮬레이션의 discrete time
+double simulationDuration = 5.0;
+double dT = 0.005;
 SimplePendulumSimulation sim = SimplePendulumSimulation(&world, dT);
 SimplePendulumRobot robot = SimplePendulumRobot(&world, urdfPath, name);
 SimplePendulumPDController controller = SimplePendulumPDController(&robot);
 
 void raisimSimulation() {
-    double dT = world.getTimeStep();
     double oneCycleSimTime = 0;
     int divider = ceil(simulationDuration / dT / 200);
     int i = 0;
+    auto begin = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
     while (true) {
         if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
-            // 로봇 제어 및 raisim world integrate
+            // control robot and data plot thread
+            if(i == 0){begin = std::chrono::high_resolution_clock::now();}
             oneCycleSimTime = i * dT;
             controller.doControl();
             world.integrate();
             if (i % divider == 0) {
-                // UI에 plot할 값들 update
+                //                std::cout<<"data_idx : "<<MainUI->data_idx<<std::endl;
                 MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
                 MainUI->data_y1[MainUI->data_idx] = robot.getQ();
                 MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition;
                 MainUI->data_y2[MainUI->data_idx] = robot.getQD();
                 MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity;
+//                MainUI->data_y2[MainUI->data_idx] = controller.torque[0];
                 MainUI->data_idx += 1;
             }
             i++;
         } else if (oneCycleSimTime >= simulationDuration) {
-            // UI에 plot
-            MainUI->plotWidget1();
-            MainUI->plotWidget2();
-
-            // 변수 값들 reset
+            end = std::chrono::high_resolution_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+            std::cout <<" Time measured: "<< elapsed.count() * 1e-9 <<"seconds" <<std::endl;
             MainUI->button1 = false;
             i = 0;
             oneCycleSimTime = 0;
+            MainUI->plotWidget1();
+            MainUI->plotWidget2();
             MainUI->data_idx = 0;
         }
     }
@@ -72,7 +71,7 @@ void *rt_simulation_thread(void *arg) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
         timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
 
-        raisimSimulation(); // Real-Time thread에서 실행될 코드
+        raisimSimulation();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기

@@ -29,6 +29,8 @@ set(CAMEL_SOURCES
         include/CAN/CanMotorX8ProV2.h
         include/Optimizer/GradientDescentOptimizer.cpp
         include/Sensor/LoadCell.cpp
+        include/Sensor/MPU9250.cpp
+        include/Sensor/RE22SC.cpp
         include/RT/rb_utils.cpp
         include/SimulationUI/qcustomplot.cpp)
 
@@ -68,14 +70,36 @@ set(CANINE_SINGLE_LEG_SOURCES
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
+
+# ====== Momentum Inverted Pendulum ======  #
+set(MOMENTUM_INVERTED_PENDULUM_SOURCES
+        src/MomentumInvertedPendulum/MIPSimulation.cpp
+        src/MomentumInvertedPendulum/MIPRobot.cpp
+        src/MomentumInvertedPendulum/MIPPDController.cpp
+        src/MomentumInvertedPendulum/MIPLQRController.cpp
+        src/MomentumInvertedPendulum/MIPPDDController.cpp
+        src/MomentumInvertedPendulum/MIPMPCController.cpp)
+
+add_executable(camel-momentum_inverted_pendulum_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_SOURCES})
+target_link_libraries(camel-momentum_inverted_pendulum_simulation ${CAMEL_LIBS})
+# ====== Momentum Inverted Pendulum ====== /#
+
+# ====== Momentum Inverted Pendulum with Incline======  #
+set(MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES
+        src/MIPwithIncline/MIPISimulation.cpp
+        src/MIPwithIncline/MIPIRobot.cpp
+        src/MIPwithIncline/MIPILQRController.cpp)
+
+add_executable(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES})
+target_link_libraries(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_LIBS})
+# ====== Momentum Inverted Pendulum ====== /#
 ## Simulation /##
 
 ## Operation  ##
 # ====== RMD X8 PRO ======  #
 set(RMDX8PRO_SOURCES
         src/RMDX8PRO/RMDX8ProOperation.cpp
-        src/RMDX8PRO/mainwindow.cpp
-        )
+        src/RMDX8PRO/mainwindow.cpp)
 
 add_executable(camel-rmdx8operation ${CAMEL_SOURCES} ${RMDX8PRO_SOURCES})
 target_link_libraries(camel-rmdx8operation ${CAMEL_LIBS})
@@ -103,10 +127,16 @@ add_executable(camel-test_real_time_thread src/Test/Test_RealTimeThread.cpp ${CA
 target_link_libraries(camel-test_real_time_thread ${CAMEL_LIBS})
 add_executable(camel-test_gradient_descent_optimizer src/Test/Test_GradientDescentOptimizer.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
+
 add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
 add_executable(camel-test_urdf src/Test/Test_urdf.cpp)
 target_link_libraries(camel-test_urdf ${CAMEL_LIBS})
 add_executable(camel-test_real_time_graph src/Test/Test_RealTimeGraph.cpp src/Test/simulationMainwindow.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_real_time_graph ${CAMEL_LIBS})
+add_executable(camel-test_write_CSV src/Test/Test_WriteCSV.cpp)
+add_executable(camel-test_sensor_MPU9250 src/Test/Test_SensorMPU9250.cpp ${CAMEL_SOURCES})
+target_link_libraries(camel-test_sensor_MPU9250 ${CAMEL_LIBS})
+add_executable(camel-test_sensor_RE22SC src/Test/Test_encoderRE22SC.cpp ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES})
+target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})
 ## TEST FILES /##

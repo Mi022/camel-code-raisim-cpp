@@ -26,7 +26,6 @@ void A1JointPDController::updateJointTrajectory(Eigen::VectorXd desiredPosition,
         this->desiredPosition[i] = desiredPosition[i];
         this->desiredVelocity[i] = desiredVelocity[i];
     }
-
 }
 
 void A1JointPDController::updateState() {

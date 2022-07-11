@@ -50,7 +50,7 @@ target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})
 set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp src/Robotarm/RobotarmSimulation.cpp)
+        src/A1/A1JointPDController.cpp)
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
 target_link_libraries(camel-a1 ${CAMEL_LIBS})
@@ -70,11 +70,18 @@ target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 
 # ====== Robotic Arm ======  #
 
-set(Robot_Arm_SOURCES
-        src/Robotarm/RobotarmSimulation.cpp)
+set(ROBOT_ARM_SOURCES
+        src/RobotArm/RobotArmSimulation.cpp
+        src/RobotArm/RobotArmRobot.cpp
+        src/RobotArm/RobotArmPDController.cpp
+        src/RobotArm/RobotArmMotionPlanning.cpp
+        src/RobotArm/RobotArmCollisionChecker.cpp
+        src/RobotArm/RobotArmForwardKinematics.cpp
+        src/RobotArm/DistanceCalculator.cpp
+        src/RobotArm/LineInterpolation.cpp)
 
-add_executable(camel-robot-arm_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${Robot_Arm_SOURCES})
-target_link_libraries(camel-robot-arm_simulation ${CAMEL_LIBS})
+add_executable(camel-robotArm ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${ROBOT_ARM_SOURCES})
+target_link_libraries(camel-robotArm ${CAMEL_LIBS})
 
 # ====== Robotic Arm ====== /#
 

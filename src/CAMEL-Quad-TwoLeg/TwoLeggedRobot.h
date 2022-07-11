@@ -8,9 +8,15 @@
 #include "include/CAMEL/Robot.h"
 
 //TODO:
+<<<<<<< HEAD
 class TwoLeggedRobot : public Robot {
 public:
     TwoLeggedRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
+=======
+class SingleLeggedRobot : public Robot {
+public:
+    SingleLeggedRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
+>>>>>>> initialize standup branch
         initialize();
     }
 

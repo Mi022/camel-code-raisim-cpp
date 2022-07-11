@@ -12,15 +12,27 @@ extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
 std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_two_leg\\camel_two_leg.urdf";
+<<<<<<< HEAD
 std::string name = "two_leg";
+=======
+std::string name = "single_leg";
+>>>>>>> initialize standup branch
 raisim::World world;
 
 double simulationDuration = 1.0;
 double dT = 0.005;
+<<<<<<< HEAD
 TwoLeggedSimulation sim = TwoLeggedSimulation(&world, dT);
 TwoLeggedRobot robot = TwoLeggedRobot(&world, urdfPath, name);
 
 TwoLeggedPDController controller = TwoLeggedPDController(&robot);
+=======
+SingleLeggedSimulation sim = SingleLeggedSimulation(&world, dT);
+SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
+
+SingleLeggedPDController controller = SingleLeggedPDController(&robot);
+
+>>>>>>> initialize standup branch
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);

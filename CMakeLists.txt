@@ -86,9 +86,9 @@ target_link_libraries(camel-momentum_inverted_pendulum_simulation ${CAMEL_LIBS})
 
 # ====== Momentum Inverted Pendulum with Incline======  #
 set(MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES
-        src/MIPwithIncline/MIPISimulation.cpp
-        src/MIPwithIncline/MIPIRobot.cpp
-        src/MIPwithIncline/MIPILQRController.cpp)
+        src/MomentumInvertedPendulum-Inclined/MIPISimulation.cpp
+        src/MomentumInvertedPendulum-Inclined/MIPIRobot.cpp
+        src/MomentumInvertedPendulum-Inclined/MIPILQRController.cpp)
 
 add_executable(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES})
 target_link_libraries(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_LIBS})

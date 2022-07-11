@@ -2,7 +2,7 @@
 // Created by jaehoon on 22. 3. 31.. dkswogns46@gmail.com
 //
 
-#include "SingleLeggedSimulation.h"
+#include "TwoLeggedSimulation.h"
 #include "include/SimulationUI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>
@@ -11,7 +11,7 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_two_leg\\camel_two_leg.urdf";
 std::string name = "single_leg";
 raisim::World world;
 
@@ -20,9 +20,8 @@ double dT = 0.005;
 SingleLeggedSimulation sim = SingleLeggedSimulation(&world, dT);
 SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
 
-//SingleLeggedPDController controller = SingleLeggedPDController(&robot);
-//SingleLeggedIDController controller = SingleLeggedIDController(&robot, dT);
-SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
+SingleLeggedPDController controller = SingleLeggedPDController(&robot);
+
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);

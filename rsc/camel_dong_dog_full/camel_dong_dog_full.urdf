@@ -5,8 +5,8 @@
     <color rgba="0.0 0.0 0.0 0.9"/>
   </material>
 
-  <material name="white">
-    <color rgba="1 1 1 0.9"/>
+  <material name="black1">
+    <color rgba="0.0 0.0 0.0 1"/>
   </material>
 
   <material name="gray1">
@@ -32,13 +32,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 1.25"/>
       <geometry>
-        <box size="0.025 0.025 2.5"/>
+        <box size="0.25 0.25 2.5"/>
       </geometry>
-      <material name="white"/>
+      <material name="black"/>
     </visual>
 
     <inertial>
-      <mass value="1"/>
+      <mass value="10"/>
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
@@ -46,21 +46,63 @@
   <joint name="base" type="prismatic">
     <origin rpy="0 0 0" xyz="-0.25 0 -0.3"/>
     <parent link="base"/>
-    <child link="body"/>
+    <child link="shoulder"/>
     <axis xyz="0 0 1"/>
   </joint>
 
-  <link name="body">
+  <link name="shoulder">
     <visual>
       <origin rpy="0 0 0" xyz="-0.825 -0.25 -1"/>
       <geometry>
-        <mesh filename="Body.stl.stl" scale="0.5 0.5 0.5"/>
+        <mesh filename="shoulder.stl" />
       </geometry>
       <material name="gray1"/>
     </visual>
     <inertial>
-      <mass value="1"/>
+      <mass value="3.0"/>
       <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
     </inertial>
   </link>
+
+  <link name="thigh">
+    <visual>0.43 -0.3 -0.3
+      <origin rpy="0 0 0" xyz="-0.175 -0.915 -1.2"/>
+      <geometry>
+        <mesh filename="thigh.stl"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <inertial>
+      <mass value="3.0"/>
+      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+    </inertial>
+  </link>
+
+  <link name="calf">
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.075 -0.285 -0.765"/>
+      <geometry>
+        <mesh filename="calf.stl"/>
+      </geometry>
+      <material name="gray3"/>
+    </visual>
+    <inertial>
+      <mass value="3.0"/>
+      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+    </inertial>
+  </link>
+
+  <joint name="J1" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.25 0.475 0.2"/>
+    <parent link="shoulder"/>
+    <child link="thigh"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <joint name="J2" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.075 -0.725 -0.725"/>
+    <parent link="thigh"/>
+    <child link="calf"/>
+    <axis xyz="1 0 0"/>
+  </joint>
 </robot>

@@ -32,14 +32,35 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 1.25"/>
       <geometry>
-        <box size="0.25 0.25 2.5"/>
+        <box size="0.025 0.025 2.5"/>
       </geometry>
-      <material name="black"/>
+      <material name="white"/>
     </visual>
-
     <inertial>
-      <mass value="10"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+      <mass value="3.0"/>
+      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
     </inertial>
   </link>
+
+  <joint name="base" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base"/>
+    <child link="body"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="body">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="Body.stl"/>
+      </geometry>
+      <material name="gray1"/>
+    </visual>
+    <inertial>
+      <mass value="3.0"/>
+      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+    </inertial>
+  </link>
+
 </robot>

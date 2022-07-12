@@ -42,11 +42,3 @@ void A1Robot::initialize() {
 
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
-
-raisim::VecDyn A1Robot::getQ() {
-    return this->robot->getGeneralizedCoordinate();
-}
-
-raisim::VecDyn A1Robot::getQD() {
-    return this->robot->getGeneralizedVelocity();
-}

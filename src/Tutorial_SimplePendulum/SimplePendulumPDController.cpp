@@ -22,8 +22,8 @@ void SimplePendulumPDController::setTrajectory() {
 }
 
 void SimplePendulumPDController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    position = getRobot()->getQ();
+    velocity = getRobot()->getQD();
 }
 
 void SimplePendulumPDController::computeControlInput() {

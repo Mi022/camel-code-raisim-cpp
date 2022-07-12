@@ -10,11 +10,3 @@ void SimplePendulumRobot::initialize() {
     initialJointPosition[0] = 1.57;
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
-
-raisim::VecDyn SimplePendulumRobot::getQ() {
-    return this->robot->getGeneralizedCoordinate();
-}
-
-raisim::VecDyn SimplePendulumRobot::getQD() {
-    return this->robot->getGeneralizedVelocity();
-}

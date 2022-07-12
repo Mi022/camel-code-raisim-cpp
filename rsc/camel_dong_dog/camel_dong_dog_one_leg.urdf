@@ -18,7 +18,7 @@
   </material>
 
   <material name="gray3">
-    <color rgba="0.25 0.25 0.25 0.9"/>
+    <color rgba="0.25 0.25 0.25 0.7"/>
   </material>
 
   <link name="world"/>
@@ -30,9 +30,9 @@
 
   <link name="base">
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 1.25"/>
       <geometry>
-        <box size="0.25 0.25 1"/>
+        <box size="0.25 0.25 2.5"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -44,7 +44,7 @@
   </link>
 
   <joint name="base" type="prismatic">
-    <origin rpy="0 0 0" xyz="0 -0.025 0.0"/>
+    <origin rpy="0 0 0" xyz="-0.25 0 -0.3"/>
     <parent link="base"/>
     <child link="shoulder"/>
     <axis xyz="0 0 1"/>
@@ -52,7 +52,7 @@
 
   <link name="shoulder">
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="-0.825 -0.25 -1"/>
       <geometry>
         <mesh filename="shoulder.stl"/>
       </geometry>
@@ -65,8 +65,8 @@
   </link>
 
   <link name="thigh">
-    <visual>
-      <origin rpy="0 0 0" xyz="0.55 -0.125 0"/>
+    <visual>0.43 -0.3 -0.3
+      <origin rpy="0 0 0" xyz="-0.175 -0.915 -1.2"/>
       <geometry>
         <mesh filename="thigh.stl"/>
       </geometry>
@@ -80,11 +80,11 @@
 
   <link name="calf">
     <visual>
-      <origin rpy="0 0 0" xyz="0.425 -0.25 -0.3"/>
+      <origin rpy="0 0 0" xyz="-0.075 -0.285 -0.765"/>
       <geometry>
         <mesh filename="calf.stl"/>
       </geometry>
-      <material name="gray1"/>
+      <material name="gray3"/>
     </visual>
     <inertial>
       <mass value="3.0"/>
@@ -93,14 +93,14 @@
   </link>
 
   <joint name="J1" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.25 0.475 0.2"/>
     <parent link="shoulder"/>
     <child link="thigh"/>
     <axis xyz="1 0 0"/>
   </joint>
 
   <joint name="J2" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.075 -0.725 -0.725"/>
     <parent link="thigh"/>
     <child link="calf"/>
     <axis xyz="1 0 0"/>

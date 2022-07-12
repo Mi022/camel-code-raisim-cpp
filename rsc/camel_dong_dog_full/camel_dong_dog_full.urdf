@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<robot name="camel_dong_dog">
+
+  <material name="black">
+    <color rgba="0 0 0 0.9"/>
+  </material>
+
+  <material name="white">
+    <color rgba="1 1 1 0.9"/>
+  </material>
+
+  <material name="gray1">
+    <color rgba="0.75 0.75 0.75 1"/>
+  </material>
+
+  <material name="gray2">
+    <color rgba="0.5 0.5 0.5 0.9"/>
+  </material>
+
+  <material name="gray3">
+    <color rgba="0.25 0.25 0.25 0.9"/>
+  </material>
+
+  <link name="world"/>
+
+  <joint name="fixed_world" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 1.25"/>
+      <geometry>
+        <box size="0.25 0.25 2.5"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+</robot>

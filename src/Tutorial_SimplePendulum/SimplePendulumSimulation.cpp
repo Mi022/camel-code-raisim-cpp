@@ -3,7 +3,7 @@
 //
 
 #include "SimplePendulumSimulation.h"
-#include "include/SimulationUI/simulationMainwindow.h"
+#include "UI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 #include <cmath>
@@ -20,41 +20,45 @@ SimplePendulumSimulation sim = SimplePendulumSimulation(&world, dT);
 SimplePendulumRobot robot = SimplePendulumRobot(&world, urdfPath, name);
 SimplePendulumPDController controller = SimplePendulumPDController(&robot);
 
+double oneCycleSimTime = 0;
+int divider = ceil(simulationDuration / dT / 200);
+int iteration = 0;
+
+void plot() {
+    MainUI->plotWidget1();
+    MainUI->plotWidget2();
+    MainUI->plotWidget3();
+}
+
+void updatePlotData() {
+    MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
+    MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
+    MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition;
+    MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
+    MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity;
+    MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[0];
+    MainUI->data_idx += 1;
+}
+
+void resetSimAndPlotVars() {
+    MainUI->data_idx = 0;
+    iteration = 0;
+    oneCycleSimTime = 0;
+}
+
 void raisimSimulation() {
-    double oneCycleSimTime = 0;
-    int divider = ceil(simulationDuration / dT / 200);
-    int i = 0;
-    auto begin = std::chrono::high_resolution_clock::now();
-    auto end = std::chrono::high_resolution_clock::now();
-    while (true) {
-        if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
-            // control robot and data plot thread
-            if(i == 0){begin = std::chrono::high_resolution_clock::now();}
-            oneCycleSimTime = i * dT;
-            controller.doControl();
-            world.integrate();
-            if (i % divider == 0) {
-                //                std::cout<<"data_idx : "<<MainUI->data_idx<<std::endl;
-                MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
-                MainUI->data_y1[MainUI->data_idx] = robot.getQ();
-                MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition;
-                MainUI->data_y2[MainUI->data_idx] = robot.getQD();
-                MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity;
-//                MainUI->data_y2[MainUI->data_idx] = controller.torque[0];
-                MainUI->data_idx += 1;
-            }
-            i++;
-        } else if (oneCycleSimTime >= simulationDuration) {
-            end = std::chrono::high_resolution_clock::now();
-            auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-            std::cout <<" Time measured: "<< elapsed.count() * 1e-9 <<"seconds" <<std::endl;
-            MainUI->button1 = false;
-            i = 0;
-            oneCycleSimTime = 0;
-            MainUI->plotWidget1();
-            MainUI->plotWidget2();
-            MainUI->data_idx = 0;
+    if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
+        oneCycleSimTime = iteration * dT;
+        controller.doControl();
+        world.integrate();
+        if (iteration % divider == 0) {
+            updatePlotData();
         }
+        iteration++;
+    } else if (oneCycleSimTime >= simulationDuration) {
+        MainUI->button1 = false;
+        plot();
+        resetSimAndPlotVars();
     }
 }
 

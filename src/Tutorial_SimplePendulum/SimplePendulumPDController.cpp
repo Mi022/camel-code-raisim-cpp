@@ -22,13 +22,13 @@ void SimplePendulumPDController::setTrajectory() {
 }
 
 void SimplePendulumPDController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate()[0];
-    velocity = getRobot()->robot->getGeneralizedVelocity()[0];
+    position = getRobot()->robot->getGeneralizedCoordinate();
+    velocity = getRobot()->robot->getGeneralizedVelocity();
 }
 
 void SimplePendulumPDController::computeControlInput() {
-    positionError = desiredPosition - position;
-    velocityError = desiredVelocity - velocity;
+    positionError = desiredPosition - position[0];
+    velocityError = desiredVelocity - velocity[0];
     torque[0] = PGain * positionError + DGain * velocityError;
 }
 

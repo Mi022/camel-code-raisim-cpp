@@ -2,7 +2,7 @@
 <robot name="camel_dong_dog">
 
   <material name="black">
-    <color rgba="0 0 0 0.9"/>
+    <color rgba="0.0 0.0 0.0 0.9"/>
   </material>
 
   <material name="white">
@@ -18,7 +18,7 @@
   </material>
 
   <material name="gray3">
-    <color rgba="0.25 0.25 0.25 0.9"/>
+    <color rgba="0.25 0.25 0.25 0.7"/>
   </material>
 
   <link name="world"/>
@@ -36,14 +36,15 @@
       </geometry>
       <material name="white"/>
     </visual>
+
     <inertial>
-      <mass value="3.0"/>
-      <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+      <mass value="1"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
 
   <joint name="base" type="prismatic">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.25 0 -0.3"/>
     <parent link="base"/>
     <child link="body"/>
     <axis xyz="0 0 1"/>
@@ -51,16 +52,15 @@
 
   <link name="body">
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="-0.825 -0.25 -1"/>
       <geometry>
-        <mesh filename="Body.stl"/>
+        <mesh filename="Body.stl.stl" scale="0.5 0.5 0.5"/>
       </geometry>
       <material name="gray1"/>
     </visual>
     <inertial>
-      <mass value="3.0"/>
+      <mass value="1"/>
       <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
     </inertial>
   </link>
-
 </robot>

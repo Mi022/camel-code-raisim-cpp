@@ -24,8 +24,8 @@ void SingleLeggedIDController::setTrajectory() {
 }
 
 void SingleLeggedIDController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    position = getRobot()->getQ();
+    velocity = getRobot()->getQD();
 }
 
 void SingleLeggedIDController::computeControlInput() {

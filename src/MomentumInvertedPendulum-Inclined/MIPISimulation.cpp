@@ -12,7 +12,7 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_momentum_inverted_pendulum_with_incline.urdf";
+std::string urdfPath = "\\home\\camel\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_momentum_inverted_pendulum_with_incline.urdf";
 std::string name = "MIPI";
 raisim::World world;
 

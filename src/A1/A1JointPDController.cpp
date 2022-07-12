@@ -30,8 +30,8 @@ void A1JointPDController::updateJointTrajectory(Eigen::VectorXd desiredPosition,
 }
 
 void A1JointPDController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    position = getRobot()->getQ();
+    velocity = getRobot()->getQD();
 }
 
 void A1JointPDController::computeControlInput() {

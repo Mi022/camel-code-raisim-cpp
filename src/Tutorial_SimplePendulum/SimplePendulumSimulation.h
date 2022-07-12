@@ -1,27 +1,15 @@
-//
-// Created by jaehoon on 22. 3. 31..
-//
+#include "include/CAMEL/Simulation.h"   //include basic sources
+#include "UI/simulationMainwindow.h"
+#include "include/RT/rb_utils.h"
+#include <QApplication>
 
-#ifndef RAISIM_SIMPLEPENDULUMSIMULATION_H
-#define RAISIM_SIMPLEPENDULUMSIMULATION_H
-
-#include "include/CAMEL/Simulation.h"
-#include "SimplePendulumRobot.h"
-#include "SimplePendulumPDController.h"
-
-
-//
-
-
+// extend Simulation class (parent) to SimplePendulumSimulation class (child)
 class SimplePendulumSimulation : public Simulation {
 
 public:
-
+    //initialize
     SimplePendulumSimulation(raisim::World *world, double dT) : Simulation(world, dT) { ; }
 
 private:
 
 };
-
-
-#endif //RAISIM_SIMPLEPENDULUMSIMULATION_H

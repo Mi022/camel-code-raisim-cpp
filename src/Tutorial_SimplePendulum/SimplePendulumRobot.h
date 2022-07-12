@@ -1,20 +1,12 @@
-//
-// Created by jaehoon on 22. 4. 3..
-//
+#include "include/CAMEL/Robot.h"     //include Robot class
 
-#ifndef RAISIM_SIMPLEPENDULUMROBOT_H
-#define RAISIM_SIMPLEPENDULUMROBOT_H
-
-#include "include/CAMEL/Robot.h"
-
+// extend Robot class (parent) to SimplePendulumRobot class (child)
 class SimplePendulumRobot : public Robot {
 public:
+    //initialize
     SimplePendulumRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
         initialize();
     }
 
-    void initialize() override;
+    void initialize() override;      //override abstract method in robot
 };
-
-
-#endif //RAISIM_SIMPLEPENDULUMROBOT_H

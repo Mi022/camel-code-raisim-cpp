@@ -10,8 +10,7 @@
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
-std:: string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_dong_dog_full\\camel_dong_dog_full.urdf";
-
+std:: string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_dong_dog\\camel_dong_dog_one_leg.urdf";
 //std::string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
 std::string name = "cutePendulum";
 raisim::World world;

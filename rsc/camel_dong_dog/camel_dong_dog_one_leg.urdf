@@ -5,7 +5,7 @@
     <color rgba="0.0 0.0 0.0 0.9"/>
   </material>
 
-  <material name="black1">
+  <material name="white">
     <color rgba="0.0 0.0 0.0 1"/>
   </material>
 

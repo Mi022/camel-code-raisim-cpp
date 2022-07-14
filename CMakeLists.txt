@@ -74,7 +74,7 @@ set(DONG_DOG_SINGLE_LEG_SOURCES
         src/Dongdog/DongdogsinglelegRobot.cpp
         src/Dongdog/DongdogsinglelegPDController.cpp)
 
-add_executable(camel-Dong-dog-single-leg ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${SIMPLE_Dongdog})
+add_executable(camel-Dong-dog-single-leg ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${DONG_DOG_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-Dong-dog-single-leg ${CAMEL_LIBS})
 # ====== Dong Dog Single Leg ======/ #
 

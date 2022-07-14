@@ -14,7 +14,7 @@ std:: string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cp
 //std:: string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_dong_dog\\camel_dong_dog_one_leg.urdf";
 //std::string urdfPath = "\\home\\lee\\raisim_ws\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
 std::string name = "Dongdog";
-raisim::World world;
+raisim::World world;    //
 
 double simulationDuration = 5.0;
 double dT = 0.005;

@@ -11,12 +11,41 @@
 char var_elim[2000];
 char con_elim[2000];
 
+void A1MPCController::getGait(){
+    for(int i=0; i<2001; i++)
+    {
+        if((i/25)%2 == 0)
+        {
+            gait(i,0) = 1;
+            gait(i,1) = 0;
+            gait(i,2) = 0;
+            gait(i,3) = 1;
+        }
+        else
+        {
+            gait(i,0) = 0;
+            gait(i,1) = 1;
+            gait(i,2) = 1;
+            gait(i,3) = 0;
+        }
+
+        if(i == 200)
+        {
+            gait(i,0) = 1;
+            gait(i,1) = 1;
+            gait(i,2) = 1;
+            gait(i,3) = 1;
+        }
+    }
+}
+
 void A1MPCController::doControl() {
     std::cout<<"simTime : "<<getRobot()->getWorldTime()<<std::endl;
     updateState();
     setTrajectory();
     getMetrices();
     qpSolver();
+    setLegcontrol();
     computeControlInput();
     setControlInput();
 }
@@ -40,8 +69,6 @@ void A1MPCController::updateState(){
 }
 
 void A1MPCController::setTrajectory() {
-    std::cout << "Set trajectory function" << std::endl;
-    double currentTime = getRobot()->getWorldTime();
     for(int i = 0; i < mMPCHorizon ; i++)
     {
         xd(i*13,0) = 0.f;
@@ -50,7 +77,8 @@ void A1MPCController::setTrajectory() {
 
         xd(i*13+3,0) = 0.f;
         xd(i*13+4,0) = 0.f;
-        xd(i*13+5,0) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
+        xd(i*13+5,0) = 0.3;
+        //xd(i*13+5,0) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
 
         xd(i*13+6,0) = 0.f;
         xd(i*13+7,0) = 0.f;
@@ -58,7 +86,8 @@ void A1MPCController::setTrajectory() {
 
         xd(i*13+9,0) = 0.f;
         xd(i*13+10,0) = 0.f;
-        xd(i*13+11,0) = mTrajectoryGenerator.getVelocityTrajectory(currentTime + mDT * i);
+        xd(i*13+11,0) = 0.f;
+        //xd(i*13+11,0) = mTrajectoryGenerator.getVelocityTrajectory(currentTime + mDT * i);
 
     }
     desiredPositionX = xd(3,0);
@@ -68,6 +97,7 @@ void A1MPCController::setTrajectory() {
     desiredRotationX = xd(0,0);
     desiredRotationY = xd(1,0);
     desiredRotationZ = xd(2,0);
+
 }
 
 void A1MPCController::getMetrices(){
@@ -79,9 +109,9 @@ void A1MPCController::getMetrices(){
 
     //weights
     Eigen::Matrix<double, 13,1> weightMat;
-    weightMat << 1, 1, 1,
-                 40, 40, 50,
-                 0, 0, 1,
+    weightMat << 0.5, 0.5, 50,
+                 20, 20, 50,
+                 0, 0, 0.2,
                  0.1, 0.1, 0.2,
                  0.f;
     L.diagonal() = weightMat.replicate(mMPCHorizon,1);
@@ -99,12 +129,12 @@ void A1MPCController::getMetrices(){
             U_b(5*k + 1) = BIG_NUMBER;
             U_b(5*k + 2) = BIG_NUMBER;
             U_b(5*k + 3) = BIG_NUMBER;
-            U_b(5*k + 4) = F_MAX;
-            //U_b(5*k + 4) = update->gait[i*4 + j] * setup->f_max;
+            //U_b(5*k + 4) = F_MAX;
+            U_b(5*k + 4) = F_MAX*gait(count,j);
             k++;
         }
     }
-
+    count++;
     //fmat initialize
     float mu = 1.f/MU;
     Eigen::Matrix<double,5,3> f_block;
@@ -320,9 +350,9 @@ void A1MPCController::qpSolver(){
         {
 
             f[leg][axis] = q_soln[leg*3 + axis];
-            std::cout << f[leg][axis] << "  ";
+            //std::cout << f[leg][axis] << "  ";
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
 
     free(H_qpoases);
@@ -340,6 +370,51 @@ void A1MPCController::qpSolver(){
     free(q_red);
 }
 
+void A1MPCController::setLegcontrol() {
+    double currentTime = getRobot()->getWorldTime();
+    legDpos = legGenerator.getPositionTrajectory(currentTime + mDT);
+
+    double jointPos[3];
+    double jointVel[3];
+    jointPos[0] = 0.f;
+    jointPos[1] = acos(std::abs(legDpos)/ 0.4);
+    jointPos[2] = -2*jointPos[1];
+    jointVel[0] = 0.f;
+    jointVel[1] = 0.f;
+    jointVel[2] = 0.f;
+
+    double Pgain[3];
+    double Dgain[3];
+    Pgain[0] = 30;
+    Dgain[0] = 3;
+
+    Pgain[1] = 100;
+    Dgain[1] = 1;
+
+    Pgain[2] = 100;
+    Dgain[2] = 1;
+
+    double posError[3];
+    double velError[3];
+    for (int i = 0; i < 4; i++){
+        if (gait(count-1, i) == 0){
+            for(int j=0; j<3; j++)
+            {
+                posError[j] = jointPos[j] - position[7+i*3+j];
+                velError[j] = jointVel[j] - velocity[6+i*3+j];
+                Legtemptorque[i*3+j] = Pgain[j] * posError[j] + Dgain[j] * velError[j];
+            }
+        }
+        else
+        {
+            for(int j=0; j<3; j++)
+            {
+                Legtemptorque[i*3+j] = 0.f;
+            }
+        }
+    }
+}
+
 void A1MPCController::computeControlInput() {
     getJacobian(robotJacobian[0], position[ 7],position[ 8],position[ 9],1);
     getJacobian(robotJacobian[1], position[10],position[11],position[12],-1);
@@ -351,14 +426,14 @@ void A1MPCController::computeControlInput() {
     {
         robotJacobian[i].transposeInPlace();
         robottorque[i] = robotJacobian[i]*f[i];
-        torque[i*3+6] = robottorque[i][0];
-        torque[i*3+7] = robottorque[i][1];
-        torque[i*3+8] = robottorque[i][2];
+        torque[i*3+6] = robottorque[i][0] + Legtemptorque[i*3];
+        torque[i*3+7] = robottorque[i][1] + Legtemptorque[i*3+1];
+        torque[i*3+8] = robottorque[i][2] + Legtemptorque[i*3+2];
     }
 }
 
 void A1MPCController::setControlInput() {
-    for (int i = 0; i < 18; i++) {
+    for (int i = 6; i < 18; i++) {
         if(torque[i] > torqueLimit)
         {
             torque[i] = torqueLimit;
@@ -442,12 +517,14 @@ void A1MPCController::ss_mats(Eigen::Matrix<double,13,13>& A, Eigen::Matrix<doub
             footPosition[i][j] -= p[j];
         }
     }
+
     Eigen::Matrix<double,4,3> R_feet;
     R_feet <<  footPosition[0][0], footPosition[0][1], footPosition[0][2], //FR
                footPosition[1][0], footPosition[1][1], footPosition[1][2], //FL
                footPosition[2][0], footPosition[2][1], footPosition[2][2], //RR
                footPosition[3][0], footPosition[3][1], footPosition[3][2]; //RL
     B.setZero();
+
     for(int n=0; n<4; n++)
     {
         B.block(6,n*3,3,3) = I_inv*getSkew(R_feet.row(n));

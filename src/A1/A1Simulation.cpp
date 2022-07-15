@@ -16,7 +16,7 @@ std::string name = "cuteA1";
 raisim::World world;
 
 double simulationDuration = 10.0;
-double dT = 0.01;
+double dT = 0.005;
 A1Simulation sim = A1Simulation(&world, dT);
 A1Robot robot = A1Robot(&world, urdfPath, name);
 
@@ -47,20 +47,20 @@ void raisimSimulation() {
             MainUI->data_y6[MainUI->data_idx] = MPCcontroller.q[2];
             MainUI->data_y6_desired[MainUI->data_idx] = MPCcontroller.desiredRotationZ;
 
-            MainUI->data_hip_fr[MainUI->data_idx] = robot.getQ()[7];
-            MainUI->data_hip_fl[MainUI->data_idx] = robot.getQ()[10];
-            MainUI->data_hip_rr[MainUI->data_idx] = robot.getQ()[13];
-            MainUI->data_hip_rl[MainUI->data_idx] = robot.getQ()[16];
+            MainUI->data_hip_fr[MainUI->data_idx] = MPCcontroller.position[7];
+            MainUI->data_hip_fl[MainUI->data_idx] = MPCcontroller.position[10];
+            MainUI->data_hip_rr[MainUI->data_idx] = MPCcontroller.position[13];
+            MainUI->data_hip_rl[MainUI->data_idx] = MPCcontroller.position[16];
 
-            MainUI->data_thigh_fr[MainUI->data_idx] = robot.getQ()[8];
-            MainUI->data_thigh_fl[MainUI->data_idx] = robot.getQ()[11];
-            MainUI->data_thigh_rr[MainUI->data_idx] = robot.getQ()[14];
-            MainUI->data_thigh_rl[MainUI->data_idx] = robot.getQ()[17];
+            MainUI->data_thigh_fr[MainUI->data_idx] = MPCcontroller.position[8];
+            MainUI->data_thigh_fl[MainUI->data_idx] = MPCcontroller.position[11];
+            MainUI->data_thigh_rr[MainUI->data_idx] = MPCcontroller.position[14];
+            MainUI->data_thigh_rl[MainUI->data_idx] = MPCcontroller.position[17];
 
-            MainUI->data_calf_fr[MainUI->data_idx] = robot.getQ()[9];
-            MainUI->data_calf_fl[MainUI->data_idx] = robot.getQ()[12];
-            MainUI->data_calf_rr[MainUI->data_idx] = robot.getQ()[15];
-            MainUI->data_calf_rl[MainUI->data_idx] = robot.getQ()[18];
+            MainUI->data_calf_fr[MainUI->data_idx] = MPCcontroller.position[9];
+            MainUI->data_calf_fl[MainUI->data_idx] = MPCcontroller.position[12];
+            MainUI->data_calf_rr[MainUI->data_idx] = MPCcontroller.position[15];
+            MainUI->data_calf_rl[MainUI->data_idx] = MPCcontroller.position[18];
 
             MainUI->data_idx += 1;
         }
@@ -113,7 +113,6 @@ int main(int argc, char *argv[]) {
     MainWindow w;
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
-    server.integrateWorldThreadSafe();
     server.focusOn(robot.robot);
     int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);

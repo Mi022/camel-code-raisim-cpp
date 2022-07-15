@@ -31,6 +31,7 @@ set(CAMEL_SOURCES
         include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
         include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
         include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp
+        include/TrajectoryGenerator/legtrajectory.cpp
         include/CAN/CanMotorX8ProV2.h
         include/Optimizer/GradientDescentOptimizer.cpp
         include/Sensor/LoadCell.cpp

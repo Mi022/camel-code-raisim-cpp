@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
     w.show();
-    motionPlanner.generatePoint();
     motionPlanner.makeTree();
+    motionPlanner.dijkstra();
     return a.exec();
 }

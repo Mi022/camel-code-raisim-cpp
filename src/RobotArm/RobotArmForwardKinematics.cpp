@@ -18,7 +18,6 @@ Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joi
             1,0,5,
             1,2,3,
             4,5,6;
-    std::cout << linkPoint.rows() << linkPoint.cols() << std::endl;
 
 
     return linkPoint;

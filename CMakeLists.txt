@@ -78,7 +78,8 @@ set(ROBOT_ARM_SOURCES
         src/RobotArm/RobotArmCollisionChecker.cpp
         src/RobotArm/RobotArmForwardKinematics.cpp
         src/RobotArm/DistanceCalculator.cpp
-        src/RobotArm/LineInterpolation.cpp)
+        src/RobotArm/LineInterpolation.cpp
+        src/RobotArm/RemoveMatrix.cpp)
 
 add_executable(camel-robotArm ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${ROBOT_ARM_SOURCES})
 target_link_libraries(camel-robotArm ${CAMEL_LIBS})

@@ -5,13 +5,13 @@
 #ifndef RAISIM_SINGLELEGGEDROBOTOPERATION_H
 #define RAISIM_SINGLELEGGEDROBOTOPERATION_H
 
-#include "include/CAMEL/Robot.h"
+#include "include/CAMEL/OperationRobot.h"
 #include "SingleLegCAN.h"
 //TODO: update mLumpedMass
 
-class SingleLeggedRobotOperation : public Robot {
+class SingleLeggedRobotOperation : public OperationRobot {
 public:
-    SingleLeggedRobotOperation(raisim::World *world, std::string urdfPath, std::string name, SingleLegCAN *can, double dT) : Robot(
+    SingleLeggedRobotOperation(raisim::World *world, std::string urdfPath, std::string name, SingleLegCAN *can, double dT) : OperationRobot(
             world, urdfPath, name) {
         mCan = can;
         mDT = dT;

@@ -35,7 +35,6 @@ set(CAMEL_SOURCES
         include/SimulationUI/qcustomplot.cpp)
 
 set(CAMEL_SIMULATION_UI_SOURCES
-        include/SimulationUI/qcustomplot.cpp
         include/SimulationUI/simulationMainwindow.cpp)
 
 ## Simulation ##
@@ -44,7 +43,9 @@ set(SIMPLE_PENDULUM_SOURCES
         src/Tutorial_SimplePendulum/SimplePendulumSimulation.cpp
         src/Tutorial_SimplePendulum/SimplePendulumRobot.cpp
         src/Tutorial_SimplePendulum/SimplePendulumPDController.cpp
-        src/Tutorial_SimplePendulum/UI/simulationMainwindow.cpp)
+        src/Tutorial_SimplePendulum/SimplePendulumSharedMemory.h
+        src/Tutorial_SimplePendulum/UI_RealTimePlot/operationMainwindow.cpp
+        )
 
 add_executable(camel-tutorial-simplePendulum ${CAMEL_SOURCES} ${SIMPLE_PENDULUM_SOURCES})
 target_link_libraries(camel-tutorial-simplePendulum ${CAMEL_LIBS})

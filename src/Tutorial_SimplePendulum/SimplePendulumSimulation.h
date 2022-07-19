@@ -1,5 +1,6 @@
 #include "include/CAMEL/Simulation.h"   //include basic sources
-#include "UI/simulationMainwindow.h"
+//#include "UI/simulationMainwindow.h"
+#include "UI_RealTimePlot/operationMainwindow.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 

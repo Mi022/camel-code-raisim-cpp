@@ -9,6 +9,7 @@
 #include "src/RobotArm/DistanceCalculator.h"
 #include "src/RobotArm/RobotArmForwardKinematics.h"
 #include "src/RobotArm/RemoveMatrix.h"
+#include "iostream"
 
 
 class RobotArmMotionPlanning {
@@ -19,6 +20,7 @@ public:
     }
     Eigen::MatrixXd armPose = Eigen::MatrixXd(1,6);
     int len ;
+    std::vector<int> findTree;
     Eigen::MatrixXd pare = Eigen::MatrixXd::Random(1,3);
     Eigen::MatrixXd pareAdd = Eigen::MatrixXd::Zero(1,3);
     Eigen::MatrixXd childTree ;
@@ -26,7 +28,6 @@ public:
     void setObstacle(Eigen::VectorXd, Eigen::MatrixXd);
     void generatePoint();
     void makeTree();
-    std::vector<int> where(Eigen::VectorXd,float);
     void dijkstra();
 
     RobotArmForwardKinematics forwardKinematics;

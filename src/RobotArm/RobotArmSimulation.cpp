@@ -72,7 +72,7 @@ void *rt_simulation_thread(void *arg) {
     std::cout << "control freq : "<< 1/double(PERIOD_US) *1e6 << std::endl;
     obstacleRadius << 0.2, 0.2;
     obstacleCenter <<  -1,  0,  0.5,
-            0,  1,  0.2;
+                        0,  1,  0.2;
     motionPlanner.setObstacle(obstacleRadius, obstacleCenter);
     motionPlanner.setObstacle(obstacleRadius, obstacleCenter);
 

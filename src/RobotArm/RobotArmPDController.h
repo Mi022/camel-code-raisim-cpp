@@ -7,6 +7,7 @@
 
 #include "include/CAMEL/Controller.h"
 #include "include/TrajectoryGenerator/CubicTrajectoryGenerator.h"
+#include <cmath>
 
 class RobotArmPDController : public Controller {
 public:
@@ -20,6 +21,10 @@ public:
 
     Eigen::VectorXd PGain = Eigen::VectorXd(6);
     Eigen::VectorXd DGain = Eigen::VectorXd(6);
+
+    size_t TRFrameIndex = getRobot()->robot->getFrameIdxByName("top_roll");//변수
+    size_t FBFrameIndex = getRobot()->robot->getFrameIdxByName("fixed_ball");
+    raisim::Vec<3> P_position[2];
 
 
     RobotArmPDController(Robot *robot) : Controller(robot) {

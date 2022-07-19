@@ -1,7 +1,7 @@
 //
 // Created by jy on 22. 7. 6.
 //
-#include "iostream"
+
 #include "RobotArmMotionPlanning.h"
 #include "random"
 #include "algorithm"
@@ -14,7 +14,7 @@ void RobotArmMotionPlanning::setObstacle(Eigen::VectorXd obstacleRadius, Eigen::
 }
 
 void RobotArmMotionPlanning::generatePoint() {
-    int randNum = 10;
+    int randNum = 100;
     armPose.row(0)=startJoint;
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
@@ -35,7 +35,7 @@ void RobotArmMotionPlanning::generatePoint() {
 void RobotArmMotionPlanning::makeTree() {
 
     generatePoint();
-    int k=300;
+    int k=250;
     float lambda1;
     float lambda2;
     Eigen::MatrixXd currentPoint = Eigen::MatrixXd::Zero(6,3);
@@ -76,17 +76,6 @@ void RobotArmMotionPlanning::makeTree() {
     pare = removeMatrix.removeRow(pare,0);
 }
 
-vector<int> RobotArmMotionPlanning::where(Eigen::VectorXd vec, float value) {
-    vector<int> findIdx;
-    int idx = 0;
-    for(idx =0;idx<vec.size();idx++){
-        if(vec(idx)==value){
-            findIdx.push_back(idx);
-        }
-    }
-    return findIdx;
-}
-
 void RobotArmMotionPlanning::dijkstra() {
 
     vector<int> Q(len);
@@ -99,9 +88,7 @@ void RobotArmMotionPlanning::dijkstra() {
     Eigen::MatrixXd Uweight = Eigen::MatrixXd(len,len);
     Uweight.setOnes();
     Uweight = largeN*Uweight;
-    Eigen::VectorXd Ud = Eigen::VectorXd(pare.rows());
-    Ud.setOnes();
-    Ud = largeN*Ud;
+    vector<float> uD(len,largeN);
     int iteration = 0;
     float limitIter = 1e4;
 
@@ -114,16 +101,16 @@ void RobotArmMotionPlanning::dijkstra() {
         distanceVertex = pare(rowIdx,2);
         Uweight(coordVertex1,coordVertex2) = distanceVertex;
     }
-
-//    cout << " U w " << endl;
-//    cout << Uweight << endl;
+    cout << childTree << endl;
 
     Eigen::VectorXd parentTree = Eigen::VectorXd::Zero(len);
 
     Uweight(0,0)=0;
-    Ud(0) = 0;
+    uD[0] = 0;
     int Uidx ;
     vector<int> UidxBox ;
+    vector<int> testBox ;
+
     vector<int> result;
     Eigen::VectorXd uIdxChild;
     vector<int> uRealChild;
@@ -137,27 +124,35 @@ void RobotArmMotionPlanning::dijkstra() {
         }
         findMin.clear();
         for(int i =0 ; i < Q.size() ; i++){
-            findMin.push_back(Ud[Q[i]]);
+            findMin.push_back(uD[Q[i]]);
         }
-
-        cout << "findMin : " << endl;
-        for(int i =0 ; i < findMin.size() ; i++){
-            cout << " " << findMin[i] << " ";
-        }
-        cout << " " << endl;
-
         minD = *min_element(findMin.begin(),findMin.end());
-        UidxBox = where(Ud, minD);
-
-        cout << "UidxBox : " << endl;
-        for(int i =0 ; i < UidxBox.size() ; i++){
-            cout << " " << UidxBox[i] << " ";
+        UidxBox.clear();
+        for(int i=0;i<uD.size();i++)
+        {
+            if (uD[i] == minD) {
+                UidxBox.push_back(i);
+            }
         }
-        cout << " " << endl;
 
-        int dd = rand() % UidxBox.size();
-        cout << "dd : " << dd <<endl;
-        Uidx = UidxBox[dd];
+//        cout << "findMin : " << endl;
+//        for(int i =0 ; i < findMin.size() ; i++){
+//            cout << " " << findMin[i] << " ";
+//        }
+//        cout << " " << endl;
+//
+//        cout << "minD : " << endl;
+//        cout << minD << endl;
+//
+//        cout << "UidxBox : " << endl;
+//        for(int i =0 ; i < UidxBox.size() ; i++){
+//            cout << " " << UidxBox[i] << " ";
+//        }
+//        cout << " " << endl;
+
+        Uidx = UidxBox[rand() % UidxBox.size()];
+
+        S.clear();
         S.push_back(Uidx);
         result.clear();
         result.resize(Q.size()+S.size());
@@ -166,24 +161,28 @@ void RobotArmMotionPlanning::dijkstra() {
         Q = result;
 
         uIdxChild = childTree.row(Uidx);
+        uRealChild.clear();
         for(int i = 0 ; i < uIdxChild.size() ; i++){
             if(uIdxChild[i] > 0){
                 uRealChild.push_back(uIdxChild[i]);
             }
         }
-        for(int i = 0 ; i < uRealChild.size() ; i++){ //아니 Ud가 왜 갑자기 그냥 뿅뿅 바껴버리냐고ㅋㅋ
+        for(int i = 0 ; i < uRealChild.size() ; i++){
             int vIdx = uRealChild[i];
-            cout <<"vIdx : " << vIdx << endl;
-            if( Ud[vIdx] > (Ud[Uidx] + Uweight(Uidx,vIdx))){
-                Ud[vIdx] = Ud[Uidx] + Uweight(Uidx,vIdx);
+            if( uD[vIdx] > (uD[Uidx] + Uweight(Uidx,vIdx))){
+                uD[vIdx] = uD[Uidx] + Uweight(Uidx,vIdx);
                 parentTree[vIdx] = Uidx;
             }
         }
 
         iteration++;
-//        cout << "parentTree : " << parentTree<< endl;
-
-//        cout << "iteration :  " <<iteration << endl;
     }
+    int find_idx = len-1;
+    findTree.push_back(find_idx);
+    while (find_idx != 0){
+        find_idx = parentTree[find_idx,0];
+        findTree.push_back(find_idx);
+    }
+    reverse(findTree.begin(),findTree.end());
 
 }

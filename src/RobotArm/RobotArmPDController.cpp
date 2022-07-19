@@ -36,6 +36,5 @@ void RobotArmPDController::computeControlInput() {
 
 void RobotArmPDController::setControlInput() {
     getRobot()->robot->setGeneralizedForce(torque);
-    getRobot()->robot->getBodyIdx("upeer_arm");
 
 }

@@ -94,9 +94,7 @@ void MainWindow::plotWidget1() {
     if (sharedMemory->desiredJointPosition > yMaxWidget1) { yMaxWidget1 = sharedMemory->desiredJointPosition; }
     ui->widget->graph(0)->addData(sharedMemory->simTime, sharedMemory->jointPosition);
     ui->widget->graph(1)->addData(sharedMemory->simTime, sharedMemory->desiredJointPosition);
-    // give the axes some labels:
-    ui->widget->xAxis->setLabel("time [sec]");
-    ui->widget->yAxis->setLabel("position");
+
     // set axes ranges, so we see all data:
     ui->widget->xAxis->setRange(0.0, sharedMemory->simTime + 0.001);
     ui->widget->yAxis->setRange(yMinWidget1 - 0.001, yMaxWidget1 + 0.001);
@@ -110,9 +108,7 @@ void MainWindow::plotWidget2() {
     if (sharedMemory->desiredJointVelocity > yMaxWidget2) { yMaxWidget2 = sharedMemory->desiredJointVelocity; }
     ui->widget_2->graph(0)->addData(sharedMemory->simTime, sharedMemory->jointVelocity);
     ui->widget_2->graph(1)->addData(sharedMemory->simTime, sharedMemory->desiredJointVelocity);
-    // give the axes some labels:
-    ui->widget_2->xAxis->setLabel("time [sec]");
-    ui->widget_2->yAxis->setLabel("velocity");
+
     // set axes ranges, so we see all data:
     ui->widget_2->xAxis->setRange(0.0, sharedMemory->simTime + 0.001);
     ui->widget_2->yAxis->setRange(yMinWidget2 - 0.001, yMaxWidget2 + 0.001);
@@ -122,11 +118,8 @@ void MainWindow::plotWidget2() {
 void MainWindow::plotWidget3() {
     if (sharedMemory->jointTorque < yMinWidget3) { yMinWidget3 = sharedMemory->jointTorque; }
     if (sharedMemory->jointTorque > yMaxWidget3) { yMaxWidget3 = sharedMemory->jointTorque; }
-
     ui->widget_3->graph(0)->addData(sharedMemory->simTime, sharedMemory->jointTorque);
-    // give the axes some labels:
-    ui->widget_3->xAxis->setLabel("time [sec]");
-    ui->widget_3->yAxis->setLabel("torque");
+
     // set axes ranges, so we see all data:
     ui->widget_3->xAxis->setRange(0.0, sharedMemory->simTime + 0.001);
     ui->widget_3->yAxis->setRange(yMinWidget3 - 0.1, yMaxWidget3 + 0.1);

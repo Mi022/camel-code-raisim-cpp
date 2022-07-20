@@ -28,14 +28,6 @@ void A1MPCController::getGait(){
             gait(i,2) = 1;
             gait(i,3) = 0;
         }
-
-        if(i == 200)
-        {
-            gait(i,0) = 1;
-            gait(i,1) = 1;
-            gait(i,2) = 1;
-            gait(i,3) = 1;
-        }
     }
 }
 
@@ -75,20 +67,17 @@ void A1MPCController::setTrajectory() {
         xd(i*13+1,0) = 0.f;
         xd(i*13+2,0) = 0.f;
 
-        xd(i*13+3,0) = 0.f;
+        xd(i*13+3,0) = 0.5*(getRobot()->getWorldTime()+mDT*i);
         xd(i*13+4,0) = 0.f;
         xd(i*13+5,0) = 0.3;
-        //xd(i*13+5,0) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
 
         xd(i*13+6,0) = 0.f;
         xd(i*13+7,0) = 0.f;
         xd(i*13+8,0) = 0.f;
 
-        xd(i*13+9,0) = 0.f;
+        xd(i*13+9,0) = 0.5;
         xd(i*13+10,0) = 0.f;
         xd(i*13+11,0) = 0.f;
-        //xd(i*13+11,0) = mTrajectoryGenerator.getVelocityTrajectory(currentTime + mDT * i);
-
     }
     desiredPositionX = xd(3,0);
     desiredPositionY = xd(4,0);
@@ -110,9 +99,9 @@ void A1MPCController::getMetrices(){
     //weights
     Eigen::Matrix<double, 13,1> weightMat;
     weightMat << 0.5, 0.5, 50,
-                 20, 20, 50,
+                 20, 20, 60,
                  0, 0, 0.2,
-                 0.1, 0.1, 0.2,
+                 0.05, 0.05, 0.05,
                  0.f;
     L.diagonal() = weightMat.replicate(mMPCHorizon,1);
 
@@ -386,12 +375,12 @@ void A1MPCController::setLegcontrol() {
     double Pgain[3];
     double Dgain[3];
     Pgain[0] = 30;
-    Dgain[0] = 3;
+    Dgain[0] = 2;
 
-    Pgain[1] = 100;
+    Pgain[1] = 30;
     Dgain[1] = 1;
 
-    Pgain[2] = 100;
+    Pgain[2] = 60;
     Dgain[2] = 1;
 
     double posError[3];

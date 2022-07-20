@@ -48,15 +48,5 @@ void A1JointPDController::computeControlInput() {
 }
 
 void A1JointPDController::setControlInput() {
-/*    if(getRobot()->robot->getContacts().size() != 0)
-    {
-        std::cout << getRobot()->robot->getContacts().size() << std::endl;
-        for(int idx=0; idx<getRobot()->robot->getContacts().size(); idx++)
-        {
-            raisim::Mat<3,1> ff = getRobot()->robot->getContacts()[idx].getImpulse() / 0.001;
-            std::cout << ff << std::endl;
-        }
-    }
-    std::cout << torque << std::endl;*/
     getRobot()->robot->setGeneralizedForce(torque);
 }

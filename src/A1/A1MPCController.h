@@ -94,7 +94,7 @@ private:
 
     Eigen::MatrixXi gait = Eigen::MatrixXi(2001,4);
 
-    double mLumpedMass = 30;
+    double mLumpedMass = 4.713;
     double mGravity = -9.81;
     int mMPCHorizon = 5;
     double mDT;

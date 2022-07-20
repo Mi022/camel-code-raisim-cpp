@@ -11,7 +11,8 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_SRB_quad.urdf";
+//std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_SRB_quad.urdf";
+std::string urdfPath = "\\home\\hs\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
 std::string name = "cuteA1";
 raisim::World world;
 
@@ -114,6 +115,8 @@ int main(int argc, char *argv[]) {
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
     server.focusOn(robot.robot);
+
+
     int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);
     w.show();

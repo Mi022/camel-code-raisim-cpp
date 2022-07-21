@@ -5,87 +5,83 @@
 #include "A1Simulation.h"
 #include "mainwindow.h"
 #include "include/RT/rb_utils.h"
+#include "SharedMemory.h"
 #include <QApplication>
 #include <cmath>
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
+pSHM smem;
 
-//std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_SRB_quad.urdf";
 std::string urdfPath = "\\home\\hs\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
 std::string name = "cuteA1";
 raisim::World world;
 
-double simulationDuration = 5.0;
+double simulationDuration = 10.0;
 double dT = 0.005;
 A1Simulation sim = A1Simulation(&world, dT);
 A1Robot robot = A1Robot(&world, urdfPath, name);
-
 A1MPCController MPCcontroller = A1MPCController(&robot, dT);
-A1JointPDController PDcontroller = A1JointPDController(&robot);
 
 double oneCycleSimTime = 0;
-int divider = ceil(simulationDuration / dT / 200);
 int iteration = 0;
-void raisimSimulation() {
-    if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
+
+void resetSimAndPlotVars() {
+    iteration = 0;
+    oneCycleSimTime = 0;
+}
+
+void realTimePlot(){
+    smem->simTime = world.getWorldTime();
+    smem->GetPosX = MPCcontroller.p[0];
+    smem->DesPosX = MPCcontroller.desiredPositionX;
+    smem->GetPosY = MPCcontroller.p[1];
+    smem->DesPosY = MPCcontroller.desiredPositionY;
+    smem->GetPosZ = MPCcontroller.p[2];
+    smem->DesPosZ = MPCcontroller.desiredPositionZ;
+
+    smem->GetRotX = MPCcontroller.q[0];
+    smem->DesRotX = MPCcontroller.desiredRotationX;
+    smem->GetRotY = MPCcontroller.q[1];
+    smem->DesRotY = MPCcontroller.desiredRotationY;
+    smem->GetRotZ = MPCcontroller.q[2];
+    smem->DesRotZ = MPCcontroller.desiredRotationZ;
+
+    smem->FR_hipJoint = MPCcontroller.position[7];
+    smem->FL_hipJoint = MPCcontroller.position[10];
+    smem->RR_hipJoint = MPCcontroller.position[13];
+    smem->RL_hipJoint = MPCcontroller.position[16];
+
+    smem->FR_thightJoint = MPCcontroller.position[8];
+    smem->FL_thightJoint= MPCcontroller.position[11];
+    smem->RR_thightJoint= MPCcontroller.position[14];
+    smem->RL_thightJoint = MPCcontroller.position[17];
+
+    smem->FR_calfJoint = MPCcontroller.position[9];
+    smem->FL_calfJoint = MPCcontroller.position[12];
+    smem->RR_calfJoint = MPCcontroller.position[15];
+    smem->RL_calfJoint = MPCcontroller.position[18];
+}
+
+void raisimSimulation()
+{
+    realTimePlot();
+    if ((MainUI->button1) && (oneCycleSimTime < simulationDuration))
+    {
         oneCycleSimTime = iteration * dT;
         MPCcontroller.doControl();
         world.integrate();
-        if (iteration % divider == 0) {
-            MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
-            MainUI->data_y1[MainUI->data_idx] = MPCcontroller.p[0];
-            MainUI->data_y1_desired[MainUI->data_idx] = MPCcontroller.desiredPositionX;
-            MainUI->data_y2[MainUI->data_idx] = MPCcontroller.p[1];
-            MainUI->data_y2_desired[MainUI->data_idx] = MPCcontroller.desiredPositionY;
-            MainUI->data_y3[MainUI->data_idx] = MPCcontroller.p[2];
-            MainUI->data_y3_desired[MainUI->data_idx] = MPCcontroller.desiredPositionZ;
-
-            MainUI->data_y4[MainUI->data_idx] = MPCcontroller.q[0];
-            MainUI->data_y4_desired[MainUI->data_idx] = MPCcontroller.desiredRotationX;
-            MainUI->data_y5[MainUI->data_idx] = MPCcontroller.q[1];
-            MainUI->data_y5_desired[MainUI->data_idx] = MPCcontroller.desiredRotationY;
-            MainUI->data_y6[MainUI->data_idx] = MPCcontroller.q[2];
-            MainUI->data_y6_desired[MainUI->data_idx] = MPCcontroller.desiredRotationZ;
-
-            MainUI->data_hip_fr[MainUI->data_idx] = MPCcontroller.position[7];
-            MainUI->data_hip_fl[MainUI->data_idx] = MPCcontroller.position[10];
-            MainUI->data_hip_rr[MainUI->data_idx] = MPCcontroller.position[13];
-            MainUI->data_hip_rl[MainUI->data_idx] = MPCcontroller.position[16];
-
-            MainUI->data_thigh_fr[MainUI->data_idx] = MPCcontroller.position[8];
-            MainUI->data_thigh_fl[MainUI->data_idx] = MPCcontroller.position[11];
-            MainUI->data_thigh_rr[MainUI->data_idx] = MPCcontroller.position[14];
-            MainUI->data_thigh_rl[MainUI->data_idx] = MPCcontroller.position[17];
-
-            MainUI->data_calf_fr[MainUI->data_idx] = MPCcontroller.position[9];
-            MainUI->data_calf_fl[MainUI->data_idx] = MPCcontroller.position[12];
-            MainUI->data_calf_rr[MainUI->data_idx] = MPCcontroller.position[15];
-            MainUI->data_calf_rl[MainUI->data_idx] = MPCcontroller.position[18];
-
-            MainUI->data_idx += 1;
-        }
         iteration++;
-    } else if (oneCycleSimTime >= simulationDuration) {
+    }
+    else if (oneCycleSimTime >= simulationDuration)
+    {
         MainUI->button1 = false;
-        iteration = 0;
-        oneCycleSimTime = 0;
-        MainUI->plotWidget1();
-        MainUI->plotWidget2();
-        MainUI->plotWidget3();
-
-        MainUI->plotWidget4();
-        MainUI->plotWidget5();
-        MainUI->plotWidget6();
-
-        MainUI->plotWidget7();
-        MainUI->plotWidget8();
-        MainUI->plotWidget9();
-        MainUI->data_idx = 0;
+        resetSimAndPlotVars();
     }
 }
 
-void *rt_simulation_thread(void *arg) {
+void *rt_simulation_thread(void *arg)
+{
     std::cout << "entered #rt_time_checker_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
@@ -109,16 +105,19 @@ void *rt_simulation_thread(void *arg) {
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QApplication a(argc, argv);
     MainWindow w;
+    smem = (pSHM) malloc(sizeof(SHM));
+
+    int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
+                                                   NULL);
+
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
     server.focusOn(robot.robot);
 
-
-    int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
-                                                   NULL);
     w.show();
 
     return a.exec();

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,55 +16,28 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     bool button1 = false;
-    int data_idx = 0;
+    double yMinWidget1;
+    double yMaxWidget1;
+    double yMinWidget2;
+    double yMaxWidget2;
+    double yMinWidget3;
+    double yMaxWidget3;
 
-    double data_x[201];
-    double data_y1[201];
-    double data_y1_desired[201];
-    double data_widget1_min = -0.01;
-    double data_widget1_max = 0.01;
-    double data_y2[201];
-    double data_y2_desired[201];
-    double data_widget2_min = -0.01;
-    double data_widget2_max = 0.01;
-    double data_y3[201];
-    double data_y3_desired[201];
-    double data_widget3_min = -0.01;
-    double data_widget3_max = 0.01;
+    double yMinWidget4;
+    double yMaxWidget4;
+    double yMinWidget5;
+    double yMaxWidget5;
+    double yMinWidget6;
+    double yMaxWidget6;
 
-    double data_y4[201];
-    double data_y4_desired[201];
-    double data_widget4_min = -0.01;
-    double data_widget4_max = 0.01;
-    double data_y5[201];
-    double data_y5_desired[201];
-    double data_widget5_min = -0.01;
-    double data_widget5_max = 0.01;
-    double data_y6[201];
-    double data_y6_desired[201];
-    double data_widget6_min = -0.01;
-    double data_widget6_max = 0.01;
+    double yMinWidget7;
+    double yMaxWidget7;
+    double yMinWidget8;
+    double yMaxWidget8;
+    double yMinWidget9;
+    double yMaxWidget9;
 
-    double data_hip_fr[201];
-    double data_hip_fl[201];
-    double data_hip_rr[201];
-    double data_hip_rl[201];
-    double data_hip_min = -0.01;
-    double data_hip_max = 0.01;
-
-    double data_thigh_fr[201];
-    double data_thigh_fl[201];
-    double data_thigh_rr[201];
-    double data_thigh_rl[201];
-    double data_thigh_min = -0.01;
-    double data_thigh_max = 0.01;
-
-    double data_calf_fr[201];
-    double data_calf_fl[201];
-    double data_calf_rr[201];
-    double data_calf_rl[201];
-    double data_calf_min = -0.01;
-    double data_calf_max = 0.01;
+    QTimer dataTimer;
 
 public slots:
     void plotWidget1();
@@ -77,7 +51,7 @@ public slots:
     void plotWidget7();
     void plotWidget8();
     void plotWidget9();
-
+    void realtimeDataSlot();
 
 private slots:
     void on_pushButton_clicked();

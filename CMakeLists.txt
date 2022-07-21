@@ -62,6 +62,7 @@ set(A1_SOURCES
         src/A1/A1Robot.cpp
         src/A1/A1JointPDController.cpp
         src/A1/A1MPCController.cpp
+        src/A1/SharedMemory.h
         )
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_A1_SIMULATION_UI_SOURCES} ${A1_SOURCES})

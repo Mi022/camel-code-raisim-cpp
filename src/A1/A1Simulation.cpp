@@ -16,7 +16,7 @@ std::string urdfPath = "\\home\\hs\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
 std::string name = "cuteA1";
 raisim::World world;
 
-double simulationDuration = 10.0;
+double simulationDuration = 5.0;
 double dT = 0.005;
 A1Simulation sim = A1Simulation(&world, dT);
 A1Robot robot = A1Robot(&world, urdfPath, name);

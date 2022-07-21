@@ -16,17 +16,17 @@ void A1MPCController::getGait(){
     {
         if((i/25)%2 == 0)
         {
-            gait(i,0) = 1;
-            gait(i,1) = 0;
-            gait(i,2) = 0;
-            gait(i,3) = 1;
-        }
-        else
-        {
             gait(i,0) = 0;
             gait(i,1) = 1;
             gait(i,2) = 1;
             gait(i,3) = 0;
+        }
+        else
+        {
+            gait(i,0) = 1;
+            gait(i,1) = 0;
+            gait(i,2) = 0;
+            gait(i,3) = 1;
         }
     }
 }
@@ -60,6 +60,10 @@ void A1MPCController::updateState(){
           mGravity;
 }
 
+double sigmoid(double t){
+    return 1/(1+std::pow(M_E,-t));
+}
+
 void A1MPCController::setTrajectory() {
     for(int i = 0; i < mMPCHorizon ; i++)
     {
@@ -67,7 +71,8 @@ void A1MPCController::setTrajectory() {
         xd(i*13+1,0) = 0.f;
         xd(i*13+2,0) = 0.f;
 
-        xd(i*13+3,0) = 0.5*(getRobot()->getWorldTime()+mDT*i);
+        //xd(i*13+3,0) = 0.3*(getRobot()->getWorldTime()+mDT*i);
+        xd(i*13+3,0) = 1.5*std::log(std::cosh(getRobot()->getWorldTime()+mDT*i));
         xd(i*13+4,0) = 0.f;
         xd(i*13+5,0) = 0.3;
 
@@ -75,7 +80,8 @@ void A1MPCController::setTrajectory() {
         xd(i*13+7,0) = 0.f;
         xd(i*13+8,0) = 0.f;
 
-        xd(i*13+9,0) = 0.5;
+        //xd(i*13+9,0) = 0.0;
+        xd(i*13+9,0) = 1.5*std::tanh(getRobot()->getWorldTime()+mDT*i);
         xd(i*13+10,0) = 0.f;
         xd(i*13+11,0) = 0.f;
     }
@@ -118,7 +124,6 @@ void A1MPCController::getMetrices(){
             U_b(5*k + 1) = BIG_NUMBER;
             U_b(5*k + 2) = BIG_NUMBER;
             U_b(5*k + 3) = BIG_NUMBER;
-            //U_b(5*k + 4) = F_MAX;
             U_b(5*k + 4) = F_MAX*gait(count,j);
             k++;
         }

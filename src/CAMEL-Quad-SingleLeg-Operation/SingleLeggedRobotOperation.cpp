@@ -14,8 +14,6 @@ void SingleLeggedRobotOperation::initialize() {
 }
 
 void SingleLeggedRobotOperation::visualize() {
-    getQ();
-    getQD();
     robot->setGeneralizedCoordinate(mJointPosition);
     robot->setGeneralizedVelocity(mJointVelocity);
 }
@@ -33,14 +31,6 @@ Eigen::VectorXd SingleLeggedRobotOperation::getQD() {
     mJointVelocity[1] = mCan->getAngularVelocity2();
     mJointVelocity[2] = mCan->getAngularVelocity1();
     return mJointVelocity;
-}
-
-double SingleLeggedRobotOperation::getPlot1() {
-    return 0;
-}
-
-double SingleLeggedRobotOperation::getPlot2() {
-    return 0;
 }
 
 void SingleLeggedRobotOperation::setTorque(Eigen::VectorXd torque) {

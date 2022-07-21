@@ -19,7 +19,7 @@ pthread_t thread_operation;
 pthread_t thread_loadcell;
 pSHM sharedMemory;
 
-bool isMotorOn = false;
+bool isReady = false;
 bool *buttonCANInitPressed;
 bool *buttonRaisimInitPressed;
 bool *buttonMotorOnPressed;
@@ -76,11 +76,12 @@ void updateSHM(){
 void operationCode(){
     singleLeg.visualize();
     updateSHM();
-    if(isMotorOn)
+    if(isReady)
     {
         can.readEncoder(motorHip);
         can.readEncoder(motorKnee);
-        singleLeg.visualize();
+        singleLeg.getQ();
+        singleLeg.getQD();
     }
     if (*buttonCANInitPressed) {
         // CAN initialize
@@ -105,8 +106,7 @@ void operationCode(){
         can.turnOnMotor(motorHip);
         can.setTorque(motorHip, 0.0);
         can.setTorque(motorKnee, 0.0);
-        singleLeg.visualize();
-        isMotorOn = true;
+        isReady = true;
         *buttonMotorOnPressed = false;
     }
 
@@ -114,19 +114,20 @@ void operationCode(){
         // Motor Off
         can.turnOffMotor(motorKnee);
         can.turnOffMotor(motorHip);
+        isReady = false;
         *buttonMotorOffPressed = false;
     }
 
     if (*buttonStartControlPressed) {
 //             Start Control
-        std::cout<<"===================================================="<<std::endl;
+//        std::cout<<"===================================================="<<std::endl;
         controller.doControl();
-        std::cout<<"current time: "<<currentTime<<std::endl;
+//        std::cout<<"current time: "<<currentTime<<std::endl;
 ////        For PD controller
-        std::cout<<"current position : "<<controller.position[1]<<" "<<controller.position[2]<<std::endl;
-        std::cout<<"desired position : "<<controller.desiredJointPosition[0] <<" "<<controller.desiredJointPosition[1]<<std::endl;
-        std::cout<<"current velocity : "<<controller.velocity[1]<<" "<<controller.velocity[2]<<std::endl;
-        std::cout<<"desired velocity : "<<controller.desiredJointVelocity[0] <<" "<<controller.desiredJointVelocity[1]<<std::endl;
+//        std::cout<<"current position : "<<controller.position[1]<<" "<<controller.position[2]<<std::endl;
+//        std::cout<<"desired position : "<<controller.desiredJointPosition[0] <<" "<<controller.desiredJointPosition[1]<<std::endl;
+//        std::cout<<"current velocity : "<<controller.velocity[1]<<" "<<controller.velocity[2]<<std::endl;
+//        std::cout<<"desired velocity : "<<controller.desiredJointVelocity[0] <<" "<<controller.desiredJointVelocity[1]<<std::endl;
 
 
 
@@ -165,6 +166,7 @@ void operationCode(){
     if (*buttonZeroingPressed){
         std::cout << "zeroing start" << std::endl;
         controller.zeroing();
+        isReady = false;
         *buttonStartControlPressed = true;
         *buttonZeroingPressed = false;
     }
@@ -199,6 +201,7 @@ void *rt_loadcell_thread(void *arg){
     {
         sensorLoadcell.readData();
         sharedMemory->GRF = sensorLoadcell.getSensoredForce();
+//        sharedMemory->GRF = sensorLoadcell.getSensoredWeight();
 //        std::cout<<"Sensored force[N] : "<<sharedMemory->GRF<<std::endl;
     }
 }

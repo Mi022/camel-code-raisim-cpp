@@ -1,4 +1,4 @@
-/snap/clion/190/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G "CodeBlocks - Unix Makefiles" -S /home/jaehoon/raisimLib/camel-code-raisim-cpp -B /home/jaehoon/raisimLib/camel-code-raisim-cpp/cmake-build-release
+/snap/clion/198/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G "CodeBlocks - Unix Makefiles" -S /home/ljm/raisimLib/camel-code-raisim-cpp -B /home/ljm/raisimLib/camel-code-raisim-cpp/cmake-build-release
 -- The C compiler identification is GNU 9.4.0
 -- The CXX compiler identification is GNU 9.4.0
 -- Detecting C compiler ABI info
@@ -11,7 +11,7 @@
 -- Check for working CXX compiler: /usr/bin/g++ - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
-CMake Error at CMakeLists.txt:13 (find_package):
+CMake Error at CMakeLists.txt:18 (find_package):
   Could not find a package configuration file provided by "raisim" with any
   of the following names:
 
@@ -25,4 +25,4 @@ CMake Error at CMakeLists.txt:13 (find_package):
 
 
 -- Configuring incomplete, errors occurred!
-See also "/home/jaehoon/raisimLib/camel-code-raisim-cpp/cmake-build-release/CMakeFiles/CMakeOutput.log".
+See also "/home/ljm/raisimLib/camel-code-raisim-cpp/cmake-build-release/CMakeFiles/CMakeOutput.log".

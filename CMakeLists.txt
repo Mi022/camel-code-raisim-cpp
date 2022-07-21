@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.5)
 project(camel-code-raisim-cpp)
 
 #==
+# Memo
+# turned off camel simulation
+#==
+
+#==
 # Dependencies
 #==
 set(CMAKE_AUTOMOC ON)
@@ -32,8 +37,8 @@ set(CAMEL_SOURCES
         include/RT/rb_utils.cpp)
 
 set(CAMEL_SIMULATION_UI_SOURCES
-        include/SimulationUI/qcustomplot.cpp
-        include/SimulationUI/simulationMainwindow.cpp)
+        include/SimulationUI/qcustomplot.cpp)
+        #include/SimulationUI/simulationMainwindow.cpp)
 
 ## Simulation ##
 # ====== Simple Pendulum ======  #
@@ -72,7 +77,9 @@ target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
 set(WHEELEDROBOT_SOURCES
         src/WheeledRobot/wheeledRobotController.cpp
         src/WheeledRobot/wheeledRobotSimulation.cpp
-        src/WheeledRobot/wheeledRobot.cpp)
+        src/WheeledRobot/wheeledRobot.cpp
+        src/WheeledRobot/wheeledRobotSimulationWindow.cpp
+        src/WheeledRobot/wheeledRobotXBOX.cpp)
         #src/WheeledRobot/camel_wheeledRobot.cpp)
 
 

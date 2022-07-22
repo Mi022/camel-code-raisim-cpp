@@ -6,7 +6,9 @@
 #define RAISIM_SINGLELEGGEDROBOTOPERATION_H
 
 #include "include/CAMEL/OperationRobot.h"
+#include "include/Filter/LPF.h"
 #include "SingleLegCAN.h"
+
 //TODO: update mLumpedMass
 
 class SingleLeggedRobotOperation : public OperationRobot {
@@ -16,6 +18,10 @@ public:
         mCan = can;
         mDT = dT;
         initialize();
+        double cutoffFreq = 70.0;
+        mLPF1.initialize(mDT, cutoffFreq);
+        mLPF2.initialize(mDT, cutoffFreq);
+        mLPF3.initialize(mDT, cutoffFreq);
     }
 
     void initialize() override;
@@ -26,6 +32,9 @@ public:
 
 private:
     SingleLegCAN *mCan;
+    LPF mLPF1;
+    LPF mLPF2;
+    LPF mLPF3;
     Eigen::VectorXd mJointPosition = Eigen::VectorXd(3);
     Eigen::VectorXd mJointPosition_past = Eigen::VectorXd(3);
     Eigen::VectorXd mJointVelocity = Eigen::VectorXd(3);

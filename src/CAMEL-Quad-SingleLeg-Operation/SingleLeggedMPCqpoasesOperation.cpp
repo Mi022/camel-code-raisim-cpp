@@ -136,9 +136,9 @@ void SingleLeggedMPCqpoases::getMatrices(){
         }
     }
     K.setIdentity();
-    K *= 1e-6;
+    K *= 2.0 * 1e-7;
 
-    float tempWeight[2] = {20.0, 1};
+    float tempWeight[2] = {0.9, 0.005};
     Eigen::Matrix<double, 3,1> weightMat;
     for(int i=0; i<2;i++)
     {

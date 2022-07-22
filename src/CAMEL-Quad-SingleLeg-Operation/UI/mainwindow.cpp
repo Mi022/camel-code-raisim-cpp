@@ -84,7 +84,7 @@ void MainWindow::realtimeDataSlot() {
     double key = time.elapsed()/1000.0;
     int fps = 120;
     static double lastPointKey = 0;
-    if (key-lastPointKey > double(1/fps)) // at most add point every 10 ms
+    if ((key-lastPointKey > double(1/fps))&(!isOperationEnd)) // at most add point every 10 ms
     {
         plotWidget1();
         plotWidget2();
@@ -222,6 +222,7 @@ void MainWindow::on_pushButton_4_clicked()
     // Motor Off
     if (buttonMotorOff) { buttonMotorOff = false; }
     else { buttonMotorOff = true; }
+    isOperationEnd = true;
     std::cout<<"Motor Off button is clicked."<<std::endl;
 }
 

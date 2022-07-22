@@ -40,6 +40,7 @@ set(CAMEL_SOURCES
         include/Sensor/RE22SC.cpp
         include/RT/rb_utils.cpp
         include/SimulationUI/qcustomplot.cpp
+        include/Filter/LPF.cpp
         )
 
 set(CAMEL_SIMULATION_UI_SOURCES

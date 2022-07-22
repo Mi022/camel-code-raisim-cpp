@@ -28,6 +28,7 @@ public:
     bool buttonGenerateSinTrajectory = false;
     bool buttonJump = false;
     bool buttonZeroing = false;
+    bool isOperationEnd = false;
 
     double yMinWidget1;
     double yMaxWidget1;

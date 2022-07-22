@@ -37,8 +37,11 @@ set(CAMEL_SOURCES
         include/RT/rb_utils.cpp)
 
 set(CAMEL_SIMULATION_UI_SOURCES
+        include/SimulationUI/qcustomplot.cpp
+        include/SimulationUI/simulationMainwindow.cpp)
+
+set(CAMEL_SIMULATION_UI_SOURCES2
         include/SimulationUI/qcustomplot.cpp)
-        #include/SimulationUI/simulationMainwindow.cpp)
 
 ## Simulation ##
 # ====== Simple Pendulum ======  #
@@ -83,7 +86,7 @@ set(WHEELEDROBOT_SOURCES
         #src/WheeledRobot/camel_wheeledRobot.cpp)
 
 
-add_executable(camel-wheeledRobot_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${WHEELEDROBOT_SOURCES})
+add_executable(camel-wheeledRobot_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES2} ${WHEELEDROBOT_SOURCES})
 target_link_libraries(camel-wheeledRobot_simulation ${CAMEL_LIBS})
 # ====== wheeledRobot ====== /#
 

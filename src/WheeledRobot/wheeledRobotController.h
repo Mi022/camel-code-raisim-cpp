@@ -21,7 +21,7 @@ public:
     double torqueLimit = 30.0;
 
     int vel;
-    int maxVel = 25;
+    int velLimit = 30;
 
     wheeledRobotController(Robot *robot) : Controller(robot) {
         torque.setZero();

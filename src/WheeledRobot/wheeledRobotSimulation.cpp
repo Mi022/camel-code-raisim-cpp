@@ -84,14 +84,14 @@ void raisimSimulation() {
     joyRead();
     int button = 0;
     //if (((MainUI->button1)||(MainUI->button2)||(MainUI->button3)||(MainUI->button4)) && (oneCycleSimTime < simulationDuration))
-    if ((joy_button[11] || joy_button[12] || joy_button[13] || joy_button[14] || joy_button[0] || joy_axis[0]/10000 || joy_axis[1]/10000) && (oneCycleSimTime < simulationDuration)) {
+    if ((joy_button[11] || joy_button[12] || joy_button[13] || joy_button[14] || joy_axis[2] > -32767 || joy_axis[5] > -32767) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
 
         if(joy_button[0]) {
             controller.accelerate();
         }
-        else {
-            controller.setVel(-joy_axis[1]/10000);
+        else if(joy_axis[5]>-32767) {
+            controller.setVel((joy_axis[5] / 10000) + 4);
         }
 
         if(joy_button[13] || (joy_axis[1]/10000)<0) {
@@ -150,6 +150,7 @@ void raisimSimulation() {
     else {
         controller.setStop();
     }
+
     controller.doControl();
     world.integrate();
 

@@ -6,6 +6,7 @@
 
 void wheeledRobotController::doControl() {
     updateState();
+    computeControlInput();
     setControlInput();
 }
 
@@ -36,117 +37,43 @@ void wheeledRobotController::setControlInput() {
 }
 
 void wheeledRobotController::setForward() {
-    if(torque[6] < 30 && velocity[6] < vel) {
-        torque[6] += 6;
-    }
-    else if(velocity[6] > vel) {
-        torque[6] = 0;
-    }
-
-    if(torque[7] < 30 && velocity[7] < vel) {
-        torque[7] += 6;
-    }
-    else if(velocity[7] > vel) {
-        torque[7] = 0;
-    }
-
-    if(torque[8] < 30 && velocity[8] < vel) {
-        torque[8] += 6;
-    }
-    else if(velocity[8] > vel) {
-        torque[8] = 0;
-    }
-
-    if(torque[9] < 30 && velocity[9] < vel) {
-        torque[9] += 6;
-    }
-    else if(velocity[9] > vel) {
-        torque[9] = 0;
-    }
+    desiredVelocity[0] = vel;
+    desiredVelocity[1] = vel;
+    desiredVelocity[2] = vel;
+    desiredVelocity[3] = vel;
 }
 
 void wheeledRobotController::setLeft() {
-    updateState();
-
-    if(torque[6] < 30 && velocity[6] < vel) {
-        torque[6] += 6;
-    }
-
-    if(torque[7] > -30 && velocity[7] > vel) {
-        torque[7] -= 3;
-    }
-
-    if(torque[8] < 30 && velocity[8] < vel) {
-        torque[8] += 6;
-    }
-
-    if(torque[9] > -30 && velocity[9] > vel) {
-        torque[9] -= 3;
-    }
+    desiredVelocity[0] = 2 * vel;
+    desiredVelocity[1] = vel;
+    desiredVelocity[2] = 2 * vel;
+    desiredVelocity[3] = vel;
 }
 
 void wheeledRobotController::setRight() {
-    updateState();
-
-    if(torque[6] > -30 && velocity[6] > vel) {
-        torque[6] -= 3;
-    }
-
-    if(torque[7] < 30 && velocity[7] < vel) {
-        torque[7] += 6;
-    }
-
-    if(torque[8] > -30 && velocity[8] > vel) {
-        torque[8] -= 3;
-    }
-
-    if(torque[9] < 30 && velocity[9] < vel) {
-        torque[9] += 6;
-    }
+    desiredVelocity[0] = vel;
+    desiredVelocity[1] = 2 * vel;
+    desiredVelocity[2] = vel;
+    desiredVelocity[3] = 2 * vel;
 }
 
 void wheeledRobotController::setBack() {
-    updateState();
-
-    if(torque[6] < 30 && velocity[6] > vel) {
-        torque[6] -= 6;
-    }
-    else if(velocity[6] < vel) {
-        torque[6] = 0;
-    }
-
-    if(torque[7] < 30 && velocity[7] > vel) {
-        torque[7] -= 6;
-    }
-    else if(velocity[7] < vel) {
-        torque[7] = 0;
-    }
-
-    if(torque[8] < 30 && velocity[8] > vel) {
-        torque[8] -= 6;
-    }
-    else if(velocity[8] < vel) {
-        torque[8] = 0;
-    }
-
-    if(torque[9] < 30 && velocity[9] > vel) {
-        torque[9] -= 6;
-    }
-    else if(velocity[9] < vel) {
-        torque[9] = 0;
-    }
+    desiredVelocity[0] = vel;
+    desiredVelocity[1] = vel;
+    desiredVelocity[2] = vel;
+    desiredVelocity[3] = vel;
 }
 
 void wheeledRobotController::setStop() {
-    computeControlInput();
+    desiredVelocity.setZero();
 }
 
 void wheeledRobotController::accelerate() {
-    vel = maxVel;
+    vel = velLimit;
 }
 
 void wheeledRobotController::setVel(int val) {
-    vel = 5 * val;
+    vel = 3 * val;
 }
 
 void wheeledRobotController::reset() {

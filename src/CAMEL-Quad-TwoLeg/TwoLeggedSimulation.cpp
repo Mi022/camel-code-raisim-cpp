@@ -11,7 +11,7 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\user\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_two_leg\\camel_two_leg.urdf";
+std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_two_leg\\camel_two_leg.urdf";
 std::string name = "two_leg";
 raisim::World world;
 

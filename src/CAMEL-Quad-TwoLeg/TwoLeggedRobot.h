@@ -18,9 +18,7 @@ public:
     raisim::VecDyn getQD();
 
 private:
-    double mMass = 0.0;             // should be update to real mass value
-    double mLengthUpperLeg = 0.23;
-    double mLengthLowerLeg = 0.23;
+
 };
 
 

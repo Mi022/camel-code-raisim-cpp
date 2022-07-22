@@ -10,9 +10,9 @@
 
 class TwoLeggedPDController : public Controller {
 public:
-    Eigen::VectorXd torque = Eigen::VectorXd(3);
-    raisim::VecDyn position = raisim::VecDyn(3);
-    raisim::VecDyn velocity = raisim::VecDyn(3);
+    Eigen::VectorXd torque = Eigen::VectorXd(10);
+    raisim::VecDyn position = raisim::VecDyn(11);
+    raisim::VecDyn velocity = raisim::VecDyn(10);
     Eigen::VectorXd positionError = Eigen::VectorXd(2);
     Eigen::VectorXd velocityError = Eigen::VectorXd(2);
     Eigen::VectorXd desiredJointPosition = Eigen::VectorXd(2);
@@ -26,7 +26,7 @@ public:
     double torqueLimit = 13.0;
 
     TwoLeggedPDController(Robot *robot) : Controller(robot) {
-        mTrajectoryGenerator.updateTrajectory(position[0], 0.35, getRobot()->getWorldTime(), 1.0);
+//        mTrajectoryGenerator.updateTrajectory(position[0], 0.35, getRobot()->getWorldTime(), 1.0);
         setPDGain(50.0, 1.5);
         torque[0] = 0.0;
     }

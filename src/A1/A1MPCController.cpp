@@ -60,10 +60,6 @@ void A1MPCController::updateState(){
           mGravity;
 }
 
-double sigmoid(double t){
-    return 1/(1+std::pow(M_E,-t));
-}
-
 void A1MPCController::setTrajectory() {
     for(int i = 0; i < mMPCHorizon ; i++)
     {

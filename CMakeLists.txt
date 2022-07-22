@@ -25,7 +25,8 @@ set(CAMEL_LIBS
         Qt5::Widgets
         raisim::raisim
         pthread
-        rt)
+        rt
+        qpOASES)
 
 set(CAMEL_SOURCES
         include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
@@ -38,7 +39,8 @@ set(CAMEL_SOURCES
         include/Sensor/MPU9250.cpp
         include/Sensor/RE22SC.cpp
         include/RT/rb_utils.cpp
-        include/SimulationUI/qcustomplot.cpp)
+        include/SimulationUI/qcustomplot.cpp
+        )
 
 set(CAMEL_SIMULATION_UI_SOURCES
         include/SimulationUI/simulationMainwindow.cpp)
@@ -130,7 +132,9 @@ set(CANINE_SINGLE_LEG_OPERATION_SOURCES
         src/CAMEL-Quad-SingleLeg-Operation/UI/mainwindow.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedPDControllerOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedSharedMemoryOperation.h)
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedMPCqpoasesOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedSharedMemoryOperation.h)
 
 add_executable(camel-canine_single_leg_operation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_SOURCES})
 target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})

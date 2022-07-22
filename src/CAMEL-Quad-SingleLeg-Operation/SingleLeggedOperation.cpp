@@ -47,7 +47,8 @@ raisim::World world;
 SingleLeggedOperation realRobot = SingleLeggedOperation(&world, 250);
 SingleLeggedRobotOperation singleLeg = SingleLeggedRobotOperation(&world, urdfPath, name, &can, dT);
 //SingleLeggedPDControllerOperation controller = SingleLeggedPDControllerOperation(&singleLeg, &currentTime, dT);
-SingleLeggedIDControllerOperation controller = SingleLeggedIDControllerOperation(&singleLeg, &currentTime, dT);
+//SingleLeggedIDControllerOperation controller = SingleLeggedIDControllerOperation(&singleLeg, &currentTime, dT);
+SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&singleLeg, &currentTime, dT);
 raisim::RaisimServer server(&world);
 
 std::random_device rd;
@@ -56,37 +57,37 @@ std::uniform_int_distribution<int> dis(0, 99);
 double randomGoalPosition;
 
 void updateSHM(){
-//    sharedMemory->time = currentTime;
-//    sharedMemory->position_z = controller.position[0];
-//    sharedMemory->desiredPosition_z = controller.desiredPosition;
-//    sharedMemory->velocity_z = controller.velocity[0];
-//    sharedMemory->desiredVelocity_z = controller.desiredVelocity;
-//    sharedMemory->jointPosition[0] = controller.position[1];
-//    sharedMemory->jointPosition[1] = controller.position[2];
-//    sharedMemory->desiredJointPosition[0] = controller.desiredJointPosition[0];
-//    sharedMemory->desiredJointPosition[1] = controller.desiredJointPosition[1];
-//    sharedMemory->jointVelocity[0] = controller.velocity[1];
-//    sharedMemory->jointVelocity[1] = controller.velocity[2];
-//    sharedMemory->desiredJointVelocity[0] = controller.desiredJointVelocity[0];
-//    sharedMemory->desiredJointVelocity[1] = controller.desiredJointVelocity[1];
-//    sharedMemory->jointTorque[0] = controller.torque[0];
-//    sharedMemory->jointTorque[1] = controller.torque[1];
-
     sharedMemory->time = currentTime;
-    sharedMemory->position_z = controller.desiredPosition - controller.position[0];
-    sharedMemory->desiredPosition_z = 0;
-    sharedMemory->velocity_z = controller.desiredVelocity - controller.velocity[0];
-    sharedMemory->desiredVelocity_z = 0;
-    sharedMemory->jointPosition[0] = controller.desiredAcceleration;
+    sharedMemory->position_z = controller.position[0];
+    sharedMemory->desiredPosition_z = controller.desiredPosition;
+    sharedMemory->velocity_z = controller.velocity[0];
+    sharedMemory->desiredVelocity_z = controller.desiredVelocity;
+    sharedMemory->jointPosition[0] = controller.calculatedForce;
     sharedMemory->jointPosition[1] = 0;
 //    sharedMemory->desiredJointPosition[0] = controller.desiredJointPosition[0];
 //    sharedMemory->desiredJointPosition[1] = controller.desiredJointPosition[1];
-    sharedMemory->jointVelocity[0] = controller.calculatedForce;
-    sharedMemory->jointVelocity[1] = 0;
+    sharedMemory->jointVelocity[0] = controller.velocity[1];
+    sharedMemory->jointVelocity[1] = controller.velocity[2];
 //    sharedMemory->desiredJointVelocity[0] = controller.desiredJointVelocity[0];
 //    sharedMemory->desiredJointVelocity[1] = controller.desiredJointVelocity[1];
     sharedMemory->jointTorque[0] = controller.torque[0];
     sharedMemory->jointTorque[1] = controller.torque[1];
+
+//    sharedMemory->time = currentTime;
+//    sharedMemory->position_z = controller.desiredPosition - controller.position[0];
+//    sharedMemory->desiredPosition_z = 0;
+//    sharedMemory->velocity_z = controller.desiredVelocity - controller.velocity[0];
+//    sharedMemory->desiredVelocity_z = 0;
+//    sharedMemory->jointPosition[0] = controller.desiredAcceleration;
+//    sharedMemory->jointPosition[1] = 0;
+////    sharedMemory->desiredJointPosition[0] = controller.desiredJointPosition[0];
+////    sharedMemory->desiredJointPosition[1] = controller.desiredJointPosition[1];
+//    sharedMemory->jointVelocity[0] = controller.calculatedForce;
+//    sharedMemory->jointVelocity[1] = 0;
+////    sharedMemory->desiredJointVelocity[0] = controller.desiredJointVelocity[0];
+////    sharedMemory->desiredJointVelocity[1] = controller.desiredJointVelocity[1];
+//    sharedMemory->jointTorque[0] = controller.torque[0];
+//    sharedMemory->jointTorque[1] = controller.torque[1];
 }
 
 void operationCode(){

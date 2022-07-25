@@ -31,7 +31,7 @@ public:
 
     SingleLeggedIDControllerOperation(SingleLeggedRobotOperation *robot, double *currentTime, double dT) {
         mRobot = robot;
-        setPDGain(70.0, 2.5);
+        setPDGain(180.0, 10.0);
         torque[0] = 0.0;
         mCurrentTime = currentTime;
         mDT = dT;
@@ -58,7 +58,7 @@ private:
     double mTorqueLimit = 10.0;
     double mHaltTime = 0.0;
     double *mCurrentTime;
-    double mLumpedMass = 2.700;
+    double mLumpedMass = 2.766;
     double mGravity = -9.81;
     double mDT;
 };

@@ -56,7 +56,7 @@ private:
     bool mIsZeroing = false;
     bool mIsCubic = false;
     bool mIsSin = false;
-    double mTorqueLimit = 10.0;
+    double mTorqueLimit = 11.0;
     double mHaltTime = 0.0;
     double *mCurrentTime;
     double mDT;

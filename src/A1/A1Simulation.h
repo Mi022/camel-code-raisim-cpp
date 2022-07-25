@@ -8,6 +8,7 @@
 #include "include/CAMEL/Simulation.h"
 #include "A1Robot.h"
 #include "A1JointPDController.h"
+#include "A1MPCController.h"
 
 class A1Simulation : public Simulation {
 public:

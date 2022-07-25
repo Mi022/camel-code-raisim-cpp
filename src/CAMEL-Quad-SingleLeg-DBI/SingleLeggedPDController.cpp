@@ -22,8 +22,8 @@ void SingleLeggedPDController::setTrajectory() {
 }
 
 void SingleLeggedPDController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    position = getRobot()->getQ();
+    velocity = getRobot()->getQD();
 }
 
 void SingleLeggedPDController::computeControlInput() {

@@ -68,8 +68,8 @@ void MIPMPCController::setTrajectory() {
 }
 
 void MIPMPCController::updateState() {
-    mPosition = getRobot()->robot->getGeneralizedCoordinate();
-    mVelocity = getRobot()->robot->getGeneralizedVelocity();
+    mPosition = getRobot()->getQ();
+    mVelocity = getRobot()->getQD();
 
     mX[0] = mPosition[0];
     mX[1] = mVelocity[0];

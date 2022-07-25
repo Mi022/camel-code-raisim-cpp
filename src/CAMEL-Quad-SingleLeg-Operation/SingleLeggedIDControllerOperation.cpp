@@ -100,7 +100,7 @@ void SingleLeggedIDControllerOperation::computeControlInput() {
     dz_dth2 = -0.23*sin(position[1] + position[2]);
     torque[0] = dz_dth1 * calculatedForce;
     torque[1] = dz_dth2 * calculatedForce;
-    std::cout<<"input torque: "<<torque[0]<<" "<<torque[1]<<std::endl;
+//    std::cout<<"input torque: "<<torque[0]<<" "<<torque[1]<<std::endl;
 }
 
 void SingleLeggedIDControllerOperation::setControlInput() {

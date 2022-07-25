@@ -28,8 +28,8 @@ void SingleLeggedMPCController::setTrajectory() {
 }
 
 void SingleLeggedMPCController::updateState() {
-    position = getRobot()->robot->getGeneralizedCoordinate();
-    velocity = getRobot()->robot->getGeneralizedVelocity();
+    position = getRobot()->getQ();
+    velocity = getRobot()->getQD();
     mInitialPosition = position[0];
     mInitialVelocity = velocity[0];
     mForce(0) = mInitialForce;

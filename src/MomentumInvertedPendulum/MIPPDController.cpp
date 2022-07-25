@@ -47,8 +47,8 @@ void MIPPDController::setTrajectory() {
 }
 
 void MIPPDController::updateState() {
-    mPosition = getRobot()->robot->getGeneralizedCoordinate();
-    mVelocity = getRobot()->robot->getGeneralizedVelocity();
+    mPosition = getRobot()->getQ();
+    mVelocity = getRobot()->getQD();
 
     addNoise();
 }

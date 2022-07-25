@@ -14,8 +14,6 @@ public:
     }
 
     void initialize() override;
-    raisim::VecDyn getQ();
-    raisim::VecDyn getQD();
 
 private:
 

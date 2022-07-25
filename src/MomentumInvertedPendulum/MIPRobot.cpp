@@ -11,11 +11,3 @@ void MIPRobot::initialize() {
     initialJointPosition[0] = 0.1; //0.4 for configuration figure
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
-
-raisim::VecDyn MIPRobot::getQ() {
-    return this->robot->getGeneralizedCoordinate();
-}
-
-raisim::VecDyn MIPRobot::getQD() {
-    return this->robot->getGeneralizedVelocity();
-}

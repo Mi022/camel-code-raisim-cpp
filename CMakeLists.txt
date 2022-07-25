@@ -16,47 +16,66 @@ find_package(Eigen3 REQUIRED HINTS ${Eigen3_HINT})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../rsc" DESTINATION ${CMAKE_BINARY_DIR}/camel-code-raisim-cpp)
 
 include_directories(${EIGEN3_INCLUDE_DIRS})
+include_directories("qpOASES/include")
+
+add_subdirectory(qpOASES)
+
 
 set(CAMEL_LIBS
         Qt5::Widgets
         raisim::raisim
         pthread
-        rt)
+        rt
+        qpOASES)
 
 set(CAMEL_SOURCES
         include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
         include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
+        include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp
+        include/TrajectoryGenerator/legtrajectory.cpp
         include/CAN/CanMotorX8ProV2.h
         include/Optimizer/GradientDescentOptimizer.cpp
         include/Sensor/LoadCell.cpp
         include/Sensor/MPU9250.cpp
         include/Sensor/RE22SC.cpp
         include/RT/rb_utils.cpp
-        include/SimulationUI/qcustomplot.cpp)
+        include/SimulationUI/qcustomplot.cpp
+        include/Filter/LPF.cpp
+        )
 
 set(CAMEL_SIMULATION_UI_SOURCES
-        include/SimulationUI/qcustomplot.cpp
         include/SimulationUI/simulationMainwindow.cpp)
+
+set(CAMEL_A1_SIMULATION_UI_SOURCES
+        include/SimulationUI/qcustomplot.cpp
+        src/A1/mainwindow.cpp)
 
 ## Simulation ##
 # ====== Simple Pendulum ======  #
 set(SIMPLE_PENDULUM_SOURCES
         src/Tutorial_SimplePendulum/SimplePendulumSimulation.cpp
         src/Tutorial_SimplePendulum/SimplePendulumRobot.cpp
-        src/Tutorial_SimplePendulum/SimplePendulumPDController.cpp)
+        src/Tutorial_SimplePendulum/SimplePendulumPDController.cpp
+        src/Tutorial_SimplePendulum/SimplePendulumSharedMemory.h
+        src/Tutorial_SimplePendulum/UI_RealTimePlot/operationMainwindow.cpp
+        )
 
-add_executable(camel-simplePendulum ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${SIMPLE_PENDULUM_SOURCES})
-target_link_libraries(camel-simplePendulum ${CAMEL_LIBS})
+add_executable(camel-tutorial-simplePendulum ${CAMEL_SOURCES} ${SIMPLE_PENDULUM_SOURCES})
+target_link_libraries(camel-tutorial-simplePendulum ${CAMEL_LIBS})
 # ====== Simple Pendulum ======/ #
 
 # ====== A1 ======  #
 set(A1_SOURCES
         src/A1/A1Simulation.cpp
         src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp)
+        src/A1/A1JointPDController.cpp
+        src/A1/A1MPCController.cpp
+        src/A1/SharedMemory.h
+        )
 
-add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${A1_SOURCES})
-target_link_libraries(camel-a1 ${CAMEL_LIBS})
+add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_A1_SIMULATION_UI_SOURCES} ${A1_SOURCES})
+target_link_libraries(camel-a1 ${CAMEL_LIBS} qpOASES)
+
 # ====== A1 ======/ #
 
 # ====== Canine Single Leg ======  #
@@ -65,10 +84,11 @@ set(CANINE_SINGLE_LEG_SOURCES
         src/CAMEL-Quad-SingleLeg/SingleLeggedRobot.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedPDController.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedIDController.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCController.cpp)
+        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCController.cpp
+        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCqpoases.cpp)
 
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
-target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS})
+target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS} qpOASES)
 # ====== Canine Single Leg ====== /#
 
 # ====== Momentum Inverted Pendulum ======  #
@@ -120,10 +140,12 @@ set(CANINE_SINGLE_LEG_OPERATION_SOURCES
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedRobotOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/mainwindow.cpp
+        src/CAMEL-Quad-SingleLeg-Operation/UI/mainwindow.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedPDControllerOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp)
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedMPCqpoasesOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedSharedMemoryOperation.h)
 
 add_executable(camel-canine_single_leg_operation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_SOURCES})
 target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})
@@ -131,7 +153,9 @@ target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})
 ## Operation /##
 
 ## TEST FILES ##
-add_executable(camel-test_trajectory_generation src/Test/Test_trajectoryGenerator.cpp include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp)
+add_executable(camel-test_trajectory_generation src/Test/Test_trajectoryGenerator.cpp include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
+                                                                                      include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
+                                                                                      include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp)
 add_executable(camel-rmdx8test_torque src/Test/Test_RMDX8Pro.cpp)
 add_executable(camel-test_real_time_thread src/Test/Test_RealTimeThread.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_real_time_thread ${CAMEL_LIBS})
@@ -149,4 +173,6 @@ add_executable(camel-test_sensor_MPU9250 src/Test/Test_SensorMPU9250.cpp ${CAMEL
 target_link_libraries(camel-test_sensor_MPU9250 ${CAMEL_LIBS})
 add_executable(camel-test_sensor_RE22SC src/Test/Test_encoderRE22SC.cpp ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES})
 target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})
+add_executable(camel-test_SGDmodel src/Test/Test_SGDmodel.cpp ${CAMEL_SOURCES})
+target_link_libraries(camel-test_SGDmodel ${CAMEL_LIBS})
 ## TEST FILES /##

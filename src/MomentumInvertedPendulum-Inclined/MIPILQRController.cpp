@@ -165,8 +165,8 @@ void MIPILQRController::doControl() {
 
 void MIPILQRController::updateState() {
     double tempVelo = mVelocity[1];
-    mPosition = getRobot()->robot->getGeneralizedCoordinate();
-    mVelocity = getRobot()->robot->getGeneralizedVelocity();
+    mPosition = getRobot()->getQ();
+    mVelocity = getRobot()->getQD();
     mRodAcc = (mVelocity[1] - tempVelo)/0.005;
 
     //for plane angle

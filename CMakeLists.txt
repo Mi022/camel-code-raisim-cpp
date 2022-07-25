@@ -51,6 +51,18 @@ set(CAMEL_A1_SIMULATION_UI_SOURCES
         src/A1/mainwindow.cpp)
 
 ## Simulation ##
+# ====== wheeledRobot ======  #
+set(WHEELED_ROBOT_SOURCES
+        src/WheeledRobot/wheeledRobot.cpp
+        src/WheeledRobot/wheeledRobotController.cpp
+        src/WheeledRobot/wheeledRobotSimulation.cpp
+        src/WheeledRobot/wheeledRobotSimulationWindow.cpp)
+
+add_executable(camel-wheeledRobot ${CAMEL_SOURCES} ${WHEELED_ROBOT_SOURCES})
+target_link_libraries(camel-wheeledRobot ${CAMEL_LIBS})
+# ====== wheeledRobot ======/ #
+
+
 # ====== Simple Pendulum ======  #
 set(SIMPLE_PENDULUM_SOURCES
         src/Tutorial_SimplePendulum/SimplePendulumSimulation.cpp
@@ -71,7 +83,7 @@ set(A1_SOURCES
         src/A1/A1JointPDController.cpp
         src/A1/A1MPCController.cpp
         src/A1/SharedMemory.h
-        )
+        src/A1/A1JoyStick.cpp src/A1/A1JoyStick.h)
 
 add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_A1_SIMULATION_UI_SOURCES} ${A1_SOURCES})
 target_link_libraries(camel-a1 ${CAMEL_LIBS} qpOASES)

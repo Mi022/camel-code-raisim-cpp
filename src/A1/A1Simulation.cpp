@@ -13,7 +13,9 @@ extern MainWindow *MainUI;
 pthread_t thread_simulation;
 pSHM smem;
 
-std::string urdfPath = "\\home\\hs\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
+A1JoyStick joystick = A1JoyStick();
+
+std::string urdfPath = "\\home\\ljm\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
 std::string name = "cuteA1";
 raisim::World world;
 
@@ -22,6 +24,7 @@ double dT = 0.005;
 A1Simulation sim = A1Simulation(&world, dT);
 A1Robot robot = A1Robot(&world, urdfPath, name);
 A1MPCController MPCcontroller = A1MPCController(&robot, dT);
+A1JointPDController PDcontroller = A1JointPDController(&robot);
 
 double oneCycleSimTime = 0;
 int iteration = 0;
@@ -65,11 +68,15 @@ void realTimePlot(){
 
 void raisimSimulation()
 {
+    joystick.joyRead();
+
     realTimePlot();
-    if ((MainUI->button1) && (oneCycleSimTime < simulationDuration))
+    if (((MainUI->button1) || (joystick.joy_button[13])) && (oneCycleSimTime < simulationDuration))
+    //if ((joystick.joy_button[13]) && (oneCycleSimTime < simulationDuration))
     {
         oneCycleSimTime = iteration * dT;
         MPCcontroller.doControl();
+        //PDcontroller.doControl();
         world.integrate();
         iteration++;
     }
@@ -111,12 +118,12 @@ int main(int argc, char *argv[])
     MainWindow w;
     smem = (pSHM) malloc(sizeof(SHM));
 
-    int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
-                                                   NULL);
-
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
     server.focusOn(robot.robot);
+
+    int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
+                                                   NULL);
 
     w.show();
 

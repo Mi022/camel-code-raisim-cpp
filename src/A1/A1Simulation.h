@@ -9,6 +9,7 @@
 #include "A1Robot.h"
 #include "A1JointPDController.h"
 #include "A1MPCController.h"
+#include "A1JoyStick.h"
 
 class A1Simulation : public Simulation {
 public:

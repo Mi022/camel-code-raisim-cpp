@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widget_1->addGraph();
     ui->widget_1->graph(1)->setName("desired position_z");
     ui->widget_1->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+    ui->widget_1->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_1->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_2->legend->setVisible(true);
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widget_2->addGraph();
     ui->widget_2->graph(1)->setName("desired velocity_z");
     ui->widget_2->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+    ui->widget_2->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_3->legend->setVisible(true);
@@ -38,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widget_3->addGraph();
     ui->widget_3->graph(1)->setName("knee_position");
     ui->widget_3->graph(1)->setPen(QPen(QColor(0, 255, 0)));
+    ui->widget_3->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_3->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_4->legend->setVisible(true);
@@ -48,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widget_4->addGraph();
     ui->widget_4->graph(1)->setName("knee_velocity");
     ui->widget_4->graph(1)->setPen(QPen(QColor(0, 255, 0)));
+    ui->widget_4->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_4->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_5->legend->setVisible(true);
@@ -58,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widget_5->addGraph();
     ui->widget_5->graph(1)->setName("knee_torque");
     ui->widget_5->graph(1)->setPen(QPen(QColor(0, 255, 0)));
+    ui->widget_5->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_5->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_6->legend->setVisible(true);
@@ -68,7 +73,9 @@ MainWindow::MainWindow(QWidget *parent)
 //    ui->widget_6->addGraph();
 //    ui->widget_6->graph(1)->setName("torque");
 //    ui->widget_6->graph(1)->setPen(QPen(QColor(0, 0, 255)));
+    ui->widget_6->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_6->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
+
     connect(&dataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
     dataTimer.start(0); // Interval 0 means to refresh as fast as possible
 }

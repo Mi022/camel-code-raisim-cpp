@@ -18,7 +18,7 @@ public:
         mCan = can;
         mDT = dT;
         initialize();
-        double cutoffFreq = 70.0;
+        double cutoffFreq = 50.0;
         mLPF1.initialize(mDT, cutoffFreq);
         mLPF2.initialize(mDT, cutoffFreq);
         mLPF3.initialize(mDT, cutoffFreq);

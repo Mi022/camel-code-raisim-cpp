@@ -165,12 +165,17 @@ void operationCode(){
     }
 
     if (*buttonGenCubicTrajPressed){
-        randomGoalPosition = double(dis(gen)) / 100.0 * 0.15 + 0.23;
-        intr = -intr;
-        double goalPos = 0.30 + 0.06 * intr;
+        if(((int)(currentTime*1000) % 2000) == 0)
+        {
+            std::cout<<"test traj gen"<<std::endl;
+            randomGoalPosition = double(dis(gen)) / 100.0 * 0.15 + 0.23;
+            intr = -intr;
+            double goalPos = 0.30 + 0.06 * intr;
 //        controller.updateCubicTrajectory(randomGoalPosition, 2.0);
-        controller.updateCubicTrajectory(goalPos, 2.0);
-        *buttonGenCubicTrajPressed = false;
+            controller.updateCubicTrajectory(goalPos, 1.0);
+        }
+
+//        *buttonGenCubicTrajPressed = false;
     }
 
     if (*buttonGenSinTrajPressed){
@@ -240,7 +245,7 @@ int main(int argc, char *argv[]) {
     buttonZeroingPressed = &w.buttonZeroing;
 
     int thread_id_sensorLoadcell = generate_rt_thread(thread_loadcell, rt_loadcell_thread, "sensor_loadcell_thread", 1, 98, NULL);
-    int thread_id_operation = generate_rt_thread(thread_operation, rt_operation_thread, "operation_thread", 0, 99, NULL);
+    int thread_id_operation = generate_rt_thread(thread_operation, rt_operation_thread, "operation_thread", 0, 49, NULL);
     std::cout<<"test"<<std::endl;
     w.show();
 

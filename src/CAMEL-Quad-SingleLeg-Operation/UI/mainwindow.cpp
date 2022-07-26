@@ -135,7 +135,7 @@ void MainWindow::plotWidget2() {
 
     // set axes ranges, so we see all data:
     ui->widget_2->xAxis->setRange(sharedMemory->time - intervalTime, sharedMemory->time + 0.001);
-    ui->widget_2->yAxis->setRange(yMinWidget2 - 0.01, yMaxWidget2 + 0.01);
+    ui->widget_2->yAxis->setRange(-0.7, 0.7);
     ui->widget_2->replot();
 }
 

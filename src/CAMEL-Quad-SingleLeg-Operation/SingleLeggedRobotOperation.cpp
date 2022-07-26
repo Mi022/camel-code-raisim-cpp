@@ -30,7 +30,7 @@ Eigen::VectorXd SingleLeggedRobotOperation::getQD() {
     mJointVelocity[0] = mLPF1.doFiltering((mJointPosition[0] - mJointPosition_past[0]) / mDT);
     mJointVelocity[1] = mLPF2.doFiltering(mCan->getAngularVelocity2());
     mJointVelocity[2] = mLPF3.doFiltering(mCan->getAngularVelocity1());
-    std::cout<<mJointVelocity<<std::endl;
+//    std::cout<<mJointVelocity<<std::endl;
 //    mJointVelocity[0] = (mJointPosition[0] - mJointPosition_past[0]) / mDT;
 //    mJointVelocity[1] = mCan->getAngularVelocity2();
 //    mJointVelocity[2] = mCan->getAngularVelocity1();

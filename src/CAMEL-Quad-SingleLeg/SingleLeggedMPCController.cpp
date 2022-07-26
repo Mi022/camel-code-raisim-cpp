@@ -11,7 +11,6 @@ void SingleLeggedMPCController::doControl() {
     solve();
     computeControlInput();
     setControlInput();
-    std::cout<<"calculated forces : \n"<<mForce<<std::endl;
     resetMPCVariables();
 }
 
@@ -32,7 +31,7 @@ void SingleLeggedMPCController::updateState() {
     velocity = getRobot()->getQD();
     mInitialPosition = position[0];
     mInitialVelocity = velocity[0];
-    mForce(0) = mInitialForce;
+//    mForce(0) = mInitialForce;
 }
 
 void SingleLeggedMPCController::computeControlInput() {

@@ -4,21 +4,19 @@
 
 #ifndef RAISIM_SINCURVETRAJECTORYGENERATOR_H
 #define RAISIM_SINCURVETRAJECTORYGENERATOR_H
+#define PI 3.141592
 
 class SincurveTrajectoryGenerator{
 public:
-    SincurveTrajectoryGenerator()
-    {
-
-    }
-    void updateTrajectory(double currentPosition, double currentTime,double timeDuration);
+    void updateTrajectory(double currentPosition, double currentTime, double amplitude, double frequency);
     double getPositionTrajectory(double currentTime);
     double getVelocityTrajectory(double currentTime);
 
 private:
     double mReferencePose;
     double mReferenceTime;
-    double mTimeDuration;
+    double mAmplitude;
+    double mFrequency;
 };
 
 #endif //RAISIM_SINCURVETRAJECTORYGENERATOR_H

@@ -7,6 +7,7 @@
 
 #include "include/CAMEL/Controller.h"
 #include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
+#include "include/TrajectoryGenerator/SincurveTrajectoryGenerator.h"
 
 class SingleLeggedMPCController : public Controller {
 public:
@@ -33,7 +34,7 @@ public:
 
     SingleLeggedMPCController(Robot *robot, double dT) : Controller(robot) {
             updateState();
-            mTrajectoryGenerator.updateTrajectory(position[0], 0.40, getRobot()->getWorldTime(), 1.0);
+            mTrajectoryGenerator.updateTrajectory(position[0], getRobot()->getWorldTime(), 0.1,0.2);
             torque[0] = 0.0;
             mDT = dT;
             mMaximumIteration = 100;
@@ -63,7 +64,8 @@ public:
     double objectiveFunction(Eigen::VectorXd force);
 
 private:
-    QuinticTrajectoryGenerator mTrajectoryGenerator;
+//    QuinticTrajectoryGenerator mTrajectoryGenerator;
+    SincurveTrajectoryGenerator mTrajectoryGenerator;
     double mLumpedMass = 2.009;
     double mGravity = -9.81;
     double mDT;
@@ -76,7 +78,7 @@ private:
     double mStepSize;
     double mInitialPosition;
     double mInitialVelocity;
-    double mInitialForce = 19.7083;
+//    double mInitialForce = 19.7083;
     double mRMSGradient;
     Eigen::MatrixXd mTrajectorySequence = Eigen::MatrixXd(2, mMPCHorizon);
     Eigen::MatrixXd mA = Eigen::MatrixXd(2, 2);

@@ -15,21 +15,32 @@
 
 #define JOY_DEV "/dev/input/js0"
 
-class wheeledRobotXBOX {
+class wheeledRobotJoyStick {
 public:
-    int joy_fd=-1;
-    int num_of_axis=0;
-    int num_of_buttons=0;
+    int joy_fd;
+    int num_of_axis;
+    int num_of_buttons;
     char name_of_joystick[80];
     std::vector<char> joy_button;
     std::vector<int> joy_axis;
 
     js_event js;
 
-    int joySetup();
+    wheeledRobotJoyStick() {
+        joy_fd=-1;
+        num_of_axis=0;
+        num_of_buttons=0;
+        name_of_joystick[80];
+
+        joySetup();
+    }
+
+    void joySetup();
     void joyRead();
+    void joyButton();
 
 private:
+
 };
 
 #endif //RAISIM_WHEELEDROBOTXBOX_H

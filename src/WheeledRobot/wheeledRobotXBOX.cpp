@@ -4,11 +4,10 @@
 
 #include "wheeledRobotXBOX.h"
 
-int wheeledRobotXBOX::joySetup() {
+void wheeledRobotJoyStick::joySetup() {
     if((joy_fd = open(JOY_DEV,O_RDONLY)) < 0)
     {
         std::cerr<<"Failed to open "<<JOY_DEV<<std::endl;
-        return -1;
     }
 
     ioctl(joy_fd, JSIOCGAXES, &num_of_axis);
@@ -19,15 +18,13 @@ int wheeledRobotXBOX::joySetup() {
     joy_axis.resize(num_of_axis,0);
 
     std::cout<<"Joystick: "<<name_of_joystick<<std::endl
-        <<"  axis: "<<num_of_axis<<std::endl
-        <<"  buttons: "<<num_of_buttons<<std::endl;
+             <<"  axis: "<<num_of_axis<<std::endl
+             <<"  buttons: "<<num_of_buttons<<std::endl;
 
     fcntl(joy_fd, F_SETFL, O_NONBLOCK);
-
-    return 1;
 }
 
-void wheeledRobotXBOX::joyRead() {
+void wheeledRobotJoyStick::joyRead() {
     read(joy_fd, &js, sizeof(js_event));
 
     switch (js.type & ~JS_EVENT_INIT)
@@ -41,18 +38,8 @@ void wheeledRobotXBOX::joyRead() {
             joy_button[(int)js.number]= js.value;
             break;
     }
+}
 
-    /*
-    std::cout<<"axis/10000: ";
-    for(size_t i(0);i<joy_axis.size();++i)
-        std::cout<<" "<<std::setw(2)<<joy_axis[i]/10000;
-    std::cout<<std::endl;
+void wheeledRobotJoyStick::joyButton() {
 
-    std::cout<<"  button: ";
-    for(size_t i(0);i<joy_button.size();++i)
-        std::cout<<" "<<(int)joy_button[i];
-    std::cout<<std::endl;
-     */
-
-    //usleep(100);
 }

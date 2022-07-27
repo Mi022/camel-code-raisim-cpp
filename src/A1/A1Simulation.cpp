@@ -71,8 +71,7 @@ void raisimSimulation()
     joystick.joyRead();
 
     realTimePlot();
-    if (((MainUI->button1) || (joystick.joy_button[13])) && (oneCycleSimTime < simulationDuration))
-    //if ((joystick.joy_button[13]) && (oneCycleSimTime < simulationDuration))
+    if (((MainUI->button1) || (joystick.joy_button[13]) || ((joystick.joy_axis[1]/10000)<0)) && (oneCycleSimTime < simulationDuration))
     {
         oneCycleSimTime = iteration * dT;
         MPCcontroller.doControl();

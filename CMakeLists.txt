@@ -56,7 +56,8 @@ set(WHEELED_ROBOT_SOURCES
         src/WheeledRobot/wheeledRobot.cpp
         src/WheeledRobot/wheeledRobotController.cpp
         src/WheeledRobot/wheeledRobotSimulation.cpp
-        src/WheeledRobot/wheeledRobotSimulationWindow.cpp)
+        src/WheeledRobot/wheeledRobotSimulationWindow.cpp
+        src/WheeledRobot/wheeledRobotXBOX.cpp)
 
 add_executable(camel-wheeledRobot ${CAMEL_SOURCES} ${WHEELED_ROBOT_SOURCES})
 target_link_libraries(camel-wheeledRobot ${CAMEL_LIBS})

@@ -8,31 +8,16 @@
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 #include <cmath>
-#include <iostream>
-#include <iomanip>
-#include <vector>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/joystick.h>
-
-#define JOY_DEV "/dev/input/js0"
-
-int joy_fd=-1;
-int num_of_axis=0;
-int num_of_buttons=0;
-char name_of_joystick[80];
-std::vector<char> joy_button;
-std::vector<int> joy_axis;
-
-js_event js;
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
+wheeledRobotJoyStick joystick = wheeledRobotJoyStick();
+
 std::string urdfPath = "\\home\\ljm\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wheeledRobot.urdf";
 std::string name = "wheeledRobot";
 raisim::World world;
+raisim::RaisimServer server(&world);
 
 double simulationDuration = 2.0;
 double dT = world.getTimeStep();
@@ -44,61 +29,38 @@ double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
 int iteration = 0;
 
-void joySetup() {
-    if((joy_fd = open(JOY_DEV,O_RDONLY)) < 0)
-    {
-        std::cerr<<"Failed to open "<<JOY_DEV<<std::endl;
-    }
-
-    ioctl(joy_fd, JSIOCGAXES, &num_of_axis);
-    ioctl(joy_fd, JSIOCGBUTTONS, &num_of_buttons);
-    ioctl(joy_fd, JSIOCGNAME(80), &name_of_joystick);
-
-    joy_button.resize(num_of_buttons,0);
-    joy_axis.resize(num_of_axis,0);
-
-    std::cout<<"Joystick: "<<name_of_joystick<<std::endl
-             <<"  axis: "<<num_of_axis<<std::endl
-             <<"  buttons: "<<num_of_buttons<<std::endl;
-
-    fcntl(joy_fd, F_SETFL, O_NONBLOCK);
-}
-
-void joyRead() {
-    read(joy_fd, &js, sizeof(js_event));
-
-    switch (js.type & ~JS_EVENT_INIT)
-    {
-        case JS_EVENT_AXIS:
-            if((int)js.number>=joy_axis.size())  {std::cerr<<"err:"<<(int)js.number<<std::endl;}
-            joy_axis[(int)js.number]= js.value;
-            break;
-        case JS_EVENT_BUTTON:
-            if((int)js.number>=joy_button.size())  {std::cerr<<"err:"<<(int)js.number<<std::endl;}
-            joy_button[(int)js.number]= js.value;
-            break;
-    }
-}
+double x=0.0, y=0.0, z=0.0;
+Eigen::Vector3d pos = { 1, y, z};
+Eigen::Vector3d lookAt = {1, 2, 3};
 
 void raisimSimulation() {
-    joyRead();
+    joystick.joyRead();
     int button = 0;
     //if (((MainUI->button1)||(MainUI->button2)||(MainUI->button3)||(MainUI->button4)) && (oneCycleSimTime < simulationDuration))
-    if ((joy_button[11] || joy_button[12] || joy_button[13] || joy_button[14] || joy_axis[2] > -32767 || joy_axis[5] > -32767) && (oneCycleSimTime < simulationDuration)) {
+    if ((joystick.joy_button[11] || joystick.joy_button[12] || joystick.joy_button[13] || joystick.joy_button[14] || joystick.joy_axis[0]/10000 || joystick.joy_axis[1]/10000) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
 
-        if(joy_button[0]) {
+        if(joystick.joy_button[0]) {
             controller.accelerate();
         }
-        else if(joy_axis[5]>-32767) {
-            controller.setVel((joy_axis[5] / 10000) + 4);
+        /*else if(joystick.joy_axis[5]>-32767) {
+            controller.setVel((joystick.joy_axis[5] / 10000) + 4);
+        }*/
+        else if(joystick.joy_axis[1]/10000) {
+            controller.setVel(joystick.joy_axis[1] / 10000);
+        }
+        else if(joystick.joy_axis[0]/10000) {
+            controller.setVel(-abs(joystick.joy_axis[0]) / 10000);
+        }
+        else {
+            controller.setStop();
         }
 
-        if(joy_button[13] || (joy_axis[1]/10000)<0) {
-            if(joy_button[11] || (joy_axis[0]/10000)<0)  {
+        if(joystick.joy_button[13] || (joystick.joy_axis[1]/10000)<0) {
+            if(joystick.joy_button[11] || (joystick.joy_axis[0]/10000)<0)  {
                 controller.setLeft();
             }
-            else if(joy_button[12] || (joy_axis[0]/10000)>0) {
+            else if(joystick.joy_button[12] || (joystick.joy_axis[0]/10000)>0) {
                 controller.setRight();
             }
             else {
@@ -106,19 +68,19 @@ void raisimSimulation() {
             }
         }
 
-        if(joy_button[11] || (joy_axis[0]/10000)<0)  {
+        if(joystick.joy_button[11] || (joystick.joy_axis[0]/10000)<0)  {
             controller.setLeft();
         }
 
-        if(joy_button[12] || (joy_axis[0]/10000)>0) {
+        if(joystick.joy_button[12] || (joystick.joy_axis[0]/10000)>0) {
             controller.setRight();
         }
 
-        if(joy_button[14] || (joy_axis[1]/10000)>0) {
-            if(joy_button[11] || (joy_axis[0]/10000)<0)  {
+        if(joystick.joy_button[14] || (joystick.joy_axis[1]/10000)>0) {
+            if(joystick.joy_button[11] || (joystick.joy_axis[0]/10000)<0)  {
                 controller.setLeft();
             }
-            else if(joy_button[12] || (joy_axis[0]/10000)>0) {
+            else if(joystick.joy_button[12] || (joystick.joy_axis[0]/10000)>0) {
                 controller.setRight();
             }
             else {
@@ -154,6 +116,16 @@ void raisimSimulation() {
     controller.doControl();
     world.integrate();
 
+    if(joystick.joy_axis[3]/10000) {
+        x++; y++; z++;
+        server.setCameraPositionAndLookAt(pos, lookAt);
+    }
+
+    if(joystick.joy_button[6]) {
+        server.killServer();
+        exit(0);
+    }
+
 }
 
 void *rt_simulation_thread(void *arg) {
@@ -183,10 +155,9 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     MainWindow w;
     sim.setGroundProperty("wheat");
-    raisim::RaisimServer server(&world);
-    server.launchServer(8080);
 
-    joySetup();
+    server.launchServer(8080);
+    server.focusOn(robot.robot);
 
     int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);

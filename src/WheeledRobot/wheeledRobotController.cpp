@@ -73,7 +73,7 @@ void wheeledRobotController::accelerate() {
 }
 
 void wheeledRobotController::setVel(int val) {
-    vel = 3 * val;
+    vel = -5 * val;
 }
 
 void wheeledRobotController::reset() {

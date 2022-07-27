@@ -42,7 +42,8 @@ public:
             mDelta = 1e-3;
             mStepSize = 100.0 / mDT / mDT;
             mA << 1.0, mDT, 0.0, 1.0;
-            mB << 0.0, mDT;
+            mB << 0.0, mDT/mLumpedMass;
+            mC << 0.0, mGravity;
             mQ << 1.5, 0.0, 0.0, 1e-3;
             mR << 1e-3 * mDT * mDT;
             mIteration = 0;
@@ -80,9 +81,13 @@ private:
     double mInitialVelocity;
 //    double mInitialForce = 19.7083;
     double mRMSGradient;
+    double mObjFunctionValue;
+    double tempValue1;
+    double tempValue2;
     Eigen::MatrixXd mTrajectorySequence = Eigen::MatrixXd(2, mMPCHorizon);
     Eigen::MatrixXd mA = Eigen::MatrixXd(2, 2);
     Eigen::VectorXd mB = Eigen::VectorXd(2);
+    Eigen::VectorXd mC = Eigen::VectorXd(2);
     Eigen::MatrixXd mQ = Eigen::MatrixXd(2, 2);
     Eigen::VectorXd mR = Eigen::VectorXd(1);
     Eigen::VectorXd mGradient = Eigen::VectorXd(mMPCHorizon);
@@ -90,6 +95,10 @@ private:
     Eigen::MatrixXd mNextStatesTemp = Eigen::MatrixXd(2,mMPCHorizon);
     Eigen::VectorXd mForce = Eigen::VectorXd(mMPCHorizon);
     Eigen::VectorXd mForceTemp = Eigen::VectorXd(mMPCHorizon);
+    Eigen::VectorXd mNextX = Eigen::VectorXd(2);
+    Eigen::VectorXd mNextXDes = Eigen::VectorXd(2);
+    struct timespec TIME_TIC;
+    struct timespec TIME_TOC;
 
 };
 

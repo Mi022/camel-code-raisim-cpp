@@ -5,7 +5,7 @@
 #include "SingleLeggedMPCqpoases.h"
 
 void SingleLeggedMPCqpoases::doControl() {
-    std::cout<<"simTime : "<<getRobot()->getWorldTime()<<std::endl;
+//    std::cout<<"simTime : "<<getRobot()->getWorldTime()<<std::endl;
     updateState();
     setTrajectory();
     getMatrices();
@@ -15,7 +15,7 @@ void SingleLeggedMPCqpoases::doControl() {
 }
 
 void SingleLeggedMPCqpoases::setTrajectory() {
-    std::cout << "Set trajectory function" << std::endl;
+//    std::cout << "Set trajectory function" << std::endl;
     double currentTime = getRobot()->getWorldTime();
     for(int i = 0; i < mMPCHorizon ; i++)
     {
@@ -147,13 +147,13 @@ void SingleLeggedMPCqpoases::qpSolver()
     std::cout << q_red[2] << std::endl;*/
 
     calculatedForce = q_red[0];
-    std::cout << "Force : " << calculatedForce << std::endl;
+//    std::cout << "Force : " << calculatedForce << std::endl;
 
     if(getRobot()->robot->getContacts().size() != 0)
     {
-        std::cout << getRobot()->robot->getContacts().size() << std::endl;
+//        std::cout << getRobot()->robot->getContacts().size() << std::endl;
         raisim::Mat<3,1> ff = getRobot()->robot->getContacts()[0].getImpulse() / mDT;
-        std::cout << ff << std::endl;
+//        std::cout << ff << std::endl;
     }
 
     free(H_qpoases);
@@ -203,6 +203,6 @@ void SingleLeggedMPCqpoases::setControlInput() {
             torque[i] = -torqueLimit;
         }
     }
-    std::cout <<torque << std::endl;
+//    std::cout <<torque << std::endl;
     getRobot()->robot->setGeneralizedForce(torque);
 }

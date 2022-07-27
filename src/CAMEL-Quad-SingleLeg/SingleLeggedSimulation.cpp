@@ -30,8 +30,10 @@ SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
 int iteration = 0;
+struct timespec TIME_TIC;
+struct timespec TIME_TOC;
 
-void updateSHM(){
+void updateSHM() {
     sharedMemory->time = world.getWorldTime();
     sharedMemory->position_z = controller.position[0];
     sharedMemory->desiredPosition_z = controller.desiredPosition;
@@ -53,7 +55,12 @@ void resetSimVarialbes() {
 void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
+
+        clock_gettime(CLOCK_REALTIME, &TIME_TIC);
         controller.doControl();
+        clock_gettime(CLOCK_REALTIME, &TIME_TOC);
+        std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
+
         world.integrate();
         updateSHM();
         iteration++;
@@ -68,6 +75,7 @@ void *rt_simulation_thread(void *arg) {
     std::cout << "entered #rt_time_checker_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
+
     const long PERIOD_US = long(dT * 1e6); // 200Hz 짜리 쓰레드
 
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);

@@ -17,7 +17,10 @@ void RobotArmPDController::doControl() {
 }
 
 void RobotArmPDController::setTrajectory() {
-    desiredPosition << 1.57, 2.76, -1.57, 0.0, 2.0, 0.0;
+    positionTrajectory = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
+    for(int i=0;i<6;i++){
+        desiredPosition[i] = positionTrajectory[i];
+    }
     desiredVelocity << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
 }
 

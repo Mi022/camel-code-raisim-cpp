@@ -1,15 +1,35 @@
 //
-// Created by jy on 22. 7. 5.
+// Created by jy on 22. 6. 1.
 //
 
 #ifndef RAISIM_ROBOTARMTRAJECTORYGENERATOR_H
 #define RAISIM_ROBOTARMTRAJECTORYGENERATOR_H
-
+#include <Eigen/Eigen>
+#include <cmath>
 
 class RobotArmTrajectoryGenerator {
+public:
+    RobotArmTrajectoryGenerator()
+    {
+        mMatrixA << 2.0, -2.0, 1.0, 1.0,
+                    -3.0, 3.0, -2.0, -1.0,
+                    0.0, 0.0, 1.0, 0.0,
+                    1.0, 0.0, 0.0, 0.0;
+    }
+    void setWaypoints(Eigen::MatrixXd);
+    void updateTrajectory(double currentPosition,double goalPosition,double currentTime,double timeDuration);
+    void calculateCoefficient();
+    std::vector<double> getPositionTrajectory(double currentTime);
+    double getVelocityTrajectory(double currentTime);
+    double getAccelerationTrajectory(double currentTime);
 
-    //way points 값 받아와
-    //cubic spline해서 경로 생성
+private:
+    Eigen::MatrixXd mMatrixA = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mCoefficient = Eigen::MatrixXd(4, 1);
+    Eigen::MatrixXd mFunctionValue = Eigen::MatrixXd(4, 1);
+    Eigen::MatrixXd mWaypoints= Eigen::MatrixXd(3, 6);;
+    double mReferenceTime;
+    double mTimeDuration;
 };
 
 

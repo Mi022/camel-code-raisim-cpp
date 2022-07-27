@@ -10,10 +10,10 @@ using namespace std;
 void RobotArmMotionPlanning::setObstacle(Eigen::VectorXd obstacleRadius, Eigen::MatrixXd obstacleCenter) {
     mObstacleCenter = obstacleCenter;
     mObstacleRadius = obstacleRadius;
-//    std::cout << mObstacleCenter(0,2) << std::endl;
 }
 
 void RobotArmMotionPlanning::generatePoint() {
+    cout << "mObstacle : " <<mObstacleCenter << endl;
     int randNum = 100;
     armPose.row(0)=startJoint;
     int currentIndex = 0;
@@ -33,11 +33,8 @@ void RobotArmMotionPlanning::generatePoint() {
 }
 
 void RobotArmMotionPlanning::makeTree() {
-
     generatePoint();
     int k=250;
-    float lambda1;
-    float lambda2;
     Eigen::MatrixXd currentPoint = Eigen::MatrixXd::Zero(6,3);
     Eigen::MatrixXd nextPoint = Eigen::MatrixXd::Zero(6,3);
     float currentDistance;
@@ -55,7 +52,7 @@ void RobotArmMotionPlanning::makeTree() {
             currentDistance = distance.distance(armPose.row(i),armPose.row(j));
 //            cout << armPose.row(i) << armPose.row(j) << endl;
 //            cout << currentDistance << endl;
-            if( currentDistance > 0.01 and currentDistance < k and collisionChecker.lineChecker(currentPoint.row(0),nextPoint.row(1)))
+            if( currentDistance > 0.01 and currentDistance < k )
 //            if( currentDistance > 0.1 and currentDistance < k)
             {
                 pareAdd(0,0) = i;
@@ -72,8 +69,12 @@ void RobotArmMotionPlanning::makeTree() {
 
 //    cout << "childTree :  "<<endl;
 //    cout <<  childTree <<  endl;
+
     pare.conservativeResize(pare.rows()-2,pare.cols());
     pare = removeMatrix.removeRow(pare,0);
+
+//    cout << "pare :  "<<endl;
+//    cout <<  pare <<  endl;
 }
 
 void RobotArmMotionPlanning::dijkstra() {
@@ -101,21 +102,18 @@ void RobotArmMotionPlanning::dijkstra() {
         distanceVertex = pare(rowIdx,2);
         Uweight(coordVertex1,coordVertex2) = distanceVertex;
     }
-    cout << childTree << endl;
 
     Eigen::VectorXd parentTree = Eigen::VectorXd::Zero(len);
-
+    Eigen::VectorXd uIdxChild;
     Uweight(0,0)=0;
     uD[0] = 0;
     int Uidx ;
     vector<int> UidxBox ;
     vector<int> testBox ;
-
     vector<int> result;
-    Eigen::VectorXd uIdxChild;
-    vector<int> uRealChild;
     vector<float> findMin;
     vector<int>::iterator itr;
+
     float minD = 0;
 
     while (!Q.empty()){
@@ -135,21 +133,6 @@ void RobotArmMotionPlanning::dijkstra() {
             }
         }
 
-//        cout << "findMin : " << endl;
-//        for(int i =0 ; i < findMin.size() ; i++){
-//            cout << " " << findMin[i] << " ";
-//        }
-//        cout << " " << endl;
-//
-//        cout << "minD : " << endl;
-//        cout << minD << endl;
-//
-//        cout << "UidxBox : " << endl;
-//        for(int i =0 ; i < UidxBox.size() ; i++){
-//            cout << " " << UidxBox[i] << " ";
-//        }
-//        cout << " " << endl;
-
         Uidx = UidxBox[rand() % UidxBox.size()];
 
         S.clear();
@@ -161,14 +144,10 @@ void RobotArmMotionPlanning::dijkstra() {
         Q = result;
 
         uIdxChild = childTree.row(Uidx);
-        uRealChild.clear();
+//        cout<<"uIdxChild : "<<endl;
+//        cout<<uIdxChild<<endl;
         for(int i = 0 ; i < uIdxChild.size() ; i++){
-            if(uIdxChild[i] > 0){
-                uRealChild.push_back(uIdxChild[i]);
-            }
-        }
-        for(int i = 0 ; i < uRealChild.size() ; i++){
-            int vIdx = uRealChild[i];
+            int vIdx = uIdxChild[i];
             if( uD[vIdx] > (uD[Uidx] + Uweight(Uidx,vIdx))){
                 uD[vIdx] = uD[Uidx] + Uweight(Uidx,vIdx);
                 parentTree[vIdx] = Uidx;
@@ -177,12 +156,27 @@ void RobotArmMotionPlanning::dijkstra() {
 
         iteration++;
     }
-    int find_idx = len-1;
+
+    int find_idx = parentTree.size()-1;
+    parentTree[find_idx] = 3;
     findTree.push_back(find_idx);
+
     while (find_idx != 0){
-        find_idx = parentTree[find_idx,0];
+        find_idx = parentTree[find_idx];
         findTree.push_back(find_idx);
     }
     reverse(findTree.begin(),findTree.end());
+
+//    for(int i = 0 ; i < findTree.size() ; i++){
+//        cout << "findTree " << i << endl;
+//        cout << findTree[i] << endl;
+//    }
+
+    Eigen::MatrixXd wayPoints = Eigen::MatrixXd (findTree.size(),6);
+    for(int i=0; i<findTree.size(); i++){
+        wayPoints.row(i) = armPose.row(findTree[i]);
+    }
+
+    trajectoryGenerator.setWaypoints(wayPoints);
 
 }

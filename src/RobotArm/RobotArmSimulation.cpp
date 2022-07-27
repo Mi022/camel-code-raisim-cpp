@@ -38,15 +38,16 @@ void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         // control robot and data plot thread
         oneCycleSimTime = iteration * dT;
+
         controller.doControl();
         world.integrate();
         if (iteration % divider == 0) {
             //                std::cout<<"data_idx : "<<MainUI->data_idx<<std::endl;
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
             MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-            MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition[0];
+            MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition[5];
             MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
-            MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity[0];
+            MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity[5];
 //                MainUI->data_y2[MainUI->data_idx] = controller.torque[0];
             MainUI->data_idx += 1;
         }
@@ -74,7 +75,7 @@ void *rt_simulation_thread(void *arg) {
     obstacleCenter <<  -1,  0,  0.5,
                         0,  1,  0.2;
     motionPlanner.setObstacle(obstacleRadius, obstacleCenter);
-    motionPlanner.setObstacle(obstacleRadius, obstacleCenter);
+    robotArmCollisionChecker.setObstacle(obstacleRadius, obstacleCenter);
 
     auto obstacle1 = world.addSphere(obstacleRadius(0), 1.0);
     auto obstacle2 = world.addSphere(obstacleRadius(1), 1.0);
@@ -101,6 +102,7 @@ int main(int argc, char *argv[]) {
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
     w.show();
+    robotArmCollisionChecker.
     motionPlanner.makeTree();
     motionPlanner.dijkstra();
     return a.exec();

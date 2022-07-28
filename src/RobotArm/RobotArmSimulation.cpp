@@ -19,7 +19,6 @@ raisim::World world;
 
 
 RobotArmCollisionChecker robotArmCollisionChecker;
-RobotArmMotionPlanning motionPlanner(&robotArmCollisionChecker);
 Eigen::VectorXd obstacleRadius = Eigen::VectorXd(2);
 Eigen::MatrixXd obstacleCenter = Eigen::MatrixXd(2,3);
 
@@ -28,6 +27,7 @@ double dT = 0.005;
 RobotArmSimulation sim = RobotArmSimulation(&world, dT);
 RobotArmRobot robot = RobotArmRobot(&world, urdfPath, name);
 RobotArmPDController controller = RobotArmPDController(&robot);
+RobotArmMotionPlanning motionPlanner(&robotArmCollisionChecker,controller.getTrajectoryGenerator());
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
@@ -75,7 +75,6 @@ void *rt_simulation_thread(void *arg) {
     obstacleRadius << 0.2, 0.2;
     obstacleCenter <<  -1,  0,  0.5,
                         0,  1,  0.2;
-    motionPlanner.setObstacle(obstacleRadius, obstacleCenter);
     robotArmCollisionChecker.setObstacle(obstacleRadius, obstacleCenter);
 
     auto obstacle1 = world.addSphere(obstacleRadius(0), 1.0);

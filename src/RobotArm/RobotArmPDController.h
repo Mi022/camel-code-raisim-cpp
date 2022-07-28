@@ -41,6 +41,8 @@ public:
     void setControlInput() override;
     void setPDGain(Eigen::VectorXd PGain, Eigen::VectorXd DGain);
 
+    RobotArmTrajectoryGenerator* getTrajectoryGenerator(){return &mTrajectoryGenerator;}
+
 private:
     RobotArmTrajectoryGenerator mTrajectoryGenerator;
     std::vector<double> positionTrajectory;

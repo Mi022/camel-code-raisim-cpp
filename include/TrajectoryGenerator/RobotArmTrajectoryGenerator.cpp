@@ -20,14 +20,12 @@ void RobotArmTrajectoryGenerator::updateTrajectory(double currentPosition, doubl
 
 void RobotArmTrajectoryGenerator::calculateCoefficient() {
     mCoefficient = mMatrixA * mFunctionValue;
-//    std::cout << mWaypoints << std::endl;
-
 }
 
 std::vector<double> RobotArmTrajectoryGenerator::getPositionTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     std::vector<double> positionTrajectory(6);
-//    std::cout << mWaypoints << std::endl;
+    std::cout << mWaypoints << std::endl;
 
     positionTrajectory[0] = 0;
 

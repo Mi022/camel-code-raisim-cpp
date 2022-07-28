@@ -15,10 +15,11 @@
 
 class RobotArmMotionPlanning {
 public:
-    RobotArmMotionPlanning(RobotArmCollisionChecker* collisionChecker){
+    RobotArmMotionPlanning(RobotArmCollisionChecker* collisionChecker, RobotArmTrajectoryGenerator* trajectoryGenerator){
         startJoint << 0,0,0,0,0,0;
         goalJoint << 30,-30,-90,90,60,0;
         this->collisionChecker = collisionChecker;
+        this->trajectoryGenerator = trajectoryGenerator;
     }
     Eigen::MatrixXd armPose = Eigen::MatrixXd(1,6);
     int len ;
@@ -37,7 +38,7 @@ public:
     RobotArmCollisionChecker* collisionChecker;
     DistanceCalculator distance;
     RemoveMatrix removeMatrix;
-    RobotArmTrajectoryGenerator trajectoryGenerator;
+    RobotArmTrajectoryGenerator* trajectoryGenerator;
 
 //    Eigen::VectorXd getObstacleRadius(){return mObstacleRadius;}
 //    Eigen::MatrixXd getObstacleCenter(){return mObstacleCenter;}

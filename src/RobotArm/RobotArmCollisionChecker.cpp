@@ -8,7 +8,6 @@
 void RobotArmCollisionChecker::setObstacle(Eigen::VectorXd obstacleRadius, Eigen::MatrixXd obstacleCenter) {
     mObstacleCenter = obstacleCenter;
     mObstacleRadius = obstacleRadius;
-    std::cout <<"mObstacle in obs cecker : " <<mObstacleCenter << std::endl;
 }
 
 bool RobotArmCollisionChecker::collisionCircle(Eigen::MatrixXd center,double radius, Eigen::MatrixXd point){
@@ -20,7 +19,6 @@ bool RobotArmCollisionChecker::collisionCircle(Eigen::MatrixXd center,double rad
 
 bool RobotArmCollisionChecker::obstacleChecker(Eigen::MatrixXd point){
     int collisionCount = 0;
-    std::cout <<"mObstacle : " <<mObstacleCenter << std::endl;
 
     for(int i=0; i<mObstacleRadius.size() ;i++){
         if(collisionCircle(mObstacleCenter.row(i),mObstacleRadius(i),point)){

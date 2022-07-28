@@ -137,7 +137,8 @@ set(CANINE_SINGLE_LEG_OPERATION_SOURCES
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedPDControllerOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedMPCqpoasesOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedSharedMemoryOperation.h)
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedSharedMemoryOperation.h
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedMPCOperation.cpp)
 
 add_executable(camel-canine_single_leg_operation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_SOURCES})
 target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})

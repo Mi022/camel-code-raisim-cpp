@@ -29,6 +29,7 @@ public:
 
     RobotArmPDController(Robot *robot) : Controller(robot) {
         updateState();
+        mTrajectoryGenerator.updateTrajectory( getRobot() -> getWorldTime(), 5.0);
         PGain << 40.0, 40.0, 40.0, 15.0, 15.0, 15.0;
         DGain << 1.0, 1.0, 1.0, 0.5, 0.5, 0.5;
         setPDGain(PGain, 5*DGain);

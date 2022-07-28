@@ -7,6 +7,8 @@
 
 void RobotArmTrajectoryGenerator::setWaypoints(Eigen::MatrixXd wayPoints) {
     mWaypoints = wayPoints;
+//    std::cout << mWaypoints << std::endl;
+
 }
 
 void RobotArmTrajectoryGenerator::updateTrajectory(double currentPosition, double goalPosition, double currentTime, double timeDuration) {
@@ -18,7 +20,7 @@ void RobotArmTrajectoryGenerator::updateTrajectory(double currentPosition, doubl
 
 void RobotArmTrajectoryGenerator::calculateCoefficient() {
     mCoefficient = mMatrixA * mFunctionValue;
-    std::cout << mWaypoints << std::endl;
+//    std::cout << mWaypoints << std::endl;
 
 }
 

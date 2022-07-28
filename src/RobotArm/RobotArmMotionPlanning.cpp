@@ -13,13 +13,13 @@ void RobotArmMotionPlanning::setObstacle(Eigen::VectorXd obstacleRadius, Eigen::
 }
 
 void RobotArmMotionPlanning::generatePoint() {
-    cout << "mObstacle : " <<mObstacleCenter << endl;
+    cout << "mObstacle in Motion planning: " <<collisionChecker->getObstacleCenter() << endl;
     int randNum = 100;
     armPose.row(0)=startJoint;
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
         Eigen::MatrixXd joint = 180*Eigen::MatrixXd::Random(1,6);
-        if(collisionChecker.jointChecker(joint)){
+        if(collisionChecker->jointChecker(joint)){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
             armPose.row(currentIndex)=joint;
@@ -178,5 +178,4 @@ void RobotArmMotionPlanning::dijkstra() {
     }
 
     trajectoryGenerator.setWaypoints(wayPoints);
-
 }

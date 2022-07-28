@@ -17,8 +17,9 @@ std::string urdfPath = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robot
 std::string name = "robotArm";
 raisim::World world;
 
-RobotArmMotionPlanning motionPlanner;
+
 RobotArmCollisionChecker robotArmCollisionChecker;
+RobotArmMotionPlanning motionPlanner(&robotArmCollisionChecker);
 Eigen::VectorXd obstacleRadius = Eigen::VectorXd(2);
 Eigen::MatrixXd obstacleCenter = Eigen::MatrixXd(2,3);
 
@@ -82,6 +83,9 @@ void *rt_simulation_thread(void *arg) {
     obstacle1->setPosition(obstacleCenter(0,0),obstacleCenter(0,1),obstacleCenter(0,2));
     obstacle2->setPosition(obstacleCenter(1,0),obstacleCenter(1,1),obstacleCenter(1,2));
 
+    motionPlanner.makeTree();
+    motionPlanner.dijkstra();
+
     while (true) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
         timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
@@ -102,8 +106,6 @@ int main(int argc, char *argv[]) {
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
     w.show();
-    robotArmCollisionChecker.
-    motionPlanner.makeTree();
-    motionPlanner.dijkstra();
+
     return a.exec();
 }

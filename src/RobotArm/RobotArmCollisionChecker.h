@@ -21,6 +21,8 @@ public:
     DistanceCalculator distanceCalculator;
     LineInterpolation interpolation;
     RobotArmForwardKinematics forwardKinematics;
+
+    Eigen::MatrixXd getObstacleCenter() {return mObstacleCenter;}
 private:
     Eigen::VectorXd mObstacleRadius = Eigen::VectorXd(2);
     Eigen::MatrixXd mObstacleCenter = Eigen::MatrixXd(2,3);

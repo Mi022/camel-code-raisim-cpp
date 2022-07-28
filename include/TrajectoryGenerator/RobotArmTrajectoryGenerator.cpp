@@ -61,13 +61,18 @@ std::vector<double> RobotArmTrajectoryGenerator::getPositionTrajectory(double cu
             positionTrajectory[i] = positionTrajectory[i] + coefficient(poly,i)* pow(normalizedTime,poly);
         }
     }
-
     return positionTrajectory;
 }
 
-double RobotArmTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
+std::vector<double> RobotArmTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-//    return (3.0 *mCoefficient(0,0) * pow(normalizedTime, 2.0) + 2.0 * mCoefficient(1,0) * normalizedTime + mCoefficient(2,0)) / mTimeDuration;
+    std::vector<double> velocityTrajectory(6);
+    for (int i = 0; i < 6; i++) {
+        for (int poly = 1; poly < 2*pointNum; poly++) {
+            velocityTrajectory[i] = velocityTrajectory[i] + poly*coefficient(poly,i)*pow(normalizedTime,poly-1);
+        }
+    }
+    return velocityTrajectory;
 }
 
 

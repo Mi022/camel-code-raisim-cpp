@@ -17,7 +17,7 @@ public:
     void caculateCoefficient();
     void updateTrajectory(double currentTime,double timeDuration);
     std::vector<double> getPositionTrajectory(double currentTime);
-    double getVelocityTrajectory(double currentTime);
+    std::vector<double> getVelocityTrajectory(double currentTime);
 
 
 private:

@@ -47,6 +47,8 @@ public:
 private:
     RobotArmTrajectoryGenerator mTrajectoryGenerator;
     std::vector<double> positionTrajectory;
+    std::vector<double> velocityTrajectory;
+
 };
 
 

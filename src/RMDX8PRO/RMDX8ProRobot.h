@@ -10,7 +10,7 @@
 
 class RMDX8ProRobot : public Robot {
 public:
-    RMDX8ProRobot(raisim::World *world, std::string urdfPath, std::string name, CanMotorX8Pro *canMotorX8) : Robot(
+    RMDX8ProRobot(raisim::World *world, std::string urdfPath, std::string name, CanMotorX8ProV2 *canMotorX8) : Robot(
             world, urdfPath, name) {
         mCanMotorX8 = canMotorX8;
         initialize();
@@ -24,7 +24,7 @@ public:
     double getQD(int motorID);
 
 private:
-    CanMotorX8Pro *mCanMotorX8;
+    CanMotorX8ProV2 *mCanMotorX8;
 };
 
 void RMDX8ProRobot::initialize() {

@@ -24,14 +24,20 @@ public:
     double dz_dth1 = 0.0;
     double dz_dth2 = 0.0;
 
-    double PGain;
-    double DGain;
+    double PGain_ID;
+    double DGain_ID;
 
+    Eigen::VectorXd desiredJointPosition_PD = Eigen::VectorXd(2);
+    Eigen::VectorXd desiredJointPosition_past_PD = Eigen::VectorXd(2);
+    Eigen::VectorXd desiredJointVelocity_PD = Eigen::VectorXd(2);
+    double PGain_PD;
+    double DGain_PD;
 
 
     SingleLeggedIDControllerOperation(SingleLeggedRobotOperation *robot, double *currentTime, double dT) {
         mRobot = robot;
-        setPDGain(70.0, 2.5);
+        setPDGain_ID(180.0, 7.5);
+        setPDGain_PD(100.0, 0.5);
         torque[0] = 0.0;
         mCurrentTime = currentTime;
         mDT = dT;
@@ -46,19 +52,28 @@ public:
     void setPointTrajectoryZeroing();
     void updateState();
     void computeControlInput();
+    void computeControlInput_ID();
     void setControlInput();
-    void setPDGain(double PGain, double DGain);
+    void setPDGain_ID(double PGain_ID, double DGain_ID);
+
+    void setPDGain_PD(double PGain_PD, double DGain_PD);
+    void computeControlInput_PD();
+    void computeControlInput_switch();
 
 private:
     SingleLeggedRobotOperation *mRobot;
     QuinticTrajectoryGenerator mQuinticTrajectoryGen;
+    CubicTrajectoryGenerator mCubicTrajectoryGen_hip;
+    CubicTrajectoryGenerator mCubicTrajectoryGen_knee;
+    bool mIsPDControl = false;
     bool mIsZeroing = false;
     bool mIsCubic = false;
     bool mIsSin = false;
+    bool mIsSwitchingController = false;
     double mTorqueLimit = 10.0;
     double mHaltTime = 0.0;
     double *mCurrentTime;
-    double mLumpedMass = 2.700;
+    double mLumpedMass = 2.766;
     double mGravity = -9.81;
     double mDT;
 };

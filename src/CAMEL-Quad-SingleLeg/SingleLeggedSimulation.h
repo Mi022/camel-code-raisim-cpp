@@ -10,6 +10,7 @@
 #include "SingleLeggedPDController.h"
 #include "SingleLeggedIDController.h"
 #include "SingleLeggedMPCController.h"
+#include "SingleLeggedMPCqpoases.h"
 
 class SingleLeggedSimulation : public Simulation {
 

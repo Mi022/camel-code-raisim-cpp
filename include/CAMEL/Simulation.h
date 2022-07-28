@@ -14,11 +14,14 @@ public:
     Simulation(raisim::World *world, double dT) {
         this->mWorld = world;
         mWorld->setTimeStep(dT);
-        mWorld->addGround();
+        mGround = mWorld->addGround(0,"gnd");
     }
+
+    void setGroundProperty(std::string groundProperty){mGround->setAppearance(groundProperty);}
 
 private:
     raisim::World *mWorld;
+    raisim::Ground *mGround;
 };
 
 #endif //RAISIM_SIMULATION_H

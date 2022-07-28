@@ -31,7 +31,7 @@
       </geometry>
       <material name="light_gray"/>
     </visual>
-	
+
     <collision>
         <origin rpy="0 0 0" xyz="0 0 0.5"/>
       <geometry>

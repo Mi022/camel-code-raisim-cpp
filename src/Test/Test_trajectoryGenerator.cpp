@@ -59,9 +59,9 @@ int main() {
 
 
 
-    for (int i = 0; i < 100; i++)
-    {
-        randomGoalPosition = double(dis(gen)) / 100.0 * 0.15 + 0.23;
-        std::cout << "Ramdom Num : " << randomGoalPosition << std::endl;
-    }
+//    for (int i = 0; i < 100; i++)
+//    {
+//        randomGoalPosition = double(dis(gen)) / 100.0 * 0.15 + 0.23;
+//        std::cout << "Ramdom Num : " << randomGoalPosition << std::endl;
+//    }
 }

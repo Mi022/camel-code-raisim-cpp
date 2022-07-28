@@ -7,7 +7,7 @@ std::string canName_temp = "can8";
 std::string bitRate = "1000000";
 char *canName = "can8";
 int motor1ID = 0x141;
-CanMotorX8Pro canX8pro(canName, canName_temp, bitRate);
+CanMotorX8ProV2 canX8pro(canName, canName_temp, bitRate);
 
 
 int main() {

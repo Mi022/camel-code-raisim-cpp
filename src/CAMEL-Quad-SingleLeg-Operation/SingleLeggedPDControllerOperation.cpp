@@ -23,7 +23,6 @@ void SingleLeggedPDControllerOperation::setTrajectory() {
         {
             desiredJointPosition << mCubicTrajectoryGen1.getPositionTrajectory(*mCurrentTime), mCubicTrajectoryGen2.getPositionTrajectory(*mCurrentTime);
             desiredJointVelocity << mCubicTrajectoryGen1.getVelocityTrajectory(*mCurrentTime), mCubicTrajectoryGen2.getVelocityTrajectory(*mCurrentTime);
-            std::cout<<"halt time: "<<mHaltTime<<std::endl;
         }
         else
         {
@@ -36,9 +35,9 @@ void SingleLeggedPDControllerOperation::setTrajectory() {
         if(*mCurrentTime < mHaltTime)
         {
             desiredPosition = mCubicTrajectoryGen.getPositionTrajectory(*mCurrentTime);
+            desiredVelocity = mCubicTrajectoryGen.getVelocityTrajectory(*mCurrentTime);
             IKsolve();
             std::cout<<mHaltTime<<std::endl;
-            std::cout<<"current time: "<<*mCurrentTime<<std::endl;
         }
         else
         {
@@ -106,7 +105,6 @@ void SingleLeggedPDControllerOperation::computeControlInput() {
 }
 
 void SingleLeggedPDControllerOperation::setControlInput() {
-    std::cout<<"input torque: "<<torque[0]<<" "<<torque[1]<<std::endl;
     for (int i = 0; i < 2; i++) {
         if(torque[i] > mTorqueLimit)
         {

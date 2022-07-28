@@ -5,16 +5,23 @@
 #ifndef RAISIM_SINGLELEGGEDROBOTOPERATION_H
 #define RAISIM_SINGLELEGGEDROBOTOPERATION_H
 
-#include "include/CAMEL/Robot.h"
+#include "include/CAMEL/OperationRobot.h"
+#include "include/Filter/LPF.h"
 #include "SingleLegCAN.h"
 
-class SingleLeggedRobotOperation : public Robot {
+//TODO: update mLumpedMass
+
+class SingleLeggedRobotOperation : public OperationRobot {
 public:
-    SingleLeggedRobotOperation(raisim::World *world, std::string urdfPath, std::string name, SingleLegCAN *can, double dT) : Robot(
+    SingleLeggedRobotOperation(raisim::World *world, std::string urdfPath, std::string name, SingleLegCAN *can, double dT) : OperationRobot(
             world, urdfPath, name) {
         mCan = can;
         mDT = dT;
         initialize();
+        double cutoffFreq = 50.0;
+        mLPF1.initialize(mDT, cutoffFreq);
+        mLPF2.initialize(mDT, cutoffFreq);
+        mLPF3.initialize(mDT, cutoffFreq);
     }
 
     void initialize() override;
@@ -22,18 +29,19 @@ public:
     void setTorque(Eigen::VectorXd torque);
     Eigen::VectorXd getQ();
     Eigen::VectorXd getQD();
-    double getPlot1();
-    double getPlot2();
 
 private:
     SingleLegCAN *mCan;
+    LPF mLPF1;
+    LPF mLPF2;
+    LPF mLPF3;
     Eigen::VectorXd mJointPosition = Eigen::VectorXd(3);
     Eigen::VectorXd mJointPosition_past = Eigen::VectorXd(3);
     Eigen::VectorXd mJointVelocity = Eigen::VectorXd(3);
 
-    double mHipOffset = 50.0 * 3.141592 / 180.0; //
-    double mKneeOffset = -3.302511324; //
-    double mLumpedMass = 2.660;
+    double mHipOffset = 0.830066202;
+    double mKneeOffset = -3.202116515;
+    double mLumpedMass = 2.766;
     double mDT;
     int mMotorKneeID = 0x141;
     int mMotorHipID = 0x143;

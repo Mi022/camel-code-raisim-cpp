@@ -15,7 +15,7 @@ void thread1task(bool *button1Pressed, bool *button2Pressed, bool *button3Presse
     std::string canName_temp = "can8";
     std::string bitRate = "1000000";
     char *canName = "can8";
-    CanMotorX8Pro canX8pro(canName, canName_temp, bitRate);
+    CanMotorX8ProV2 canX8pro(canName, canName_temp, bitRate);
 
     std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_RMDX8_pro.urdf";
     std::string name = "RMDX8Pro";

@@ -21,30 +21,32 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget->legend->setVisible(true);
     ui->widget->legend->setFont(QFont("Helvetica", 9));
     ui->widget->addGraph();
-    ui->widget->graph(0)->setName("position");
+    ui->widget->graph(0)->setName("position X");
     ui->widget->graph(0)->setPen(QPen(QColor(0, 0, 255)));
     ui->widget->addGraph();
-    ui->widget->graph(1)->setName("desired position");
+    ui->widget->graph(1)->setName("desired position X");
     ui->widget->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+    ui->widget->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_2->legend->setVisible(true);
     ui->widget_2->legend->setFont(QFont("Helvetica", 9));
     ui->widget_2->addGraph();
-    ui->widget_2->graph(0)->setName("velocity");
+    ui->widget_2->graph(0)->setName("position Y");
     ui->widget_2->graph(0)->setPen(QPen(QColor(0, 0, 255)));
     ui->widget_2->addGraph();
-    ui->widget_2->graph(1)->setName("desired velocity");
+    ui->widget_2->graph(1)->setName("desired position Y");
     ui->widget_2->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+    ui->widget_2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_3->legend->setVisible(true);
     ui->widget_3->legend->setFont(QFont("Helvetica", 9));
     ui->widget_3->addGraph();
-    ui->widget_3->graph(0)->setName("torque hip");
+    ui->widget_3->graph(0)->setName("thigh torque");
     ui->widget_3->graph(0)->setPen(QPen(QColor(0, 0, 255)));
     ui->widget_3->addGraph();
-    ui->widget_3->graph(1)->setName("torque knee");
+    ui->widget_3->graph(1)->setName("calf torque");
     ui->widget_3->graph(1)->setPen(QPen(QColor(255, 0, 0)));
-
+    ui->widget_3->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 }
 
 MainWindow::~MainWindow() {
@@ -98,7 +100,7 @@ void MainWindow::plotWidget2() {
     ui->widget_2->graph(1)->addData(x, y2_desired);
     // give the axes some labels:
     ui->widget_2->xAxis->setLabel("time [sec]");
-    ui->widget_2->yAxis->setLabel("velocity");
+    ui->widget_2->yAxis->setLabel("position");
     // set axes ranges, so we see all data:
     ui->widget_2->xAxis->setRange(0.0, x[MainUI->data_idx - 1] + 0.001);
     ui->widget_2->yAxis->setRange(data_widget2_min - 0.001, data_widget2_max + 0.001);
@@ -123,7 +125,7 @@ void MainWindow::plotWidget3() {
     ui->widget_3->graph(1)->addData(x, y3_red);
     // give the axes some labels:
     ui->widget_3->xAxis->setLabel("time [sec]");
-    ui->widget_3->yAxis->setLabel("torque");
+    ui->widget_3->yAxis->setLabel("position");
     // set axes ranges, so we see all data:
     ui->widget_3->xAxis->setRange(0.0, x[MainUI->data_idx - 1] + 0.001);
     ui->widget_3->yAxis->setRange(data_widget3_min - 0.1, data_widget3_max + 0.1);

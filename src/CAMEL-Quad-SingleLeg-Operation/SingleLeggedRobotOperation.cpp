@@ -14,8 +14,6 @@ void SingleLeggedRobotOperation::initialize() {
 }
 
 void SingleLeggedRobotOperation::visualize() {
-    getQ();
-    getQD();
     robot->setGeneralizedCoordinate(mJointPosition);
     robot->setGeneralizedVelocity(mJointVelocity);
 }
@@ -29,18 +27,14 @@ Eigen::VectorXd SingleLeggedRobotOperation::getQ() {
 }
 
 Eigen::VectorXd SingleLeggedRobotOperation::getQD() {
-    mJointVelocity[0] = (mJointPosition[0] - mJointPosition_past[0]) / mDT;
-    mJointVelocity[1] = mCan->getAngularVelocity2();
-    mJointVelocity[2] = mCan->getAngularVelocity1();
+    mJointVelocity[0] = mLPF1.doFiltering((mJointPosition[0] - mJointPosition_past[0]) / mDT);
+    mJointVelocity[1] = mLPF2.doFiltering(mCan->getAngularVelocity2());
+    mJointVelocity[2] = mLPF3.doFiltering(mCan->getAngularVelocity1());
+//    std::cout<<mJointVelocity<<std::endl;
+//    mJointVelocity[0] = (mJointPosition[0] - mJointPosition_past[0]) / mDT;
+//    mJointVelocity[1] = mCan->getAngularVelocity2();
+//    mJointVelocity[2] = mCan->getAngularVelocity1();
     return mJointVelocity;
-}
-
-double SingleLeggedRobotOperation::getPlot1() {
-    return 0;
-}
-
-double SingleLeggedRobotOperation::getPlot2() {
-    return 0;
 }
 
 void SingleLeggedRobotOperation::setTorque(Eigen::VectorXd torque) {

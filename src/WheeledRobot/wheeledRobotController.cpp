@@ -37,31 +37,63 @@ void wheeledRobotController::setControlInput() {
 }
 
 void wheeledRobotController::setForward() {
-    desiredVelocity[0] = vel;
-    desiredVelocity[1] = vel;
-    desiredVelocity[2] = vel;
-    desiredVelocity[3] = vel;
+    if(vel) {
+        desiredVelocity[0] = vel;
+        desiredVelocity[1] = vel;
+        desiredVelocity[2] = vel;
+        desiredVelocity[3] = vel;
+    }
+    else {
+        desiredVelocity[0] = 15;
+        desiredVelocity[1] = 15;
+        desiredVelocity[2] = 15;
+        desiredVelocity[3] = 15;
+    }
 }
 
 void wheeledRobotController::setLeft() {
-    desiredVelocity[0] = 2 * vel;
-    desiredVelocity[1] = vel;
-    desiredVelocity[2] = 2 * vel;
-    desiredVelocity[3] = vel;
+    if(vel) {
+        desiredVelocity[0] = 2 * vel;
+        desiredVelocity[1] = vel;
+        desiredVelocity[2] = 2 * vel;
+        desiredVelocity[3] = vel;
+    }
+    else {
+        desiredVelocity[0] = 30;
+        desiredVelocity[1] = 15;
+        desiredVelocity[2] = 30;
+        desiredVelocity[3] = 15;
+    }
 }
 
 void wheeledRobotController::setRight() {
-    desiredVelocity[0] = vel;
-    desiredVelocity[1] = 2 * vel;
-    desiredVelocity[2] = vel;
-    desiredVelocity[3] = 2 * vel;
+    if(vel) {
+        desiredVelocity[0] = vel;
+        desiredVelocity[1] = 2 * vel;
+        desiredVelocity[2] = vel;
+        desiredVelocity[3] = 2 * vel;
+    }
+    else {
+        desiredVelocity[0] = 15;
+        desiredVelocity[1] = 30;
+        desiredVelocity[2] = 15;
+        desiredVelocity[3] = 30;
+    }
 }
 
 void wheeledRobotController::setBack() {
-    desiredVelocity[0] = vel;
-    desiredVelocity[1] = vel;
-    desiredVelocity[2] = vel;
-    desiredVelocity[3] = vel;
+    if(vel) {
+        desiredVelocity[0] = vel;
+        desiredVelocity[1] = vel;
+        desiredVelocity[2] = vel;
+        desiredVelocity[3] = vel;
+    }
+    else {
+        desiredVelocity[0] = -15;
+        desiredVelocity[1] = -15;
+        desiredVelocity[2] = -15;
+        desiredVelocity[3] = -15;
+    }
 }
 
 void wheeledRobotController::setStop() {

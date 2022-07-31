@@ -4,10 +4,11 @@
 
 #include "A1JoyStick.h"
 
-void A1JoyStick::joySetup() {
+bool A1JoyStick::joySetup() {
     if((joy_fd = open(JOY_DEV,O_RDONLY)) < 0)
     {
         std::cerr<<"Failed to open "<<JOY_DEV<<std::endl;
+        return false;
     }
 
     ioctl(joy_fd, JSIOCGAXES, &num_of_axis);
@@ -22,6 +23,8 @@ void A1JoyStick::joySetup() {
              <<"  buttons: "<<num_of_buttons<<std::endl;
 
     fcntl(joy_fd, F_SETFL, O_NONBLOCK);
+
+    return true;
 }
 
 void A1JoyStick::joyRead() {

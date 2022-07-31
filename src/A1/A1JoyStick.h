@@ -21,6 +21,7 @@ public:
     int num_of_axis;
     int num_of_buttons;
     char name_of_joystick[80];
+    bool joyAvailable;
     std::vector<char> joy_button;
     std::vector<int> joy_axis;
 
@@ -32,10 +33,10 @@ public:
         num_of_buttons=0;
         name_of_joystick[80];
 
-        joySetup();
+        joyAvailable = joySetup();
     }
 
-    void joySetup();
+    bool joySetup();
     void joyRead();
     void joyButton();
 

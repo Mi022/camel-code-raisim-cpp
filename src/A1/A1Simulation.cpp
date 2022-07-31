@@ -68,22 +68,43 @@ void realTimePlot(){
 
 void raisimSimulation()
 {
-    joystick.joyRead();
+    if(joystick.joyAvailable) {
+        joystick.joyRead();
 
-    realTimePlot();
-    if (((MainUI->button1) || (joystick.joy_button[13]) || ((joystick.joy_axis[1]/10000)<0)) && (oneCycleSimTime < simulationDuration))
-    {
-        oneCycleSimTime = iteration * dT;
-        MPCcontroller.doControl();
-        //PDcontroller.doControl();
-        world.integrate();
-        iteration++;
+        realTimePlot();
+        if (((MainUI->button1) || (joystick.joy_button[13]) || ((joystick.joy_axis[1]/10000)<0)) && (oneCycleSimTime < simulationDuration))
+        {
+            oneCycleSimTime = iteration * dT;
+            MPCcontroller.doControl();
+            //PDcontroller.doControl();
+            world.integrate();
+            iteration++;
+        }
+        else if (oneCycleSimTime >= simulationDuration)
+        {
+            MainUI->button1 = false;
+            resetSimAndPlotVars();
+        }
     }
-    else if (oneCycleSimTime >= simulationDuration)
-    {
-        MainUI->button1 = false;
-        resetSimAndPlotVars();
+    else{
+        joystick.joyRead();
+
+        realTimePlot();
+        if ((MainUI->button1) && (oneCycleSimTime < simulationDuration))
+        {
+            oneCycleSimTime = iteration * dT;
+            MPCcontroller.doControl();
+            //PDcontroller.doControl();
+            world.integrate();
+            iteration++;
+        }
+        else if (oneCycleSimTime >= simulationDuration)
+        {
+            MainUI->button1 = false;
+            resetSimAndPlotVars();
+        }
     }
+
 }
 
 void *rt_simulation_thread(void *arg)
@@ -105,7 +126,7 @@ void *rt_simulation_thread(void *arg)
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
-            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+            std::cerr << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
                       << " ms" << std::endl;
         }
     }

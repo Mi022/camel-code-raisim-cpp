@@ -70,9 +70,15 @@ void MainWindow::on_pushButton_3_clicked() {
 }
 
 void MainWindow::on_pushButton_4_clicked() {
-    std::cout << "'Stop' button is clicked" << std::endl;
+    std::cout << "'Back' button is clicked" << std::endl;
     if (button4) { button4 = false; }
     else { button4 = true; }
+}
+
+void MainWindow::on_pushButton_5_clicked() {
+    std::cout << "'Stop' button is clicked" << std::endl;
+    if (button5) { button5 = false; }
+    else { button5 = true; }
 }
 
 void MainWindow::plotWidget1() {

@@ -4,19 +4,17 @@
 
 #include "UI/mainwindow.h"
 #include "include/RT/rb_utils.h"
-#include "include/Sensor/LoadCell.h"
 #include "SingleLeggedOperation.h"
 #include "SingleLeggedSharedMemoryOperation.h"
 #include <QApplication>
-#include <thread>
 #include <random>
 
 double deg2rad = 3.141592 / 180.0;
 double rad2deg = 180.0 / 3.141592;
 double currentTime = 0.0;
 double dT = 0.005;
+
 pthread_t thread_operation;
-pthread_t thread_loadcell;
 pSHM sharedMemory;
 
 bool isReady = false;
@@ -35,21 +33,19 @@ std::string canName_temp = "can0";
 std::string bitRate = "1000000";
 char *canName = "can0";
 SingleLegCAN can(canName, canName_temp, bitRate);
-int motorKnee = 0x141;
-int motorHip = 0x143;
+int motorHip = 0x141;
+int motorKnee = 0x142;
 double intr = 1.0;
 
-LoadCell sensorLoadcell;
 
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
+
+std::string urdfPath = "\\home\\camel\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_right\\camel_single_leg.urdf";
 std::string name = "singleLeg";
 raisim::World world;
 SingleLeggedOperation realRobot = SingleLeggedOperation(&world, 250);
 SingleLeggedRobotOperation singleLeg = SingleLeggedRobotOperation(&world, urdfPath, name, &can, dT);
-//SingleLeggedPDControllerOperation controller = SingleLeggedPDControllerOperation(&singleLeg, &currentTime, dT);
+SingleLeggedPDControllerOperation controller = SingleLeggedPDControllerOperation(&singleLeg, &currentTime, dT);
 //SingleLeggedIDControllerOperation controller = SingleLeggedIDControllerOperation(&singleLeg, &currentTime, dT);
-//SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&singleLeg, &currentTime, dT);
-SingleLeggedMPCOperation controller = SingleLeggedMPCOperation(&singleLeg, &currentTime, dT);
 raisim::RaisimServer server(&world);
 
 std::random_device rd;
@@ -65,31 +61,10 @@ void updateSHM(){
     sharedMemory->desiredVelocity_z = controller.desiredVelocity;
     sharedMemory->jointPosition[0] = controller.position[1];
     sharedMemory->jointPosition[1] = controller.position[2];
-//    sharedMemory->desiredJointPosition[0] = controller.desiredJointPosition[0];
-//    sharedMemory->desiredJointPosition[1] = controller.desiredJointPosition[1];
     sharedMemory->jointVelocity[0] = controller.velocity[1];
     sharedMemory->jointVelocity[1] = controller.velocity[2];
-//    sharedMemory->desiredJointVelocity[0] = controller.desiredJointVelocity[0];
-//    sharedMemory->desiredJointVelocity[1] = controller.desiredJointVelocity[1];
     sharedMemory->jointTorque[0] = controller.torque[0];
     sharedMemory->jointTorque[1] = controller.torque[1];
-
-    /* MPC */
-//    sharedMemory->time = currentTime;
-//   sharedMemory->position_z = controller.position[0];
-//    sharedMemory->desiredPosition_z = controller.desiredPosition;
-//    sharedMemory->velocity_z = controller.velocity[0];
-//    sharedMemory->desiredVelocity_z = controller.desiredVelocity;
-//    sharedMemory->jointPosition[0] = controller.calculatedForce;
-//    sharedMemory->jointPosition[1] = 0.0;
-//    sharedMemory->desiredJointPosition[0] = controller.desiredJointPosition[0];
-//    sharedMemory->desiredJointPosition[1] = controller.desiredJointPosition[1];
-//    sharedMemory->jointVelocity[0] = controller.velocity[1];
-//    sharedMemory->jointVelocity[1] = controller.velocity[2];
-//    sharedMemory->desiredJointVelocity[0] = controller.desiredJointVelocity[0];
-//    sharedMemory->desiredJointVelocity[1] = controller.desiredJointVelocity[1];
-//    sharedMemory->jointTorque[0] = controller.torque[0];
-//    sharedMemory->jointTorque[1] = controller.torque[1];
 }
 
 void operationCode(){
@@ -139,23 +114,7 @@ void operationCode(){
     }
 
     if (*buttonStartControlPressed) {
-//             Start Control
-//        std::cout<<"===================================================="<<std::endl;
         controller.doControl();
-//        std::cout<<"current time: "<<currentTime<<std::endl;
-////        For PD controller
-//        std::cout<<"current position : "<<controller.position[1]<<" "<<controller.position[2]<<std::endl;
-//        std::cout<<"desired position : "<<controller.desiredJointPosition[0] <<" "<<controller.desiredJointPosition[1]<<std::endl;
-//        std::cout<<"current velocity : "<<controller.velocity[1]<<" "<<controller.velocity[2]<<std::endl;
-//        std::cout<<"desired velocity : "<<controller.desiredJointVelocity[0] <<" "<<controller.desiredJointVelocity[1]<<std::endl;
-
-
-
-////        For ID controller
-//        std::cout<<"current position : "<<controller.position[0]<<std::endl;
-//        std::cout<<"desired position : "<<controller.desiredPosition <<std::endl;
-//        std::cout<<"current position : "<<controller.velocity[0]<<std::endl;
-//        std::cout<<"desired velocity : "<<controller.desiredVelocity <<std::endl;
     }
 
     if (*buttonStopControlPressed) {
@@ -217,16 +176,6 @@ void *rt_operation_thread(void *arg) {
     }
 }
 
-void *rt_loadcell_thread(void *arg){
-    while(true)
-    {
-        sensorLoadcell.readData();
-        sharedMemory->GRF = sensorLoadcell.getSensoredForce();
-//        sharedMemory->GRF = sensorLoadcell.getSensoredWeight();
-//        std::cout<<"Sensored force[N] : "<<sharedMemory->GRF<<std::endl;
-    }
-}
-
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     MainWindow w;
@@ -242,7 +191,6 @@ int main(int argc, char *argv[]) {
     buttonJumpPressed = &w.buttonJump;
     buttonZeroingPressed = &w.buttonZeroing;
 
-    int thread_id_sensorLoadcell = generate_rt_thread(thread_loadcell, rt_loadcell_thread, "sensor_loadcell_thread", 1, 98, NULL);
     int thread_id_operation = generate_rt_thread(thread_operation, rt_operation_thread, "operation_thread", 0, 49, NULL);
     std::cout<<"test"<<std::endl;
     w.show();

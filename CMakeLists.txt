@@ -133,7 +133,6 @@ set(CANINE_SINGLE_LEG_OPERATION_SOURCES
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedRobotOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/UI/mainwindow.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedPDControllerOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedMPCqpoasesOperation.cpp
@@ -143,6 +142,22 @@ set(CANINE_SINGLE_LEG_OPERATION_SOURCES
 add_executable(camel-canine_single_leg_operation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_SOURCES})
 target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
+
+# ====== Canine Single Leg Circle======  #
+set(CANINE_SINGLE_LEG_OPERATION_CIRCLE_SOURCES
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedRobotOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLegCAN.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/UI/mainwindow.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedPDControllerOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedIDControllerOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedSharedMemoryOperation.h)
+
+add_executable(camel-canine_single_leg_opertaion_circle ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_CIRCLE_SOURCES})
+target_link_libraries(camel-canine_single_leg_opertaion_circle ${CAMEL_LIBS})
+# ====== Canine Single Leg Circle====== /#
+
+
 ## Operation /##
 
 ## TEST FILES ##

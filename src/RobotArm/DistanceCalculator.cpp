@@ -3,6 +3,7 @@
 //
 
 #include "DistanceCalculator.h"
+#include "iostream"
 
 float DistanceCalculator::distance(Eigen::MatrixXd point1, Eigen::MatrixXd point2) {
     float distanceValue;
@@ -11,5 +12,6 @@ float DistanceCalculator::distance(Eigen::MatrixXd point1, Eigen::MatrixXd point
         distanceValue = distanceValue + pow(point1(i) - point2(i),2);
     }
     distanceValue = sqrt(distanceValue);
+
     return distanceValue;
 }

@@ -5,10 +5,10 @@
 #include "RobotArmTrajectoryGenerator.h"
 #include "iostream"
 #include "Eigen/Eigen"
-#include "math.h"
+#include "cmath"
 
 void RobotArmTrajectoryGenerator::setWaypoints(Eigen::MatrixXd wayPoints) {
-    mWaypoints = wayPoints;
+    mWaypoints = (3.141592/180)*wayPoints;
     pointNum = wayPoints.rows();
 
 }
@@ -23,28 +23,34 @@ void RobotArmTrajectoryGenerator::updateTrajectory( double currentTime, double t
 void RobotArmTrajectoryGenerator::caculateCoefficient() {
     Eigen::MatrixXd xValue = Eigen::MatrixXd(2*pointNum , 2*pointNum);
     Eigen::MatrixXd yValue = Eigen::MatrixXd(2*pointNum,1);
-    coefficient.conservativeResize(2*pointNum,6);
+    Eigen::MatrixXd xSVD;
 
+    coefficient.conservativeResize(2*pointNum,6);
+    float normalizeValue = (1+pointNum)/2;
     xValue.setZero();
     for(int rowNum = 0 ; rowNum < pointNum ; rowNum++){
         for(int poly =0 ; poly < 2*pointNum ; poly++){
-            xValue(rowNum,poly) = pow(rowNum+1,poly);
+            xValue(rowNum,poly) = pow(rowNum/normalizeValue,poly);
         }
     }
     for(int rowNum = pointNum ; rowNum < 2*pointNum ; rowNum++){
         xValue(rowNum,1) = 1;
         for(int poly = 2 ; poly < 2*pointNum ; poly++){
-            xValue(rowNum,poly) = poly*(rowNum+1-pointNum);
+            xValue(rowNum,poly) = poly*((rowNum-pointNum)/normalizeValue);
         }
     }
+    std::cout << "xValue" << std::endl;
+    std::cout << xValue << std::endl;
+
+    xSVD = xValue.transpose()*xValue;
+    xSVD = xSVD.inverse();
 
     for(int i = 0 ; i < 6 ; i++){
         yValue.setZero();
         for(int rowNum = 0 ; rowNum < pointNum ; rowNum++){
             yValue(rowNum,0) = mWaypoints(rowNum,i);
         }
-        xValue.inverse();
-        coefficient.col(i) = xValue*yValue;
+        coefficient.col(i) = xSVD*xValue.transpose()*yValue;
     }
     std::cout << "coefficient" << std::endl;
     std::cout << coefficient << std::endl;
@@ -74,7 +80,6 @@ std::vector<double> RobotArmTrajectoryGenerator::getVelocityTrajectory(double cu
     }
     return velocityTrajectory;
 }
-
 
 //double RobotArmTrajectoryGenerator::getAccelerationTrajectory(double currentTime) {
 //    double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;

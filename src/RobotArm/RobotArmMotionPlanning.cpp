@@ -8,11 +8,11 @@
 using namespace std;
 
 void RobotArmMotionPlanning::generatePoint() {
-    int randNum = 50;
+    int randNum = 100;
     armPose.row(0)=startJoint;
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
-        Eigen::MatrixXd joint = 180*Eigen::MatrixXd::Random(1,6);
+        Eigen::MatrixXd joint = 90*Eigen::MatrixXd::Random(1,6);
         if(collisionChecker->jointChecker(joint)){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
@@ -28,7 +28,7 @@ void RobotArmMotionPlanning::generatePoint() {
 
 void RobotArmMotionPlanning::makeTree() {
     generatePoint();
-    float k=300;
+    float k=200;
     Eigen::MatrixXd currentPoint = Eigen::MatrixXd::Zero(6,3);
     Eigen::MatrixXd nextPoint = Eigen::MatrixXd::Zero(6,3);
     float currentDistance;

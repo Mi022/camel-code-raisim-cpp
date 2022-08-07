@@ -22,21 +22,24 @@ void RobotArmTrajectoryGenerator::updateTrajectory( double currentTime, double t
 
 void RobotArmTrajectoryGenerator::caculateCoefficient() {
     Eigen::MatrixXd xValue = Eigen::MatrixXd(2*pointNum , 2*pointNum);
-    Eigen::MatrixXd yValue = Eigen::MatrixXd(2*pointNum,1);
+    Eigen::MatrixXd yValue = Eigen::MatrixXd(2*pointNum,6);
     Eigen::MatrixXd xSVD;
 
     coefficient.conservativeResize(2*pointNum,6);
-    float normalizeValue = (1+pointNum)/2;
+    float normalizeValue;
+    normalizeValue = (1 + float (pointNum)) / 2;
+
     xValue.setZero();
+    yValue.setZero();
+
     for(int rowNum = 0 ; rowNum < pointNum ; rowNum++){
         for(int poly =0 ; poly < 2*pointNum ; poly++){
-            xValue(rowNum,poly) = pow(rowNum/normalizeValue,poly);
+            xValue(rowNum,poly) = pow(((rowNum+1)/normalizeValue)  ,poly);
         }
     }
     for(int rowNum = pointNum ; rowNum < 2*pointNum ; rowNum++){
-        xValue(rowNum,1) = 1;
-        for(int poly = 2 ; poly < 2*pointNum ; poly++){
-            xValue(rowNum,poly) = poly*((rowNum-pointNum)/normalizeValue);
+        for(int poly = 1 ; poly < 2*pointNum ; poly++){
+            xValue(rowNum,poly) = poly*xValue(rowNum-pointNum,poly-1);
         }
     }
     std::cout << "xValue" << std::endl;
@@ -46,15 +49,14 @@ void RobotArmTrajectoryGenerator::caculateCoefficient() {
     xSVD = xSVD.inverse();
 
     for(int i = 0 ; i < 6 ; i++){
-        yValue.setZero();
         for(int rowNum = 0 ; rowNum < pointNum ; rowNum++){
-            yValue(rowNum,0) = mWaypoints(rowNum,i);
+            yValue(rowNum,i) = mWaypoints(rowNum,i);
         }
-        coefficient.col(i) = xSVD*xValue.transpose()*yValue;
+        coefficient.col(i) = xSVD*xValue.transpose()*yValue.col(i);
     }
+
     std::cout << "coefficient" << std::endl;
     std::cout << coefficient << std::endl;
-
 }
 
 std::vector<double> RobotArmTrajectoryGenerator::getPositionTrajectory(double currentTime) {

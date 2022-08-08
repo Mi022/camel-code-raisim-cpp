@@ -22,7 +22,7 @@
           5. EMC switch
           6. multiple motorId is needed
 */
-
+//hi
 class CanMotorX8ProV2 {
 public:
     CanMotorX8ProV2(char *canName, std::string canName_temp, std::string bitRate) {

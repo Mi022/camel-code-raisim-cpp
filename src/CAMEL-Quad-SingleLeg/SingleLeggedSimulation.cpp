@@ -17,14 +17,14 @@ std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\
 std::string name = "single_leg";
 raisim::World world;
 
-double simulationDuration = 10.0;
+double simulationDuration = 1.0;
 double dT = 0.005;
 SingleLeggedSimulation sim = SingleLeggedSimulation(&world, dT);
 SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
 
-//SingleLeggedPDController controller = SingleLeggedPDController(&robot);
+SingleLeggedPDController controller = SingleLeggedPDController(&robot);
 //SingleLeggedIDController controller = SingleLeggedIDController(&robot, dT);
-SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
+//SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
 //SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&robot, dT);
 
 double oneCycleSimTime = 0;

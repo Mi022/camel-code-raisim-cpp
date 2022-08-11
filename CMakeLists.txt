@@ -64,57 +64,8 @@ add_executable(camel-tutorial-simplePendulum ${CAMEL_SOURCES} ${SIMPLE_PENDULUM_
 target_link_libraries(camel-tutorial-simplePendulum ${CAMEL_LIBS})
 # ====== Simple Pendulum ======/ #
 
-# ====== A1 ======  #
-set(A1_SOURCES
-        src/A1/A1Simulation.cpp
-        src/A1/A1Robot.cpp
-        src/A1/A1JointPDController.cpp
-        src/A1/A1MPCController.cpp
-        src/A1/SharedMemory.h
-        )
 
-add_executable(camel-a1 ${CAMEL_SOURCES} ${CAMEL_A1_SIMULATION_UI_SOURCES} ${A1_SOURCES})
-target_link_libraries(camel-a1 ${CAMEL_LIBS} qpOASES)
 
-# ====== A1 ======/ #
-
-# ====== Canine Single Leg ======  #
-set(CANINE_SINGLE_LEG_SOURCES
-        src/CAMEL-Quad-SingleLeg/SingleLeggedSimulation.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedRobot.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedPDController.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedIDController.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCController.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCqpoases.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedSharedMemory.h
-        src/CAMEL-Quad-SingleLeg/UI/simulationMainwindow.cpp)
-
-add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
-target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS} qpOASES)
-# ====== Canine Single Leg ====== /#
-
-# ====== Momentum Inverted Pendulum ======  #
-set(MOMENTUM_INVERTED_PENDULUM_SOURCES
-        src/MomentumInvertedPendulum/MIPSimulation.cpp
-        src/MomentumInvertedPendulum/MIPRobot.cpp
-        src/MomentumInvertedPendulum/MIPPDController.cpp
-        src/MomentumInvertedPendulum/MIPLQRController.cpp
-        src/MomentumInvertedPendulum/MIPPDDController.cpp
-        src/MomentumInvertedPendulum/MIPMPCController.cpp)
-
-add_executable(camel-momentum_inverted_pendulum_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_SOURCES})
-target_link_libraries(camel-momentum_inverted_pendulum_simulation ${CAMEL_LIBS})
-# ====== Momentum Inverted Pendulum ====== /#
-
-# ====== Momentum Inverted Pendulum with Incline======  #
-set(MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES
-        src/MomentumInvertedPendulum-Inclined/MIPISimulation.cpp
-        src/MomentumInvertedPendulum-Inclined/MIPIRobot.cpp
-        src/MomentumInvertedPendulum-Inclined/MIPILQRController.cpp)
-
-add_executable(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${MOMENTUM_INVERTED_PENDULUM_WITH_INCLINE_SOURCES})
-target_link_libraries(camel-momentum_inverted_pendulum_with_incline_simulation ${CAMEL_LIBS})
-# ====== Momentum Inverted Pendulum ====== /#
 ## Simulation /##
 
 ## Operation  ##
@@ -143,52 +94,16 @@ add_executable(camel-canine_single_leg_operation ${CAMEL_SOURCES} ${CANINE_SINGL
 target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
 
-# ====== Canine Single Leg Circle======  #
-set(CANINE_SINGLE_LEG_OPERATION_CIRCLE_SOURCES
-        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedRobotOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLegCAN.cpp
-        src/CAMEL-Quad-SingleLeg-Operation-Circle/UI/mainwindow.cpp
-        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedPDControllerOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedIDControllerOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedSharedMemoryOperation.h)
+# ====== JHdog Single Leg Circle======  #
+set(JHDOG_SOURCES
+        src/camel_JHdog/UI/mainwindow.cpp
+        src/camel_JHdog/JHdog.cpp
+        src/camel_JHdog/JHdogSimulation.cpp
+        )
 
-add_executable(camel-canine_single_leg_opertaion_circle ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_CIRCLE_SOURCES})
-target_link_libraries(camel-canine_single_leg_opertaion_circle ${CAMEL_LIBS})
-# ====== Canine Single Leg Circle====== /#
-
+add_executable(camel-jhdog_single_leg_simulation ${CAMEL_SOURCES} ${JHDOG_SOURCES})
+target_link_libraries(camel-jhdog_single_leg_simulation ${CAMEL_LIBS})
+# ====== JHdog Single Leg Circle====== /#
 
 ## Operation /##
 
-## TEST FILES ##
-add_executable(camel-test_trajectory_generation src/Test/Test_trajectoryGenerator.cpp
-                                                include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
-                                                include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
-                                                include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp)
-add_executable(camel-rmdx8test_torque src/Test/Test_RMDX8Pro.cpp)
-add_executable(camel-test_write_CSV src/Test/Test_WriteCSV.cpp)
-
-add_executable(camel-test_real_time_thread src/Test/Test_RealTimeThread.cpp ${CAMEL_SOURCES})
-target_link_libraries(camel-test_real_time_thread ${CAMEL_LIBS})
-
-add_executable(camel-test_gradient_descent_optimizer src/Test/Test_GradientDescentOptimizer.cpp ${CAMEL_SOURCES})
-target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
-
-add_executable(camel-test_urdf src/Test/Test_urdf.cpp)
-target_link_libraries(camel-test_urdf ${CAMEL_LIBS})
-
-add_executable(camel-test_real_time_graph src/Test/Qt_RealTimeGraph/Test_RealTimeGraph.cpp src/Test/Qt_RealTimeGraph/simulationMainwindow.cpp ${CAMEL_SOURCES})
-target_link_libraries(camel-test_real_time_graph ${CAMEL_LIBS})
-
-add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
-target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
-
-add_executable(camel-test_sensor_MPU9250 src/Test/Test_SensorMPU9250.cpp ${CAMEL_SOURCES})
-target_link_libraries(camel-test_sensor_MPU9250 ${CAMEL_LIBS})
-
-add_executable(camel-test_sensor_RE22SC src/Test/Test_encoderRE22SC.cpp ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES})
-target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})
-
-add_executable(camel-test_SGDmodel src/Test/Test_SGDmodel.cpp ${CAMEL_SOURCES})
-target_link_libraries(camel-test_SGDmodel ${CAMEL_LIBS})
-## TEST FILES /##

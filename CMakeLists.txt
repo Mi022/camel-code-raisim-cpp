@@ -96,9 +96,10 @@ target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})
 
 # ====== JHdog Single Leg Circle======  #
 set(JHDOG_SOURCES
-        src/camel_JHdog/UI/mainwindow.cpp
+        src/camel_JHdog/UI_RealTimePlot/operationMainwindow.cpp
         src/camel_JHdog/JHdog.cpp
         src/camel_JHdog/JHdogSimulation.cpp
+        src/camel_JHdog/JHdogPDController.cpp
         )
 
 add_executable(camel-jhdog_single_leg_simulation ${CAMEL_SOURCES} ${JHDOG_SOURCES})

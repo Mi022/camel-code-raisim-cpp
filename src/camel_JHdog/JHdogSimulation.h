@@ -6,7 +6,7 @@
 #define RAISIM_JHDOGSIMULATION_H
 
 #include "include/CAMEL/Simulation.h"
-#include "UI/mainwindow.h"
+#include "UI_RealTimePlot//operationMainwindow.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 

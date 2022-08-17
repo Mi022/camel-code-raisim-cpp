@@ -19,5 +19,5 @@ double SincurveTrajectoryGenerator::getPositionTrajectory(double currentTime) {
 
 double SincurveTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
     double time = (currentTime - mReferenceTime);
-    return 2*PI*mFrequency*mAmplitude*cos(2*PI*mFrequency*time  - PI/2);
+    return 2*PI*mFrequency*mAmplitude*cos(2*PI*mFrequency*time - PI/2);
 }

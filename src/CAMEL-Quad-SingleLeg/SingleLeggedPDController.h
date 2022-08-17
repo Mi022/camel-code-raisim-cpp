@@ -5,8 +5,11 @@
 #ifndef RAISIM_SIMPLEPENDULUMPDCONTROLLER_H
 #define RAISIM_SIMPLEPENDULUMPDCONTROLLER_H
 
+#include <random>
+#include "include/Filter/LPF.h"
 #include "include/CAMEL/Controller.h"
 #include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
+#include "include/TrajectoryGenerator/SincurveTrajectoryGenerator.h"
 
 class SingleLeggedPDController : public Controller {
 public:
@@ -26,9 +29,13 @@ public:
     double torqueLimit = 13.0;
 
     SingleLeggedPDController(Robot *robot) : Controller(robot) {
-        mTrajectoryGenerator.updateTrajectory(position[0], 0.35, getRobot()->getWorldTime(), 1.0);
-        setPDGain(50.0, 1.5);
+        updateState();
+        mTrajectoryGenerator.updateTrajectory(position[0], getRobot()->getWorldTime(), 0.05, 1.0);
+        setPDGain(150.0, 2.5);
         torque[0] = 0.0;
+        double cutoffFreq = 50.0;
+        mLPF1.initialize(getRobot()->robotWorld->getTimeStep(), cutoffFreq);
+        mLPF2.initialize(getRobot()->robotWorld->getTimeStep(), cutoffFreq);
     }
 
     void doControl() override;
@@ -38,9 +45,16 @@ public:
     void setControlInput() override;
     void setPDGain(double PGain, double DGain);
     void IKsolve();
+    raisim::VecDyn getNoisyQD();
 
 private:
-    QuinticTrajectoryGenerator mTrajectoryGenerator;
+    SincurveTrajectoryGenerator mTrajectoryGenerator;
+    raisim::VecDyn mNoisyQD = raisim::VecDyn(3);
+    raisim::VecDyn mFilteredQD = raisim::VecDyn(3);
+    std::default_random_engine mGenerator;
+    std::normal_distribution<double> mDistribution = std::normal_distribution<double>(0.0, 0.09);
+    LPF mLPF1;
+    LPF mLPF2;
 };
 
 

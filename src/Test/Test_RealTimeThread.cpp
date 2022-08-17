@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include "include/RT/rb_utils.h"
 
-pthread_t thread_mpc;
+pthread_t thread_rt;
 
 
 void *rt_thread(void *arg) {
@@ -16,7 +16,7 @@ void *rt_thread(void *arg) {
     int iteration = 0;
     int failedTime = 0;
     unsigned long mpc_counter = 0;
-    const long PERIOD_US = 1000; // 200Hz 짜리 쓰레드
+    const long PERIOD_US = 100; // 1kHz 짜리 쓰레드
 
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
     clock_gettime(CLOCK_REALTIME, &TIME_START);
@@ -25,7 +25,7 @@ void *rt_thread(void *arg) {
     while (1) {
 
         iteration++;
-//        std::cout<<"iteration : "<<iteration<<std::endl;
+        std::cout<<"iteration : "<<iteration<<std::endl;
 //        mpc_controller(); //여기에 알고리즘 구현
 
 
@@ -48,7 +48,7 @@ void *rt_thread(void *arg) {
             std::cout << "RT Deadline Miss, MPC thread :  " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
             failedTime++;
         }
-        if (iteration == 10000) {
+        if (iteration == 100000) {
             break;
         }
     }
@@ -62,7 +62,7 @@ int main() {
 
     std::cout << "bf #generate_rt_thread" << std::endl;
 //    int thread_id_rt = generate_rt_thread(thread_rt, rt_thread, "rt_thread", 3, 98, NULL);
-    int thread_id_rt = generate_rt_thread_hard(thread_rt, rt_thread, "rt_thread", 3, 10, NULL);
+    int thread_id_rt = generate_rt_thread_hard(thread_rt, rt_thread, "rt_thread", 7, 10, NULL);
 
     sleep(3000);
     return 0;

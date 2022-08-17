@@ -14,6 +14,7 @@ typedef struct _SHM_
     double desiredVelocity_z;
     double jointPosition[2];
     double jointVelocity[2];
+    double desiredJointVelocity[2];
     double jointTorque[2];
     double GRF;
 }SHM, *pSHM;

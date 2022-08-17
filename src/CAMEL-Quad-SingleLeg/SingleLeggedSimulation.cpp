@@ -17,7 +17,7 @@ std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\
 std::string name = "single_leg";
 raisim::World world;
 
-double simulationDuration = 1.0;
+double simulationDuration = 5.0;
 double dT = 0.005;
 SingleLeggedSimulation sim = SingleLeggedSimulation(&world, dT);
 SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
@@ -43,6 +43,8 @@ void updateSHM() {
     sharedMemory->jointPosition[1] = controller.position[2];
     sharedMemory->jointVelocity[0] = controller.velocity[1];
     sharedMemory->jointVelocity[1] = controller.velocity[2];
+    sharedMemory->desiredJointVelocity[0] = controller.desiredJointVelocity[0];
+    sharedMemory->desiredJointVelocity[1] = controller.desiredJointVelocity[1];
     sharedMemory->jointTorque[0] = controller.torque[0];
     sharedMemory->jointTorque[1] = controller.torque[1];
 }
@@ -59,7 +61,7 @@ void raisimSimulation() {
         clock_gettime(CLOCK_REALTIME, &TIME_TIC);
         controller.doControl();
         clock_gettime(CLOCK_REALTIME, &TIME_TOC);
-        std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
+//        std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
 
         world.integrate();
         updateSHM();
@@ -72,7 +74,7 @@ void raisimSimulation() {
 }
 
 void *rt_simulation_thread(void *arg) {
-    std::cout << "entered #rt_time_checker_thread" << std::endl;
+    std::cout << "entered #rt_simulation_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
 
@@ -89,7 +91,7 @@ void *rt_simulation_thread(void *arg) {
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
-            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+            std::cout << "RT Deadline Miss, Simulation thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
                       << " ms" << std::endl;
         }
     }

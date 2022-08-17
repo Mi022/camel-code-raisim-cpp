@@ -31,10 +31,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_2->legend->setVisible(true);
     ui->widget_2->legend->setFont(QFont("Helvetica", 9));
     ui->widget_2->addGraph();
-    ui->widget_2->graph(0)->setName("velocity_z");
+    ui->widget_2->graph(0)->setName("hip velocity");
     ui->widget_2->graph(0)->setPen(QPen(QColor(0, 0, 255)));
     ui->widget_2->addGraph();
-    ui->widget_2->graph(1)->setName("desired velocity_z");
+    ui->widget_2->graph(1)->setName("desired hip velocity");
     ui->widget_2->graph(1)->setPen(QPen(QColor(255, 0, 0)));
     ui->widget_2->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
@@ -42,10 +42,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_3->legend->setVisible(true);
     ui->widget_3->legend->setFont(QFont("Helvetica", 9));
     ui->widget_3->addGraph();
-    ui->widget_3->graph(0)->setName("hip_torque");
+    ui->widget_3->graph(0)->setName("knee velocity");
     ui->widget_3->graph(0)->setPen(QPen(QColor(0, 0, 255)));
     ui->widget_3->addGraph();
-    ui->widget_3->graph(1)->setName("knee_torque");
+    ui->widget_3->graph(1)->setName("desired knee velocity");
     ui->widget_3->graph(1)->setPen(QPen(QColor(0, 255, 0)));
     ui->widget_3->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_3->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
@@ -94,26 +94,40 @@ void MainWindow::plotWidget1() {
 }
 
 void MainWindow::plotWidget2() {
-    if (sharedMemory->velocity_z < yMinWidget2) { yMinWidget2 = sharedMemory->velocity_z; }
-    if (sharedMemory->velocity_z > yMaxWidget2) { yMaxWidget2 = sharedMemory->velocity_z; }
-    if (sharedMemory->desiredVelocity_z < yMinWidget2) { yMinWidget2 = sharedMemory->desiredVelocity_z; }
-    if (sharedMemory->desiredVelocity_z > yMaxWidget2) { yMaxWidget2 = sharedMemory->desiredVelocity_z; }
-    ui->widget_2->graph(0)->addData(sharedMemory->time, sharedMemory->velocity_z);
-    ui->widget_2->graph(1)->addData(sharedMemory->time, sharedMemory->desiredVelocity_z);
+//    if (sharedMemory->velocity_z < yMinWidget2) { yMinWidget2 = sharedMemory->velocity_z; }
+//    if (sharedMemory->velocity_z > yMaxWidget2) { yMaxWidget2 = sharedMemory->velocity_z; }
+//    if (sharedMemory->desiredVelocity_z < yMinWidget2) { yMinWidget2 = sharedMemory->desiredVelocity_z; }
+//    if (sharedMemory->desiredVelocity_z > yMaxWidget2) { yMaxWidget2 = sharedMemory->desiredVelocity_z; }
+//    ui->widget_2->graph(0)->addData(sharedMemory->time, sharedMemory->velocity_z);
+//    ui->widget_2->graph(1)->addData(sharedMemory->time, sharedMemory->desiredVelocity_z);
+
+    if (sharedMemory->jointVelocity[0] < yMinWidget2) { yMinWidget2 = sharedMemory->jointVelocity[0]; }
+    if (sharedMemory->jointVelocity[0] > yMaxWidget2) { yMaxWidget2 = sharedMemory->jointVelocity[0]; }
+    if (sharedMemory->desiredJointVelocity[0] < yMinWidget2) { yMinWidget2 = sharedMemory->desiredJointVelocity[0]; }
+    if (sharedMemory->desiredJointVelocity[0] > yMaxWidget2) { yMaxWidget2 = sharedMemory->desiredJointVelocity[0]; }
+    ui->widget_2->graph(0)->addData(sharedMemory->time, sharedMemory->jointVelocity[0]);
+    ui->widget_2->graph(1)->addData(sharedMemory->time, sharedMemory->desiredJointVelocity[0]);
 
     // set axes ranges, so we see all data:
     ui->widget_2->xAxis->setRange(sharedMemory->time - intervalTime, sharedMemory->time + 0.001);
-    ui->widget_2->yAxis->setRange(-0.7, 0.7);
+    ui->widget_2->yAxis->setRange(yMinWidget2 - 0.001, yMaxWidget2 + 0.001);
     ui->widget_2->replot();
 }
 
 void MainWindow::plotWidget3() {
-    if (sharedMemory->jointTorque[0] < yMinWidget3) { yMinWidget3 = sharedMemory->jointTorque[0]; }
-    if (sharedMemory->jointTorque[0] > yMaxWidget3) { yMaxWidget3 = sharedMemory->jointTorque[0]; }
-    if (sharedMemory->jointTorque[1] < yMinWidget3) { yMinWidget3 = sharedMemory->jointTorque[1]; }
-    if (sharedMemory->jointTorque[1] > yMaxWidget3) { yMaxWidget3 = sharedMemory->jointTorque[1]; }
-    ui->widget_3->graph(0)->addData(sharedMemory->time, sharedMemory->jointTorque[0]);
-    ui->widget_3->graph(1)->addData(sharedMemory->time, sharedMemory->jointTorque[1]);
+//    if (sharedMemory->jointTorque[0] < yMinWidget3) { yMinWidget3 = sharedMemory->jointTorque[0]; }
+//    if (sharedMemory->jointTorque[0] > yMaxWidget3) { yMaxWidget3 = sharedMemory->jointTorque[0]; }
+//    if (sharedMemory->jointTorque[1] < yMinWidget3) { yMinWidget3 = sharedMemory->jointTorque[1]; }
+//    if (sharedMemory->jointTorque[1] > yMaxWidget3) { yMaxWidget3 = sharedMemory->jointTorque[1]; }
+//    ui->widget_3->graph(0)->addData(sharedMemory->time, sharedMemory->jointTorque[0]);
+//    ui->widget_3->graph(1)->addData(sharedMemory->time, sharedMemory->jointTorque[1]);
+
+    if (sharedMemory->jointVelocity[1] < yMinWidget3) { yMinWidget3 = sharedMemory->jointVelocity[1]; }
+    if (sharedMemory->jointVelocity[1] > yMaxWidget3) { yMaxWidget3 = sharedMemory->jointVelocity[1]; }
+    if (sharedMemory->desiredJointVelocity[1] < yMinWidget3) { yMinWidget3 = sharedMemory->desiredJointVelocity[1]; }
+    if (sharedMemory->desiredJointVelocity[1] > yMaxWidget3) { yMaxWidget3 = sharedMemory->desiredJointVelocity[1]; }
+    ui->widget_3->graph(0)->addData(sharedMemory->time, sharedMemory->jointVelocity[1]);
+    ui->widget_3->graph(1)->addData(sharedMemory->time, sharedMemory->desiredJointVelocity[1]);
 
     // set axes ranges, so we see all data:
     ui->widget_3->xAxis->setRange(sharedMemory->time - intervalTime, sharedMemory->time + 0.001);

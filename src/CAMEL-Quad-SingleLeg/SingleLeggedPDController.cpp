@@ -25,6 +25,17 @@ void SingleLeggedPDController::setTrajectory() {
 void SingleLeggedPDController::updateState() {
     position = getRobot()->getQ();
     velocity = getRobot()->getQD();
+    velocity = getNoisyQD();
+}
+
+raisim::VecDyn SingleLeggedPDController::getNoisyQD() {
+    mNoisyQD[0] = velocity[0] + mDistribution(mGenerator);
+    mNoisyQD[1] = velocity[1] + mDistribution(mGenerator);
+    mNoisyQD[2] = velocity[2] + mDistribution(mGenerator);
+    mFilteredQD[0] = mLPF1.doFiltering(mNoisyQD[0]);
+    mFilteredQD[1] = mLPF2.doFiltering(mNoisyQD[1]);
+    mFilteredQD[2] = mLPF2.doFiltering(mNoisyQD[2]);
+    return mFilteredQD;
 }
 
 void SingleLeggedPDController::computeControlInput() {
@@ -50,5 +61,6 @@ void SingleLeggedPDController::setControlInput() {
 void SingleLeggedPDController::IKsolve() {
     desiredJointPosition[0] = acos(desiredPosition / 0.46);
     desiredJointPosition[1] = -2*desiredJointPosition[0];
-    desiredJointVelocity.setZero();
+    desiredJointVelocity[0] = -desiredVelocity / (0.46 * sin(desiredJointPosition[0]));
+    desiredJointVelocity[1] = -2*desiredJointVelocity[0];
 }

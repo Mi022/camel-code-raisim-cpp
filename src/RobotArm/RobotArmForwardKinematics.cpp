@@ -5,6 +5,27 @@
 #include "RobotArmForwardKinematics.h"
 #include "iostream"
 
+Eigen::MatrixXd RobotArmForwardKinematics::rotationMatrix(char axes, double radian) {
+    Eigen::MatrixXd(4,4) matrix;
+    if(axes == 'r'){
+        matrix << ;
+    }
+    else if(axes == 'p'){
+        matrix << ;
+    }
+    else if(axes == 'y'){
+        matrix << ;
+    }
+}
+
+Eigen::MatrixXd RobotArmForwardKinematics::translationMatrix(double x, double y, double z) {
+
+
+}
+
+
+
+
 Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joint) {
     float pi = 3.141592;
     joint = joint*(pi/180);

@@ -12,6 +12,9 @@ public:
 
     Eigen::MatrixXd forwardKinematics(Eigen::MatrixXd);
 
+private:
+    Eigen::MatrixXd rotationMatrix(char axes, double radian);
+    Eigen::MatrixXd translationMatrix(double x, double y, double z);
 };
 
 

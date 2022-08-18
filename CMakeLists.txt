@@ -123,6 +123,19 @@ set(CANINE_TWO_LEG_SOURCES
 add_executable(camel-canine_two_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_TWO_LEG_SOURCES})
 target_link_libraries(camel-canine_two_leg_simulation ${CAMEL_LIBS})
 # ====== Canine Two Leg ====== /#
+
+# ====== Single Leg ======  #
+set(SINGLE_LEG_SOURCES
+        src/FloatingSingleLegModel/SingleLegSimulation.cpp
+        src/FloatingSingleLegModel/SingleLegRobot.cpp
+        src/FloatingSingleLegModel/SingleLegRBDLController.cpp
+        src/FloatingSingleLegModel/SingleLegSharedMemory.h
+        src/FloatingSingleLegModel/UI_RealTimePlot/operationMainwindow.cpp
+        )
+
+add_executable(single_leg-floating ${CAMEL_SOURCES} ${SINGLE_LEG_SOURCES})
+target_link_libraries(single_leg-floating ${CAMEL_LIBS})
+# ====== Simple Pendulum ======/ #
 ## Simulation /##
 
 ## Operation  ##
@@ -175,4 +188,5 @@ add_executable(camel-test_sensor_RE22SC src/Test/Test_encoderRE22SC.cpp ${CAMEL_
 target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})
 add_executable(camel-test_SGDmodel src/Test/Test_SGDmodel.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_SGDmodel ${CAMEL_LIBS})
+add_executable(camel-test_calculateInertia src/Test/Test_calculateInertia.cpp)
 ## TEST FILES /##

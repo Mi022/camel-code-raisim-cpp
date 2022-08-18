@@ -1,0 +1,157 @@
+<?xml version="1.0" ?>
+<robot name="camel_two_leg_bot">
+  <material name="green">
+    <color rgba="0.0 0.8 0.0 0.7"/>
+  </material>
+
+  <material name="light_gray">
+     <color rgba="0.75 0.75 0.75 0.7"/>
+  </material>
+
+  <material name="black1">
+      <color rgba="0.25 0.0 0.25 0.7"/>
+  </material>
+
+  <material name="black2">
+      <color rgba="0.0 0.35 0.35 0.7"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0.0 0.0 0.8 0.7"/>
+  </material>
+<!--  BR leg-->
+  <link name="BR-hip-motor">
+    <visual>
+      <origin rpy="1.570796 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.044" radius="0.05"/>
+      </geometry>
+      <material name="black1"/>
+    </visual>
+
+    <collision>
+      <origin rpy="1.570796 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+        <cylinder length="0.044" radius="0.05"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.7"/>
+      <inertia ixx="0.000550433" ixy="0" ixz="0" iyy="0.000875" iyx="0" iyz="0" izz="0.000550433" izx="0" izy="0"/>
+    </inertial>
+  </link>
+
+  <joint name="BR-hip-pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0.022 0.0"/>
+    <parent link="BR-hip-motor"/>
+    <child link="BR-knee-motor"/>
+    <axis xyz="0.0 1 0.0"/>
+  </joint>
+
+  <link name="BR-knee-motor">
+    <visual>
+      <origin rpy="1.570796 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.05"/>
+      </geometry>
+      <material name="black1"/>
+    </visual>
+
+    <collision>
+      <origin rpy="1.570796 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.05"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.8"/>
+      <inertia ixx="0.00056" ixy="0" ixz="0" iyy="0.001" iyx="0" iyz="0" izz="0.00056" izx="0" izy="0"/>
+    </inertial>
+  </link>
+
+  <joint name="BR-hip-fixed" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="BR-knee-motor"/>
+    <child link="BR_upper_leg"/>
+  </joint>
+
+  <link name="BR_upper_leg">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
+      <geometry>
+        <box size="0.03 0.02 0.2"/>
+      </geometry>
+      <material name="black1"/>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 0 -0.1"/>
+      <geometry>
+        <box size="0.03 0.02 0.2"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.00067333" ixy="0" ixz="0" iyy="0.00068167" iyx="0" iyz="0" izz="0.00002167" izx="0" izy="0"/>
+    </inertial>
+  </link>
+
+  <joint name="BR-knee-pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.2"/>
+    <parent link="BR_upper_leg"/>
+    <child link="BR_lower_leg"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="BR_lower_leg">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.1"/>
+      <geometry>
+        <box size="0.03 0.02 0.2"/>
+      </geometry>
+      <material name="black2"/>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 0 -0.1"/>
+      <geometry>
+        <box size="0.03 0.02 0.2"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.00067333" ixy="0" ixz="0" iyy="0.00068167" iyx="0" iyz="0" izz="0.00002167" izx="0" izy="0"/>
+    </inertial>
+  </link>
+
+  <joint name="BR_foot_fixed" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 -0.2"/>
+    <parent link="BR_lower_leg"/>
+    <child link="BR_foot"/>
+  </joint>
+
+  <link name="BR_foot">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.01"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.06"/>
+      <inertia ixx="9.6e-06" ixy="0.0" ixz="0.0" iyy="9.6e-06" iyz="0.0" izz="9.6e-06"/>
+    </inertial>
+  </link>
+
+</robot>

@@ -7,8 +7,6 @@
 
 #include"raisim/World.hpp"
 
-//TODO : making getQ and getQD, and update all robot classes
-
 class Robot {
 public:
     raisim::ArticulatedSystem *robot;

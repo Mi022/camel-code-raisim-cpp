@@ -31,8 +31,8 @@ void realTimePlot() {
     sharedMemory->jointPosition = controller.position[0];
     sharedMemory->jointVelocity = controller.velocity[0];
     sharedMemory->jointTorque = controller.torque[0];
-    sharedMemory->desiredJointPosition = controller.desiredPosition;
-    sharedMemory->desiredJointVelocity = controller.desiredVelocity;
+    sharedMemory->desiredJointPosition = controller.desiredPosition[7];
+    sharedMemory->desiredJointVelocity = controller.desiredVelocity[0];
 }
 
 void resetSimulationVars() {

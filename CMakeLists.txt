@@ -12,11 +12,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 find_package(raisim CONFIG REQUIRED)
 find_package(Eigen3 REQUIRED HINTS ${Eigen3_HINT})
+find_package(RBDL REQUIRED)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../rsc" DESTINATION ${CMAKE_BINARY_DIR}/camel-code-raisim-cpp)
 
 include_directories(${EIGEN3_INCLUDE_DIRS})
 include_directories("qpOASES/include")
+include_directories( ${RBDL_INCLIDE_DIR} )
 
 add_subdirectory(qpOASES)
 
@@ -134,7 +136,7 @@ set(SINGLE_LEG_SOURCES
         )
 
 add_executable(single_leg-floating ${CAMEL_SOURCES} ${SINGLE_LEG_SOURCES})
-target_link_libraries(single_leg-floating ${CAMEL_LIBS})
+target_link_libraries(single_leg-floating ${CAMEL_LIBS} ${RBDL_LIBRARY})
 # ====== Simple Pendulum ======/ #
 ## Simulation /##
 
@@ -189,4 +191,5 @@ target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})
 add_executable(camel-test_SGDmodel src/Test/Test_SGDmodel.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_SGDmodel ${CAMEL_LIBS})
 add_executable(camel-test_calculateInertia src/Test/Test_calculateInertia.cpp)
+add_executable(camel-test_Eigen src/Test/Test_Eigen.cpp)
 ## TEST FILES /##

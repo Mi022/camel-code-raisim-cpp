@@ -11,9 +11,11 @@ class SingleLegRobot : public Robot {
 public:
     SingleLegRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name){
         initialize();
+        dim = robot->getGeneralizedCoordinateDim();
     }
 
     void initialize() override;
+    int dim;
 
 private:
     static const double deg2rad;

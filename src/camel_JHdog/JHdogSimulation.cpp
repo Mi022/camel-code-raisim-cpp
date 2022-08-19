@@ -45,11 +45,14 @@ int iteration = 0;
 // You can change the plotted data in UI
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
-    sharedMemory->jointPosition = controller.position[0];
-    sharedMemory->jointVelocity = controller.velocity[0];
-    sharedMemory->jointTorque = controller.torque[0];
-    sharedMemory->desiredJointPosition = controller.desiredPosition;
-    sharedMemory->desiredJointVelocity = controller.desiredVelocity;
+    for(int i=0; i<3; i++)
+    {
+        sharedMemory->jointPosition[i] = controller.position[i];
+        sharedMemory->jointVelocity[i] = controller.velocity[i];
+        sharedMemory->jointTorque[i] = controller.torque[i];
+        sharedMemory->desiredJointPosition[i] = controller.desiredPosition[i];
+        sharedMemory->desiredJointVelocity[i] = controller.desiredVelocity[i];
+    }
 }
 
 void resetSimulationVars() {

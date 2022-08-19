@@ -25,12 +25,15 @@ public:
     double yMaxWidget2;
     double yMinWidget3;
     double yMaxWidget3;
+    double yMinWidget4;
+    double yMaxWidget4;
     QTimer dataTimer;
 
 public slots:
     void plotWidget1();
     void plotWidget2();
     void plotWidget3();
+    void plotWidget4();
     void realtimeDataSlot();
 
 private slots:

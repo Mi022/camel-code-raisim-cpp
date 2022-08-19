@@ -17,8 +17,15 @@ void JHdogPDController:: doControl() {
 
 // set desired states of the robot
 void JHdogPDController::setTrajectory() {
-    desiredPosition = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
-    desiredVelocity = mTrajectoryGenerator.getVelocityTrajectory(getRobot()->getWorldTime());
+    double d2r = 3.141592/180;
+
+    desiredPosition[1] = 30*d2r;
+    desiredPosition[2] = -60*d2r;
+    desiredVelocity[1] = 0;
+//        desiredPosition = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
+//        desiredVelocity = mTrajectoryGenerator.getVelocityTrajectory(getRobot()->getWorldTime());
+
+
 }
 
 // update states of the robot
@@ -29,9 +36,12 @@ void JHdogPDController::updateState() {
 
 // compute control inputs based on PD control method
 void JHdogPDController::computeControlInput() {
-    positionError = desiredPosition - position[0];
-    velocityError = desiredVelocity - velocity[0];
-    torque[0] = PGain * positionError + DGain * velocityError;
+    for(int i=1; i<3; i++)
+    {
+        positionError[i] = desiredPosition[i] - position[i];
+        velocityError[i] = desiredVelocity[i] - velocity[i];
+        torque[i] = PGain * positionError[i] + DGain * velocityError[i];
+    }
 }
 
 // set computed force(torque) to the robot

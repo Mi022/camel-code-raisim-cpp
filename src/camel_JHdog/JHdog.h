@@ -12,8 +12,8 @@ public:
     JHdog(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
         initialize();
     }
-
-    void initialize() override;      //override abstract method in robot
+    void initialize() override;
+    //override abstract method in robot
 };
 
 #endif //RAISIM_JHDOG_H

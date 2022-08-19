@@ -17,13 +17,13 @@ public:
         setPDGain(200,25);
     }
 
-    Eigen::VectorXd torque = Eigen::VectorXd(4);
-    raisim::VecDyn position = raisim::VecDyn(4);
-    raisim::VecDyn velocity = raisim::VecDyn(4);
-    double positionError;
-    double velocityError;
-    double desiredPosition;
-    double desiredVelocity;
+    Eigen::VectorXd torque = Eigen::VectorXd(3);
+    raisim::VecDyn position = raisim::VecDyn(3);
+    raisim::VecDyn velocity = raisim::VecDyn(3);
+    double positionError[3];
+    double velocityError[3];
+    double desiredPosition[3];
+    double desiredVelocity[3];
 
     double PGain;
     double DGain;

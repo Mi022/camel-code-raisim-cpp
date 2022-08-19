@@ -8,10 +8,10 @@
 typedef struct _SHM_
 {
     double simTime;
-    double jointPosition;
-    double desiredJointPosition;
-    double jointVelocity;
-    double desiredJointVelocity;
-    double jointTorque;
+    double jointPosition[3];
+    double desiredJointPosition[3];
+    double jointVelocity[3];
+    double desiredJointVelocity[3];
+    double jointTorque[3];
 }SHM, *pSHM;
 #endif //RAISIM_JHDOGSHAREDMEMORY_H

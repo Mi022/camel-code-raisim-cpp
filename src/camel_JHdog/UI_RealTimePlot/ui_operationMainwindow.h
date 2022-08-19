@@ -28,6 +28,7 @@ public:
     QCustomPlot *widget;
     QCustomPlot *widget_2;
     QCustomPlot *widget_3;
+    QCustomPlot *widget_4;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -36,7 +37,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(972, 972);
+        MainWindow->resize(974, 2000);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         pushButton = new QPushButton(centralWidget);
@@ -51,6 +52,9 @@ public:
         widget_3 = new QCustomPlot(centralWidget);
         widget_3->setObjectName(QString::fromUtf8("widget_3"));
         widget_3->setGeometry(QRect(10, 610, 821, 291));
+        widget_4 = new QCustomPlot(centralWidget);
+        widget_4->setObjectName(QString::fromUtf8("widget_4"));
+        widget_4->setGeometry(QRect(10, 910, 821, 291));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

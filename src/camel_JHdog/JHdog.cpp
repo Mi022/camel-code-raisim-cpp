@@ -8,6 +8,8 @@
 void JHdog::initialize(){
     Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
-    initialJointPosition[0] = 1.57;  //1.57rad
+    initialJointPosition[0] = 0.5; // linear guide height
+    initialJointPosition[1] = 0;
+    initialJointPosition[2] = 0;
     robot->setGeneralizedCoordinate(initialJointPosition);
 }

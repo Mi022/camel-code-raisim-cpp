@@ -38,7 +38,6 @@ public:
 
     bool joySetup();
     void joyRead();
-    void joyButton();
 
 private:
 

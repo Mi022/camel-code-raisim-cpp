@@ -81,6 +81,12 @@ void MainWindow::on_pushButton_5_clicked() {
     else { button5 = true; }
 }
 
+void MainWindow::on_pushButton_6_clicked() {
+    std::cout << "'Accelerate' button is clicked" << std::endl;
+    if (button6) { button6 = false; }
+    else { button6 = true; }
+}
+
 void MainWindow::plotWidget1() {
     QVector<double> x(201);
     QVector<double> y1(201);

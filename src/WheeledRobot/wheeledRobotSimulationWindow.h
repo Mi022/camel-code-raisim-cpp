@@ -23,6 +23,7 @@ public:
     bool button3 = false;
     bool button4 = false;
     bool button5 = false;
+    bool button6 = false;
     int data_idx = 0;
     double data_x[201];
     double data_y1[201];
@@ -49,6 +50,7 @@ private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_4_clicked();
     void on_pushButton_5_clicked();
+    void on_pushButton_6_clicked();
 
 private:
     Ui::MainWindow *ui;

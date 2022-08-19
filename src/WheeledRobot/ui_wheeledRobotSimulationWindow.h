@@ -38,6 +38,7 @@ public:
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
     QPushButton *pushButton_5;
+    QPushButton *pushButton_6;
     QCustomPlot *widget_1;
     QCustomPlot *widget_2;
     QCustomPlot *widget_3;
@@ -66,7 +67,10 @@ public:
         pushButton_4->setGeometry(QRect(875, 132, 51, 51));
         pushButton_5 = new QPushButton(centralWidget);
         pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
-        pushButton_5->setGeometry(QRect(875, 254, 51, 51));
+        pushButton_5->setGeometry(QRect(840, 254, 51, 51));
+        pushButton_6 = new QPushButton(centralWidget);
+        pushButton_6->setObjectName(QString::fromUtf8("pushButton_6"));
+        pushButton_6->setGeometry(QRect(910, 254, 51, 51));
 
         widget_1 = new QCustomPlot(centralWidget);
         widget_1->setObjectName(QString::fromUtf8("widget_1"));
@@ -103,6 +107,7 @@ public:
         pushButton_3->setText(QApplication::translate("MainWindow", "right", nullptr));
         pushButton_4->setText(QApplication::translate("MainWindow", "back", nullptr));
         pushButton_5->setText(QApplication::translate("MainWindow", "stop", nullptr));
+        pushButton_6->setText(QApplication::translate("MainWindow", "accelerate", nullptr));
     }
 };
 

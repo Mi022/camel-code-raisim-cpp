@@ -5,6 +5,7 @@
 #include "wheeledRobotSimulation.h"
 #include "wheeledRobotSimulationWindow.h"
 #include "wheeledRobotXBOX.h"
+#include "wheeledRobotMyJoy.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 #include <cmath>
@@ -12,6 +13,7 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
+wheeledRobotMyJoyStick myJoystick = wheeledRobotMyJoyStick();
 wheeledRobotJoyStick joystick = wheeledRobotJoyStick();
 
 std::string urdfPath = "\\home\\ljm\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wheeledRobot.urdf";
@@ -28,6 +30,7 @@ wheeledRobotController controller = wheeledRobotController(&robot);
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
 int iteration = 0;
+int accelerationButton=0;
 
 /*double* x, y, z;
 &x = 0.0;
@@ -121,9 +124,81 @@ void raisimSimulation() {
             exit(0);
         }
     }
-    else {
-        if (((MainUI->button1)||(MainUI->button2)||(MainUI->button3)||(MainUI->button4)||(MainUI->button5)) && (oneCycleSimTime < simulationDuration)) {
+    else if(myJoystick.joyAvailable) {
+        myJoystick.myJoyRead();
+
+        if (myJoystick.joy_button[11] || myJoystick.joy_button[12] || myJoystick.joy_button[13] || myJoystick.joy_button[14]
+                && (oneCycleSimTime < simulationDuration)) {
             oneCycleSimTime = iteration * dT;
+
+            if(myJoystick.joy_button[13]) {
+                if(myJoystick.joy_button[11])  {
+                    controller.setLeft();
+                }
+                else if(myJoystick.joy_button[12]) {
+                    controller.setRight();
+                }
+                else {
+                    controller.setForward();
+                }
+            }
+
+            if(myJoystick.joy_button[11])  {
+                controller.setLeft();
+            }
+
+            if(myJoystick.joy_button[12]) {
+                controller.setRight();
+            }
+
+            if(myJoystick.joy_button[14]) {
+                if(myJoystick.joy_button[11])  {
+                    controller.setLeft();
+                }
+                else if(myJoystick.joy_button[12]) {
+                    controller.setRight();
+                }
+                else {
+                    controller.setBack();
+                }
+            }
+
+            iteration++;
+        }
+        else if (oneCycleSimTime >= simulationDuration) {
+
+            iteration = 0;
+            oneCycleSimTime = 0;
+
+            std::cout << "torque : " << controller.torque[6] << " " << controller.torque[7] << std::endl;
+            std::cout << "velocity : " << controller.velocity[8] << " " << controller.velocity[9] << std::endl;
+
+            MainUI->plotWidget1();
+            MainUI->plotWidget2();
+            MainUI->data_idx = 0;
+        }
+        else {
+            controller.setStop();
+        }
+
+        if(myJoystick.joy_button[6]) {
+            server.killServer();
+            exit(0);
+        }
+    }
+    else {
+        if (((MainUI->button1)||(MainUI->button2)||(MainUI->button3)||(MainUI->button4)||(MainUI->button5)||(MainUI->button6))
+                && (oneCycleSimTime < simulationDuration)) {
+            oneCycleSimTime = iteration * dT;
+
+            if(MainUI->button6 || accelerationButton==0) {
+                controller.accelerate();
+                accelerationButton = 1;
+            }
+            else if(MainUI->button6 || accelerationButton==1) {
+                controller.setStop();
+                accelerationButton = 0;
+            }
 
             if(MainUI->button1) {
                 controller.setForward();
@@ -153,6 +228,7 @@ void raisimSimulation() {
             MainUI->button3 = false;
             MainUI->button4 = false;
             MainUI->button5 = false;
+            MainUI->button6 = false;
 
             iteration = 0;
             oneCycleSimTime = 0;

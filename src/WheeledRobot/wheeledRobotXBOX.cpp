@@ -42,7 +42,3 @@ void wheeledRobotJoyStick::joyRead() {
             break;
     }
 }
-
-void wheeledRobotJoyStick::joyButton() {
-
-}

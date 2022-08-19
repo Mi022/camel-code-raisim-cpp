@@ -65,7 +65,7 @@ Eigen::VectorXd CubicTrajectoryGeneratorND::getVelocityTrajectory(double current
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     Eigen::Vector4d timeMatrix;
     timeMatrix << 3*pow(normalizedTime, 2.0), 2*normalizedTime, 1.0, 0.0;
-    return mCoefficient*timeMatrix;
+    return mCoefficient*timeMatrix / mTimeDuration;
 }
 
 Eigen::VectorXd CubicTrajectoryGeneratorND::getAccelerationTrajectory(double currentTime) {
@@ -73,7 +73,7 @@ Eigen::VectorXd CubicTrajectoryGeneratorND::getAccelerationTrajectory(double cur
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     Eigen::Vector4d timeMatrix;
     timeMatrix << 6*normalizedTime, 2.0, 0.0, 0.0;
-    return mCoefficient*timeMatrix;
+    return mCoefficient*timeMatrix / pow(mTimeDuration, 2.0);
 }
 
 int CubicTrajectoryGeneratorND::getDim() const {

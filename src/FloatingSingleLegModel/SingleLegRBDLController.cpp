@@ -30,7 +30,7 @@ void SingleLegRBDLController::setTrajectory() {
         mIsTrajectoryAlready = true;
     }
     if(!mIsGenerateTrajectory && mIsTrajectoryAlready){
-        desiredPosition[7] = mCubicTrajectoryGeneratorNd.getPositionTrajectory(getRobot()->getWorldTime())[3];
+        desiredVelocity[6] = mCubicTrajectoryGeneratorNd.getVelocityTrajectory(getRobot()->getWorldTime())[3];
         std::cout<< "hi" << std::endl;
         std::cout<< "desiredPosition[7]: " << desiredPosition[7] <<std::endl;
     }

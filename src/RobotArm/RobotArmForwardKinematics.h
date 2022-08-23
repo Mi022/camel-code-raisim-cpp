@@ -16,6 +16,9 @@ public:
     Eigen::MatrixXd rotYaw(float joint);
     Eigen::MatrixXd translation(float xD,float yD,float zD);
 
+private:
+    Eigen::MatrixXd rotationMatrix(char axes, double radian);
+    Eigen::MatrixXd translationMatrix(double x, double y, double z);
 };
 
 

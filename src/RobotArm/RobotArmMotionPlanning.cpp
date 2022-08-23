@@ -12,7 +12,7 @@ void RobotArmMotionPlanning::generatePoint() {
     armPose.row(0)=startJoint;
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
-        Eigen::MatrixXd joint = 90*Eigen::MatrixXd::Random(1,6);
+        Eigen::MatrixXd joint = 100*Eigen::MatrixXd::Random(1,6);
         if(collisionChecker->jointChecker(joint)){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
@@ -159,16 +159,16 @@ void RobotArmMotionPlanning::dijkstra() {
         cout << findTree[i] << endl;
     }
 
-//    Eigen::MatrixXd wayPoints = Eigen::MatrixXd(findTree.size(), 6);
-    Eigen::MatrixXd wayPoints = Eigen::MatrixXd(4, 6);
-//    for (int i = 0; i < findTree.size(); i++) {
-//        wayPoints.row(i) = armPose.row(findTree[i]);
-//    }
+    Eigen::MatrixXd wayPoints = Eigen::MatrixXd(findTree.size(), 6);
+    for (int i = 0; i < findTree.size(); i++) {
+        wayPoints.row(i) = armPose.row(findTree[i]);
+    }
+//    Eigen::MatrixXd wayPoints = Eigen::MatrixXd(4, 6);
 
-    wayPoints << 20.0, 120.0, 90, 0.0, 90.0, 40.0,
-            20.0, 120.0, 90, 70.0, 90.0, 40.0,
-            20.0, 130.0, 90, 20.0, 80.0, 30.0,
-            20.0, 160.0, 90, 0.0, 70.0, 60.0;
+//    wayPoints << 20.0, 120.0, 90, 0.0, 90.0, 40.0,
+//            20.0, 120.0, 90, 70.0, 90.0, 40.0,
+//            20.0, 130.0, 90, 20.0, 80.0, 30.0,
+//            20.0, 160.0, 90, 0.0, 70.0, 60.0;
 
     trajectoryGenerator->setWaypoints(wayPoints);
 

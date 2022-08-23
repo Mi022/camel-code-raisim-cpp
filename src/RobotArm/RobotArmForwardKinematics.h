@@ -11,6 +11,10 @@ class RobotArmForwardKinematics {
 public:
 
     Eigen::MatrixXd forwardKinematics(Eigen::MatrixXd);
+    Eigen::MatrixXd rotRoll(float joint);
+    Eigen::MatrixXd rotPitch(float joint);
+    Eigen::MatrixXd rotYaw(float joint);
+    Eigen::MatrixXd translation(float xD,float yD,float zD);
 
 };
 

@@ -25,6 +25,7 @@ public:
         mTimeDuration = 1.0;
         mIsGenerateTrajectory = false;
         mIsTrajectoryAlready = false;
+
     }
 
     Eigen::VectorXd torque;

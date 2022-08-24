@@ -10,7 +10,7 @@ pthread_t thread_simulation;
 pSHM sharedMemory;
 
 // robot's urdfPath and name. IT SHOULD BE CHANGED TO YOUR PATH.
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
+std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_simple_pendulum.urdf";
 std::string name = "cutePendulum";
 
 // raisim world

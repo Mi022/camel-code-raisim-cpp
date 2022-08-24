@@ -7,7 +7,7 @@ public:
     //initialize
     SimplePendulumPDController(Robot *robot) : Controller(robot) {
         updateState();
-        mTrajectoryGenerator.updateTrajectory(position[0], -90.0 / 180.0* 3.141592, getRobot() -> getWorldTime(), 5.0);
+        mTrajectoryGenerator.updateTrajectory(position[0], 45.0 / 180.0* 3.141592, getRobot() -> getWorldTime(), 5.0);
         setPDGain(200.0, 25.0);
     }
 

@@ -1,9 +1,6 @@
-//
-// Created by jaehoon on 22. 4. 3..
-//
 
-#ifndef RAISIM_SIMPLEPENDULUMROBOT_H
-#define RAISIM_SIMPLEPENDULUMROBOT_H
+#ifndef RAISIM_TWOLEGGEDROBOT_H
+#define RAISIM_TWOLEGGEDROBOT_H
 
 #include "include/CAMEL/Robot.h"
 
@@ -14,12 +11,9 @@ public:
     }
 
     void initialize() override;
-    raisim::VecDyn getQ();
-    raisim::VecDyn getQD();
-
 private:
-
+    static const double deg2rad;
 };
 
 
-#endif //RAISIM_SIMPLEPENDULUMROBOT_H
+#endif //RAISIM_TWOLEGGEDROBOT_H

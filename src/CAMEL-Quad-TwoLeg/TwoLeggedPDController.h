@@ -1,34 +1,29 @@
-//
-// Created by jaehoon on 22. 4. 3..
-//
 
-#ifndef RAISIM_SIMPLEPENDULUMPDCONTROLLER_H
-#define RAISIM_SIMPLEPENDULUMPDCONTROLLER_H
+#ifndef RAISIM_TWOLEGGEDPDCONTROLLER_H
+#define RAISIM_TWOLEGGEDPDCONTROLLER_H
 
 #include "include/CAMEL/Controller.h"
-#include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
 
 class TwoLeggedPDController : public Controller {
 public:
     Eigen::VectorXd torque = Eigen::VectorXd(10);
     raisim::VecDyn position = raisim::VecDyn(11);
     raisim::VecDyn velocity = raisim::VecDyn(10);
-    Eigen::VectorXd positionError = Eigen::VectorXd(2);
-    Eigen::VectorXd velocityError = Eigen::VectorXd(2);
-    Eigen::VectorXd desiredJointPosition = Eigen::VectorXd(2);
-    Eigen::VectorXd desiredJointVelocity = Eigen::VectorXd(2);
+    raisim::VecDyn desiredPosition = raisim::VecDyn(11);
+    raisim::VecDyn desiredVelocity = raisim::VecDyn(10);
+    Eigen::VectorXd positionError = Eigen::VectorXd(4);
+    Eigen::VectorXd velocityError = Eigen::VectorXd(4);
+    Eigen::VectorXd PGain = Eigen::VectorXd(4);
+    Eigen::VectorXd DGain = Eigen::VectorXd(4);
 
-    double desiredPosition;
-    double desiredVelocity;
-
-    double PGain;
-    double DGain;
     double torqueLimit = 13.0;
 
     TwoLeggedPDController(Robot *robot) : Controller(robot) {
 //        mTrajectoryGenerator.updateTrajectory(position[0], 0.35, getRobot()->getWorldTime(), 1.0);
-        setPDGain(50.0, 1.5);
-        torque[0] = 0.0;
+        setPDGain({80.0, 100.0, 80.0, 100.0}, {10.0, 4.0, 10.0, 4.0});
+//        setPDGain({0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0});
+        mSetDesired();
+        torque.setZero();
     }
 
     void doControl() override;
@@ -36,12 +31,17 @@ public:
     void updateState() override;
     void computeControlInput() override;
     void setControlInput() override;
-    void setPDGain(double PGain, double DGain);
+    void setPDGain(Eigen::Vector4d PGain, Eigen::Vector4d DGain);
     void IKsolve();
 
 private:
-    QuinticTrajectoryGenerator mTrajectoryGenerator;
+    void mSetDesired();
+    static const double mass;
+    static const double gravity;
+    static const double l;
+    static const double deg2rad;
+    Eigen::VectorXd mTheta = Eigen::VectorXd(4);//RH = 0, RK = 1, LH = 2, LK = 3;
 };
 
 
-#endif //RAISIM_SIMPLEPENDULUMPDCONTROLLER_H
+#endif //RAISIM_TWOLEGGEDPDCONTROLLER_H

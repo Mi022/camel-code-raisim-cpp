@@ -1,9 +1,5 @@
-//
-// Created by jaehoon on 22. 3. 31..
-//
-
-#ifndef RAISIM_SIMPLEPENDULUMSIMULATION_H
-#define RAISIM_SIMPLEPENDULUMSIMULATION_H
+#ifndef RAISIM_TWOLEGGEDSIMULATION_H
+#define RAISIM_TWOLEGGEDSIMULATION_H
 
 #include "include/CAMEL/Simulation.h"
 #include "TwoLeggedRobot.h"
@@ -19,4 +15,4 @@ private:
 };
 
 
-#endif //RAISIM_SIMPLEPENDULUMSIMULATION_H
+#endif //RAISIM_TWOLEGGEDSIMULATION_H

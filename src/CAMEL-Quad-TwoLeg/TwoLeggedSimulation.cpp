@@ -1,7 +1,3 @@
-//
-// Created by jaehoon on 22. 3. 31.. dkswogns46@gmail.com
-//
-
 #include "TwoLeggedSimulation.h"
 #include "include/SimulationUI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
@@ -34,12 +30,12 @@ void raisimSimulation() {
         world.integrate();
         if (iteration % divider == 0) {
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
-            MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-            MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition;
-            MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
-            MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity;
-            MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[1];
-            MainUI->data_y3_red[MainUI->data_idx] = controller.torque[2];
+            MainUI->data_y1[MainUI->data_idx] = controller.positionError[0];
+            MainUI->data_y1_desired[MainUI->data_idx] = controller.velocityError[0];
+            MainUI->data_y2[MainUI->data_idx] = controller.positionError[1];
+            MainUI->data_y2_desired[MainUI->data_idx] = controller.velocityError[1];
+            MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[6];
+            MainUI->data_y3_red[MainUI->data_idx] = controller.torque[7];
             MainUI->data_idx += 1;
         }
         iteration++;

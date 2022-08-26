@@ -27,5 +27,54 @@ private:
     double mTimeDuration;
 };
 
+//translation trajectory
+class CubicTrajectoryGeneratorND {
+public:
+    CubicTrajectoryGeneratorND(int dim)
+    {
+        mMatrixA << 2.0, -2.0, 1.0, 1.0, -3.0, 3.0, -2.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0;
+        mCoefficient = Eigen::MatrixXd(dim,4);
+        mFunctionValue = Eigen::MatrixXd (dim, 1);
+        mDim = dim;
+
+    }
+
+    void updateTrajectory(Eigen::VectorXd currentPosition,Eigen::VectorXd goalPosition,double currentTime,double timeDuration);
+    Eigen::VectorXd getPositionTrajectory(double currentTime);
+    Eigen::VectorXd getVelocityTrajectory(double currentTime);
+    Eigen::VectorXd getAccelerationTrajectory(double currentTime);
+    int getDim() const;
+
+private:
+    Eigen::MatrixXd mMatrixA = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mCoefficient;
+    Eigen::MatrixXd mFunctionValue;
+    double mReferenceTime;
+    double mTimeDuration;
+    int mDim;
+    void calculateCoefficient();
+};
+
+//rotational trajectory
+class CubicTrajectoryGeneratorRotation {
+public:
+    CubicTrajectoryGeneratorRotation()
+    {
+        targetFinder = CubicTrajectoryGenerator();
+    }
+
+    void updateTrajectory(Eigen::Quaterniond currentQuaternion, Eigen::Quaterniond finalQuaternion, double currentTime, double timeDuration);
+    Eigen::Vector3d getRPYPositionTrajectory(double currentTime);
+    Eigen::Vector3d getRPYVelocityTrajectory(double currentTime);
+    Eigen::Vector3d getRPYAccelerationTrajectory(double currentTime);
+    Eigen::Quaterniond euler2quaternion(Eigen::Vector3d euler);
+
+
+private:
+    CubicTrajectoryGenerator targetFinder;
+    Eigen::Quaterniond mStartQuaternion;
+    Eigen::Quaterniond mGoalQuaternion;
+    static const double delta;
+};
 
 #endif //RAISIM_CUBICTRAJECTORYGENERATOR_H

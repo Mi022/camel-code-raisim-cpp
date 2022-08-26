@@ -165,4 +165,6 @@ add_executable(camel-test_sensor_RE22SC src/Test/Test_encoderRE22SC.cpp ${CAMEL_
 target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})
 add_executable(camel-test_SGDmodel src/Test/Test_SGDmodel.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_SGDmodel ${CAMEL_LIBS})
+add_executable(camel-test_Eigen src/Test/Test_Eigen.cpp ${CAMEL_SOURCES})
+target_link_libraries(camel-test_Eigen ${CAMEL_LIBS})
 ## TEST FILES /##

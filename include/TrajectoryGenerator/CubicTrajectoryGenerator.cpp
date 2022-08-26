@@ -38,6 +38,7 @@ double CubicTrajectoryGenerator::getAccelerationTrajectory(double currentTime) {
     return (6.0 *mCoefficient(0,0) * normalizedTime + 2.0 * mCoefficient(1,0)) / pow(mTimeDuration, 2.0);
 }
 
+
 void CubicTrajectoryGeneratorND::updateTrajectory(Eigen::VectorXd currentPosition, Eigen::VectorXd goalPosition, double currentTime, double timeDuration) {
     Eigen::VectorXd zeros = Eigen::VectorXd(mDim);
     zeros.setZero();
@@ -85,9 +86,6 @@ Eigen::VectorXd CubicTrajectoryGeneratorND::getAccelerationTrajectory(double cur
     return mCoefficient*timeMatrix / pow(mTimeDuration, 2.0);
 }
 
-int CubicTrajectoryGeneratorND::getDim() const {
-    return mDim;
-}
 
 void CubicTrajectoryGeneratorRotation::updateTrajectory(Eigen::Quaterniond currentQuaternion, Eigen::Quaterniond finalQuaternion, double currentTime, double timeDuration) {
     mStartQuaternion = currentQuaternion;
@@ -128,4 +126,5 @@ Eigen::Quaterniond CubicTrajectoryGeneratorRotation::euler2quaternion(Eigen::Vec
 Eigen::Vector3d CubicTrajectoryGeneratorRotation::quaternion2euler(Eigen::Quaterniond quaternion){
     return quaternion.toRotationMatrix().eulerAngles(0,1,2);
 }
+
 const double CubicTrajectoryGeneratorRotation::delta = 1e-3;

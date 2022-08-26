@@ -55,7 +55,7 @@ void QuinticTrajectoryTest(double currentPosition, double goalPosition, double c
     }
 }
 //
-// Created by jaehoon on 22. 6. 1.
+// Created by jaehoon on 22. 8. 19.
 //
 
 void printRotationTest(CubicTrajectoryGeneratorRotation *rotationTest, double realTime, Eigen::Vector3d *accumulatedPosition, Eigen::Vector3d *accumulatedVelocity, double dT){

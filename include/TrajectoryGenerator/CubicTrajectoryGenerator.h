@@ -27,7 +27,10 @@ private:
     double mTimeDuration;
 };
 
-//translation trajectory
+//
+// Created by hwayoung on 22. 8. 19.
+// translation trajectory
+//
 class CubicTrajectoryGeneratorND {
 public:
     CubicTrajectoryGeneratorND(int dim)
@@ -43,7 +46,6 @@ public:
     Eigen::VectorXd getPositionTrajectory(double currentTime);
     Eigen::VectorXd getVelocityTrajectory(double currentTime);
     Eigen::VectorXd getAccelerationTrajectory(double currentTime);
-    int getDim() const;
 
 private:
     Eigen::MatrixXd mMatrixA = Eigen::MatrixXd(4, 4);
@@ -55,7 +57,10 @@ private:
     void calculateCoefficient();
 };
 
-//rotational trajectory
+//
+// Created by hwayoung on 22. 8. 19.
+// rotational trajectory
+//
 class CubicTrajectoryGeneratorRotation {
 public:
     CubicTrajectoryGeneratorRotation()

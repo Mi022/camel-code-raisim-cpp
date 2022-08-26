@@ -85,9 +85,11 @@ set(CANINE_SINGLE_LEG_SOURCES
         src/CAMEL-Quad-SingleLeg/SingleLeggedPDController.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedIDController.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedMPCController.cpp
-        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCqpoases.cpp)
+        src/CAMEL-Quad-SingleLeg/SingleLeggedMPCqpoases.cpp
+        src/CAMEL-Quad-SingleLeg/SingleLeggedSharedMemory.h
+        src/CAMEL-Quad-SingleLeg/UI/simulationMainwindow.cpp)
 
-add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
+add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS} qpOASES)
 # ====== Canine Single Leg ====== /#
 
@@ -131,38 +133,62 @@ set(CANINE_SINGLE_LEG_OPERATION_SOURCES
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedRobotOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/UI/mainwindow.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/SingleLegCAN.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedPDControllerOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedIDControllerOperation.cpp
         src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedMPCqpoasesOperation.cpp
-        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedSharedMemoryOperation.h)
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedSharedMemoryOperation.h
+        src/CAMEL-Quad-SingleLeg-Operation/SingleLeggedMPCOperation.cpp)
 
 add_executable(camel-canine_single_leg_operation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_SOURCES})
 target_link_libraries(camel-canine_single_leg_operation ${CAMEL_LIBS})
 # ====== Canine Single Leg ====== /#
+
+# ====== Canine Single Leg Circle======  #
+set(CANINE_SINGLE_LEG_OPERATION_CIRCLE_SOURCES
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedRobotOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLegCAN.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/UI/mainwindow.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedPDControllerOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedIDControllerOperation.cpp
+        src/CAMEL-Quad-SingleLeg-Operation-Circle/SingleLeggedSharedMemoryOperation.h)
+
+add_executable(camel-canine_single_leg_opertaion_circle ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_OPERATION_CIRCLE_SOURCES})
+target_link_libraries(camel-canine_single_leg_opertaion_circle ${CAMEL_LIBS})
+# ====== Canine Single Leg Circle====== /#
+
+
 ## Operation /##
 
 ## TEST FILES ##
-add_executable(camel-test_trajectory_generation src/Test/Test_trajectoryGenerator.cpp include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
-                                                                                      include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
-                                                                                      include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp)
+add_executable(camel-test_trajectory_generation src/Test/Test_trajectoryGenerator.cpp
+                                                include/TrajectoryGenerator/CubicTrajectoryGenerator.cpp
+                                                include/TrajectoryGenerator/QuinticTrajectoryGenerator.cpp
+                                                include/TrajectoryGenerator/SincurveTrajectoryGenerator.cpp)
 add_executable(camel-rmdx8test_torque src/Test/Test_RMDX8Pro.cpp)
+add_executable(camel-test_write_CSV src/Test/Test_WriteCSV.cpp)
+
 add_executable(camel-test_real_time_thread src/Test/Test_RealTimeThread.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_real_time_thread ${CAMEL_LIBS})
+
 add_executable(camel-test_gradient_descent_optimizer src/Test/Test_GradientDescentOptimizer.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
 
-add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
-target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
 add_executable(camel-test_urdf src/Test/Test_urdf.cpp)
 target_link_libraries(camel-test_urdf ${CAMEL_LIBS})
-add_executable(camel-test_real_time_graph src/Test/Test_RealTimeGraph.cpp src/Test/simulationMainwindow.cpp ${CAMEL_SOURCES})
+
+add_executable(camel-test_real_time_graph src/Test/Qt_RealTimeGraph/Test_RealTimeGraph.cpp src/Test/Qt_RealTimeGraph/simulationMainwindow.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_real_time_graph ${CAMEL_LIBS})
-add_executable(camel-test_write_CSV src/Test/Test_WriteCSV.cpp)
+
+add_executable(camel-test_sensor_loadcell src/Test/Test_SensorLoadCell.cpp ${CAMEL_SOURCES})
+target_link_libraries(camel-test_sensor_loadcell ${CAMEL_LIBS})
+
 add_executable(camel-test_sensor_MPU9250 src/Test/Test_SensorMPU9250.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_sensor_MPU9250 ${CAMEL_LIBS})
+
 add_executable(camel-test_sensor_RE22SC src/Test/Test_encoderRE22SC.cpp ${CAMEL_SOURCES} ${CAMEL_SIMULATION_UI_SOURCES})
 target_link_libraries(camel-test_sensor_RE22SC ${CAMEL_LIBS})
+
 add_executable(camel-test_SGDmodel src/Test/Test_SGDmodel.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_SGDmodel ${CAMEL_LIBS})
 add_executable(camel-test_Eigen src/Test/Test_Eigen.cpp ${CAMEL_SOURCES})

@@ -3,51 +3,51 @@
 //
 
 #include "SingleLeggedSimulation.h"
-#include "include/SimulationUI/simulationMainwindow.h"
+#include "SingleLeggedSharedMemory.h"
+#include "UI/simulationMainwindow.h"
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 #include <cmath>
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
+pSHM sharedMemory;
 
-std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg.urdf";
 std::string name = "single_leg";
 raisim::World world;
 
-double simulationDuration = 1.0;
+double simulationDuration = 10.0;
 double dT = 0.005;
 SingleLeggedSimulation sim = SingleLeggedSimulation(&world, dT);
 SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
 
 //SingleLeggedPDController controller = SingleLeggedPDController(&robot);
 //SingleLeggedIDController controller = SingleLeggedIDController(&robot, dT);
-//SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
-SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&robot, dT);
+SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
+//SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&robot, dT);
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
 int iteration = 0;
+struct timespec TIME_TIC;
+struct timespec TIME_TOC;
 
-void plot() {
-    MainUI->plotWidget1();
-    MainUI->plotWidget2();
-    MainUI->plotWidget3();
+void updateSHM() {
+    sharedMemory->time = world.getWorldTime();
+    sharedMemory->position_z = controller.position[0];
+    sharedMemory->desiredPosition_z = controller.desiredPosition;
+    sharedMemory->velocity_z = controller.velocity[0];
+    sharedMemory->desiredVelocity_z = controller.desiredVelocity;
+    sharedMemory->jointPosition[0] = controller.position[1];
+    sharedMemory->jointPosition[1] = controller.position[2];
+    sharedMemory->jointVelocity[0] = controller.velocity[1];
+    sharedMemory->jointVelocity[1] = controller.velocity[2];
+    sharedMemory->jointTorque[0] = controller.torque[0];
+    sharedMemory->jointTorque[1] = controller.torque[1];
 }
 
-void updatePlotData() {
-    MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
-    MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-    MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition;
-    MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
-    MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity;
-    MainUI->data_y3_blue[MainUI->data_idx] = controller.torque[1];
-    MainUI->data_y3_red[MainUI->data_idx] = controller.torque[2];
-    MainUI->data_idx += 1;
-}
-
-void resetSimAndPlotVars() {
-    MainUI->data_idx = 0;
+void resetSimVarialbes() {
     iteration = 0;
     oneCycleSimTime = 0;
 }
@@ -55,16 +55,19 @@ void resetSimAndPlotVars() {
 void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
+
+        clock_gettime(CLOCK_REALTIME, &TIME_TIC);
         controller.doControl();
+        clock_gettime(CLOCK_REALTIME, &TIME_TOC);
+        std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
+
         world.integrate();
-        if (iteration % divider == 0) {
-            updatePlotData();
-        }
+        updateSHM();
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
         MainUI->button1 = false;
-        plot();
-        resetSimAndPlotVars();
+        MainUI->isSimulationEnd = true;
+        resetSimVarialbes();
     }
 }
 
@@ -72,6 +75,7 @@ void *rt_simulation_thread(void *arg) {
     std::cout << "entered #rt_time_checker_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
+
     const long PERIOD_US = long(dT * 1e6); // 200Hz 짜리 쓰레드
 
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
@@ -94,6 +98,7 @@ void *rt_simulation_thread(void *arg) {
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     MainWindow w;
+    sharedMemory = (pSHM) malloc(sizeof(SHM));
     sim.setGroundProperty("wheat");
     raisim::RaisimServer server(&world);
     server.launchServer(8080);

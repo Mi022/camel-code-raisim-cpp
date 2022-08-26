@@ -39,12 +39,12 @@ private:
     Eigen::VectorXd mJointPosition_past = Eigen::VectorXd(3);
     Eigen::VectorXd mJointVelocity = Eigen::VectorXd(3);
 
-    double mHipOffset = 0.830066202;
-    double mKneeOffset = -3.202116515;
+    double mHipOffset = 1.980766202;
+    double mKneeOffset = -2.532516515;
     double mLumpedMass = 2.766;
     double mDT;
-    int mMotorKneeID = 0x141;
-    int mMotorHipID = 0x143;
+    int mMotorHipID = 0x141;
+    int mMotorKneeID = 0x142;
 };
 
 

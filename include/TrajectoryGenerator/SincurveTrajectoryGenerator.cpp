@@ -5,18 +5,19 @@
 #include "SincurveTrajectoryGenerator.h"
 #include "math.h"
 
-void SincurveTrajectoryGenerator::updateTrajectory(double currentPosition, double currentTime, double timeDuration) {
+void SincurveTrajectoryGenerator::updateTrajectory(double currentPosition, double currentTime, double amplitude, double frequency){
     mReferencePose = currentPosition;
     mReferenceTime = currentTime;
-    mTimeDuration = timeDuration;
+    mAmplitude = amplitude;
+    mFrequency = frequency;
 }
 
 double SincurveTrajectoryGenerator::getPositionTrajectory(double currentTime) {
-    double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    return 0.05*sin(normalizedTime*2*3.14)+mReferencePose;
+    double time = (currentTime - mReferenceTime);
+    return mAmplitude*sin(2*PI*mFrequency*time)+mReferencePose;
 }
 
 double SincurveTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
-    double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    return 0.05*cos(normalizedTime*2*3.14)*2*3.14;
+    double time = (currentTime - mReferenceTime);
+    return 2*PI*mFrequency*mAmplitude*cos(2*PI*mFrequency*time);
 }

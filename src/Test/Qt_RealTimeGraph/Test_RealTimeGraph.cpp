@@ -1,7 +1,7 @@
 //
 // Created by jaehoon on 22. 7. 11.
 //
-#include "simulationMainwindow.h"
+#include "src/Test/Qt_RealTimeGraph/simulationMainwindow.h"
 #include <QApplication>
 extern MainWindow *MainUI;
 

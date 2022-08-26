@@ -3,15 +3,16 @@
 //
 
 #include "SingleLeggedMPCController.h"
+#include "include/RT/rb_utils.h"
 
 void SingleLeggedMPCController::doControl() {
-    std::cout<<"simTime : "<<getRobot()->getWorldTime()<<std::endl;
+//    std::cout<<"simTime : "<<getRobot()->getWorldTime()<<std::endl;
+
     updateState();
     setTrajectory();
     solve();
     computeControlInput();
     setControlInput();
-    std::cout<<"calculated forces : \n"<<mForce<<std::endl;
     resetMPCVariables();
 }
 
@@ -32,7 +33,7 @@ void SingleLeggedMPCController::updateState() {
     velocity = getRobot()->getQD();
     mInitialPosition = position[0];
     mInitialVelocity = velocity[0];
-    mForce(0) = mInitialForce;
+//    mForce(0) = mInitialForce;
 }
 
 void SingleLeggedMPCController::computeControlInput() {
@@ -64,7 +65,7 @@ void SingleLeggedMPCController::solve() {
         computeGradient();
         updateForces();
         if(isTerminateCondition()){
-            std::cout<<"iteration : "<<mIteration<<std::endl;
+//            std::cout<<"iteration : "<<mIteration<<std::endl;
 //            std::cout<<"mNextStates : \n"<<mNextStates<<"\n\n"<<std::endl;
             break;
         }
@@ -95,34 +96,50 @@ void SingleLeggedMPCController::updateMPCStatesTemp(Eigen::VectorXd force){
             mNextStatesTemp(1, i) = mInitialVelocity + mDT * (force(i) / mLumpedMass + mGravity);
         }
         else if (i == 1){
-            mNextStatesTemp(0, i) = mNextStatesTemp(0, i-1) + mDT * mInitialVelocity + mDT * mDT * (force(i-1)/mLumpedMass + mGravity);
+            mNextStatesTemp(0, i) = mNextStatesTemp(0, i-1) + mDT * mInitialVelocity + mDT * mDT * (force(i-1) / mLumpedMass + mGravity);
             mNextStatesTemp(1, i) = mInitialVelocity + mDT * (force(i) / mLumpedMass + mGravity);
         }
         else{
-            mNextStatesTemp(0, i) = mNextStates(0, i-1) + mDT * mNextStatesTemp(1,i-2) + mDT * mDT * (force(i-1)/mLumpedMass + mGravity);
+            mNextStatesTemp(0, i) = mNextStates(0, i-1) + mDT * mNextStatesTemp(1,i-2) + mDT * mDT * (force(i-1) / mLumpedMass + mGravity);
             mNextStatesTemp(1, i) = mInitialVelocity + mDT * (force(i) / mLumpedMass + mGravity);
         }
     }
 }
 
+//TODO: should be improved
 double SingleLeggedMPCController::objectiveFunction(Eigen::VectorXd force) {
-    double ret = 0.0;
+    mObjFunctionValue = 0.0;
     updateMPCStatesTemp(force);
-    Eigen::VectorXd nextX(2);
-    Eigen::VectorXd nextXDes(2);
+
     for (int i = 0 ; i < mMPCHorizon ; i++)
     {
-        nextX(0) = mNextStatesTemp(0, i);
-        nextX(1) = mNextStatesTemp(1, i);
-        nextXDes(0) = mTrajectorySequence(0, i);
-        nextXDes(1) = mTrajectorySequence(1, i);
-        ret += ((nextX - nextXDes).transpose()*mQ*(nextX - nextXDes) + mForce(i)*mR*mForce(i))(0);
+        /* It was slow.. bcz of the following reasons
+         * primary reason : transpose and multiply of matrix
+         * secondary reason : double call of matrix component
+         */
+
+         /* Previous Code
+            mNextX(0) = mNextStatesTemp(0, i);
+            mNextX(1) = mNextStatesTemp(1, i);
+            mNextXDes(0) = mTrajectorySequence(0, i);
+            mNextXDes(1) = mTrajectorySequence(1, i);
+            mObjFunctionValue += ((mNextX - mNextXDes).transpose()*mQ*(mNextX - mNextXDes) + mForce(i)*mR*mForce(i))(0);
+         */
+
+        /* Improved Code*/
+        tempValue1 = mNextStatesTemp(0, i)-mTrajectorySequence(0, i);
+        tempValue2 = mNextStatesTemp(1, i)-mTrajectorySequence(1, i);
+        mObjFunctionValue += tempValue1*tempValue1*mQ(0,0);
+        mObjFunctionValue += tempValue2*tempValue2*mQ(1,1);
+        mObjFunctionValue += mForce(i)*mR(0)*mForce(i);
     }
-    return ret;
+    return mObjFunctionValue;
 }
 
 void SingleLeggedMPCController::computeGradient() {
+
     double functionValue = objectiveFunction(mForce);
+
     for(int i = 0; i < mMPCHorizon ; i++)
     {
         mForceTemp = mForce;
@@ -141,11 +158,11 @@ void SingleLeggedMPCController::updateForces() {
 
 bool SingleLeggedMPCController::isTerminateCondition() {
     if(mIteration > mMaximumIteration){
-        std::cout<<"maximum iteration"<<std::endl;
+//        std::cout<<"maximum iteration"<<std::endl;
         return true;
     }
     else if(mRMSGradient < mTerminateCondition){
-        std::cout<<"terminate condition"<<std::endl;
+//        std::cout<<"terminate condition"<<std::endl;
         return true;
     }
     else

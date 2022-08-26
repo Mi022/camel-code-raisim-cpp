@@ -11,7 +11,7 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 
-std::string urdfPath = "\\home\\camel\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg_no_meshes.urdf";
+std::string urdfPath = "\\home\\camel\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg_no_meshes.urdf";
 std::string name = "single_leg";
 raisim::World world;
 Eigen::MatrixXd validationData(7,101);

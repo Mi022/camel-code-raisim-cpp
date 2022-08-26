@@ -35,7 +35,7 @@ public:
         torque.setZero();
 
         updateState();
-        mTrajectoryGenerator.updateTrajectory(position[0], getRobot()->getWorldTime(), 1.0);
+        mTrajectoryGenerator.updateTrajectory(position[0], getRobot()->getWorldTime(), 0.05, 1.0);
         mDT = dT;
     }
     void doControl() override;

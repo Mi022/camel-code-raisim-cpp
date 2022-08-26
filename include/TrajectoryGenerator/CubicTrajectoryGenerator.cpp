@@ -3,7 +3,7 @@
 //
 
 #include "CubicTrajectoryGenerator.h"
-
+//for debug
 #include <iostream>
 
 void CubicTrajectoryGenerator::updateTrajectory(double currentPosition, double goalPosition, double currentTime, double timeDuration) {
@@ -19,18 +19,21 @@ void CubicTrajectoryGenerator::calculateCoefficient() {
 
 double CubicTrajectoryGenerator::getPositionTrajectory(double currentTime) {
     if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
+    if(currentTime<mReferenceTime) currentTime = mReferenceTime;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     return mCoefficient(0,0) * pow(normalizedTime, 3.0) + mCoefficient(1,0) * pow(normalizedTime, 2.0) + mCoefficient(2,0) * normalizedTime + mCoefficient(3, 0);
 }
 
 double CubicTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
     if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
+    if(currentTime<mReferenceTime) currentTime = mReferenceTime;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     return (3.0 *mCoefficient(0,0) * pow(normalizedTime, 2.0) + 2.0 * mCoefficient(1,0) * normalizedTime + mCoefficient(2,0)) / mTimeDuration;
 }
 
 double CubicTrajectoryGenerator::getAccelerationTrajectory(double currentTime) {
     if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
+    if(currentTime<mReferenceTime) currentTime = mReferenceTime;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     return (6.0 *mCoefficient(0,0) * normalizedTime + 2.0 * mCoefficient(1,0)) / pow(mTimeDuration, 2.0);
 }
@@ -57,6 +60,7 @@ void CubicTrajectoryGeneratorND::calculateCoefficient() {
 
 Eigen::VectorXd CubicTrajectoryGeneratorND::getPositionTrajectory(double currentTime) {
     if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
+    if(currentTime<mReferenceTime) currentTime = mReferenceTime;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     Eigen::Vector4d timeMatrix;
     timeMatrix << pow(normalizedTime, 3.0), pow(normalizedTime, 2.0), normalizedTime, 1.0;
@@ -65,6 +69,7 @@ Eigen::VectorXd CubicTrajectoryGeneratorND::getPositionTrajectory(double current
 
 Eigen::VectorXd CubicTrajectoryGeneratorND::getVelocityTrajectory(double currentTime) {
     if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
+    if(currentTime<mReferenceTime) currentTime = mReferenceTime;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     Eigen::Vector4d timeMatrix;
     timeMatrix << 3*pow(normalizedTime, 2.0), 2*normalizedTime, 1.0, 0.0;
@@ -73,6 +78,7 @@ Eigen::VectorXd CubicTrajectoryGeneratorND::getVelocityTrajectory(double current
 
 Eigen::VectorXd CubicTrajectoryGeneratorND::getAccelerationTrajectory(double currentTime) {
     if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
+    if(currentTime<mReferenceTime) currentTime = mReferenceTime;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     Eigen::Vector4d timeMatrix;
     timeMatrix << 6*normalizedTime, 2.0, 0.0, 0.0;
@@ -94,7 +100,7 @@ Eigen::Vector3d CubicTrajectoryGeneratorRotation::getRPYPositionTrajectory(doubl
     double target = targetFinder.getPositionTrajectory(currentTime);
     Eigen::Quaterniond quaternion = mStartQuaternion.slerp(target, mGoalQuaternion);
 
-    return quaternion.toRotationMatrix().eulerAngles(0,1,2);
+    return quaternion2euler(quaternion);
 }
 
 Eigen::Vector3d CubicTrajectoryGeneratorRotation::getRPYVelocityTrajectory(double currentTime){
@@ -119,4 +125,7 @@ Eigen::Quaterniond CubicTrajectoryGeneratorRotation::euler2quaternion(Eigen::Vec
     return q;
 }
 
+Eigen::Vector3d CubicTrajectoryGeneratorRotation::quaternion2euler(Eigen::Quaterniond quaternion){
+    return quaternion.toRotationMatrix().eulerAngles(0,1,2);
+}
 const double CubicTrajectoryGeneratorRotation::delta = 1e-3;

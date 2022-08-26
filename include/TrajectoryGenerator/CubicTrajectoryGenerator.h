@@ -68,6 +68,7 @@ public:
     Eigen::Vector3d getRPYVelocityTrajectory(double currentTime);
     Eigen::Vector3d getRPYAccelerationTrajectory(double currentTime);
     Eigen::Quaterniond euler2quaternion(Eigen::Vector3d euler);
+    Eigen::Vector3d quaternion2euler(Eigen::Quaterniond quaternion);
 
 
 private:

@@ -18,16 +18,19 @@ void CubicTrajectoryGenerator::calculateCoefficient() {
 }
 
 double CubicTrajectoryGenerator::getPositionTrajectory(double currentTime) {
+    if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     return mCoefficient(0,0) * pow(normalizedTime, 3.0) + mCoefficient(1,0) * pow(normalizedTime, 2.0) + mCoefficient(2,0) * normalizedTime + mCoefficient(3, 0);
 }
 
 double CubicTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
+    if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     return (3.0 *mCoefficient(0,0) * pow(normalizedTime, 2.0) + 2.0 * mCoefficient(1,0) * normalizedTime + mCoefficient(2,0)) / mTimeDuration;
 }
 
 double CubicTrajectoryGenerator::getAccelerationTrajectory(double currentTime) {
+    if(currentTime>mReferenceTime + mTimeDuration) currentTime = mReferenceTime + mTimeDuration;
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     return (6.0 *mCoefficient(0,0) * normalizedTime + 2.0 * mCoefficient(1,0)) / pow(mTimeDuration, 2.0);
 }

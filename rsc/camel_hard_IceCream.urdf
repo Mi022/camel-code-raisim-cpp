@@ -33,7 +33,7 @@
     </visual>
   </link>
 
-  <joint name="base-pitch" type="continuous">
+  <joint name="base-pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0.01275"/>
     <parent link="base"/>
     <child link="rod"/>
@@ -63,16 +63,17 @@
   </link>
 
   <joint name="hip-pitch" type="revolute">
-    <origin rpy="0 0 0" xyz="0.0 0.01 0.35"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.35"/>
     <parent link="rod"/>
     <child link="body"/>
     <axis xyz = "0 1 0"/>
-<!--    <limit velocity= "17"/>-->
+    <limit velocity= "17"/>
+<!--    <dynamics friction = "1.0"/>-->
   </joint>
 
   <link name="body">
     <visual>
-      <origin rpy="0 0 0" xyz="0.14 0.05 0.04"/>
+      <origin rpy="0 0 0" xyz="0.14 0.0 0.04"/>
       <geometry>
         <box size="0.3 0.1 0.1"/>
       </geometry>
@@ -84,15 +85,6 @@
       <inertia ixx="0.00416667" ixy="0.0" ixz="0.0" iyy="0.0208333" iyz="0.0" izz="0.0208333"/>
     </inertial>
 
-    <collision>
-      <origin rpy="0 0 0" xyz="0.14 0.05 0.04"/>
-      <geometry>
-        <box size="0.3 0.1 0.1"/>
-      </geometry>
-    </collision>
   </link>
-
-
-
 
 </robot>

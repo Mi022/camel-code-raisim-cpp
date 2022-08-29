@@ -16,7 +16,7 @@ std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\
 std::string name = "cuteIceCream";
 
 raisim::World world;
-double simulationDuration = 5.0;
+double simulationDuration = 3.0;
 double dT = 0.005;
 
 IceCreamSimulation sim = IceCreamSimulation(&world, dT);
@@ -28,11 +28,11 @@ int iteration = 0;
 
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
-    sharedMemory->jointPosition = controller.position[0];
-    sharedMemory->jointVelocity = controller.velocity[0];
-    sharedMemory->jointTorque = controller.torque[0];
-    sharedMemory->desiredJointPosition = controller.desiredPosition[7];
-    sharedMemory->desiredJointVelocity = controller.desiredVelocity[6];
+    sharedMemory->jointPosition = controller.position[1];
+    sharedMemory->jointVelocity = controller.velocity[1];
+    sharedMemory->jointTorque = controller.torque[1];
+    sharedMemory->desiredJointPosition = controller.desiredPosition[1];
+    sharedMemory->desiredJointVelocity = controller.desiredVelocity[1];
 }
 
 void resetSimulationVars() {
@@ -45,7 +45,7 @@ void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
         controller.doControl();
-//        world.setGravity({0.0, 0.0, 0.0});
+        world.setGravity({0.0, 0.0, 0.0});
         world.integrate();
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {

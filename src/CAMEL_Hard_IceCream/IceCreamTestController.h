@@ -19,10 +19,11 @@ public:
         desiredPosition = getRobot() -> getQ().e();
         desiredVelocity = getRobot() -> getQD().e();
 
-        mTimeDuration = 1.0;
-        mIsGenerateTrajectory = false;
-        mIsTrajectoryAlready = false;
+        mTrajectoryGenerator = CubicTrajectoryGenerator();
+        mTrajectoryGenerator.updateTrajectory(position[1], -90*robot->deg2rad, robot->getWorldTime(), 3.0);
 
+        mPGain = 1.0;
+        mDGain = 0.4;
     }
 
     Eigen::VectorXd torque;
@@ -38,9 +39,8 @@ public:
     void setControlInput() override;
 
 private:
-    bool mIsGenerateTrajectory;
-    bool mIsTrajectoryAlready;
-    double mTimeDuration;
+    double mPGain, mDGain;
+    CubicTrajectoryGenerator mTrajectoryGenerator;
 };
 
 

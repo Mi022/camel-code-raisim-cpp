@@ -16,9 +16,9 @@ public:
 
     void initialize() override;
     int dim;
+    static const double deg2rad;
 
 private:
-    static const double deg2rad;
 };
 
 #endif //RAISIM_ICECREAMROBOT_H

@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<robot name = "camel_momentum_inverted_pendulum">
+
+  <material name="red">
+    <color rgba="0.914 0.263 0.212 0.7"/>
+  </material>
+
+  <material name="stylish">
+    <color rgba="0.243 0.271 0.318 0.9"/>
+  </material>
+
+  <material name="lime">
+    <color rgba="0.804 0.863 0.223 0.9"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0.329 0.463 0.890 0.7 "/>
+  </material>
+
+  <link name="world"/>
+  <joint name="fixed_world" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="1.570796 0 0 " xyz="0 0 0.01275"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.005"/>
+      </geometry>
+      <material name="stylish"/>
+    </visual>
+  </link>
+
+  <joint name="base-pitch" type="continuous">
+    <origin rpy="0 0 0" xyz="0 0 0.01275"/>
+    <parent link="base"/>
+    <child link="rod"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="rod">
+    <visual>
+      <origin rpy="0.0 0 0" xyz="0 0 0.175"/>
+      <geometry>
+        <box size="0.03 0.02 0.35"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+
+    <inertial>
+      <mass value="1.2"/>
+      <inertia ixx="0.01229" ixy="0.0" ixz="0.0" iyy="0.01234" iyz="0.0" izz="0.00013"/>
+    </inertial>
+
+    <collision>
+      <origin rpy="0.0 0 0" xyz="0 0 0.175"/>
+      <geometry>
+        <box size="0.03 0.02 0.35"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="hip-pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.01 0.35"/>
+    <parent link="rod"/>
+    <child link="body"/>
+    <axis xyz = "0 1 0"/>
+<!--    <limit velocity= "17"/>-->
+  </joint>
+
+  <link name="body">
+    <visual>
+      <origin rpy="0 0 0" xyz="0.14 0.05 0.04"/>
+      <geometry>
+        <box size="0.3 0.1 0.1"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+
+    <inertial>
+      <mass value="2.5"/>
+      <inertia ixx="0.00416667" ixy="0.0" ixz="0.0" iyy="0.0208333" iyz="0.0" izz="0.0208333"/>
+    </inertial>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0.14 0.05 0.04"/>
+      <geometry>
+        <box size="0.3 0.1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+
+
+
+
+</robot>

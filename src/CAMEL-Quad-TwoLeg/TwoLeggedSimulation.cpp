@@ -28,6 +28,7 @@ void raisimSimulation() {
         oneCycleSimTime = iteration * dT;
         controller.doControl();
         world.integrate();
+        world.setGravity({0.0, 0.0, 0.0});
         if (iteration % divider == 0) {
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
             MainUI->data_y1[MainUI->data_idx] = controller.positionError[0];

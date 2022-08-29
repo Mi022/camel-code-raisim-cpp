@@ -137,7 +137,18 @@ set(SINGLE_LEG_SOURCES
 
 add_executable(single_leg-floating ${CAMEL_SOURCES} ${SINGLE_LEG_SOURCES})
 target_link_libraries(single_leg-floating ${CAMEL_LIBS} ${RBDL_LIBRARY})
-# ====== Simple Pendulum ======/ #
+# ====== Simple Leg ======/ #
+
+# ====== Hard Ice Cream ====== #
+set(ICE_CREAM_SOURCES
+        src/CAMEL_Hard_IceCream/IceCreamSimulation.cpp
+        src/CAMEL_Hard_IceCream/IceCreamSharedMemory.h
+        src/CAMEL_Hard_IceCream/IceCreamRobot.cpp
+        src/CAMEL_Hard_IceCream/IceCreamTestController.cpp
+        src/CAMEL_Hard_IceCream/UI_RealTimePlot/operationMainwindow.cpp
+        )
+add_executable(camel-IceCream ${CAMEL_SOURCES} ${ICE_CREAM_SOURCES})
+target_link_libraries(camel-IceCream ${CAMEL_LIBS})
 ## Simulation /##
 
 ## Operation  ##

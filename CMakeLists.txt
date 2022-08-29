@@ -149,6 +149,19 @@ set(ICE_CREAM_SOURCES
         )
 add_executable(camel-IceCream ${CAMEL_SOURCES} ${ICE_CREAM_SOURCES})
 target_link_libraries(camel-IceCream ${CAMEL_LIBS})
+# ====== Hard Ice Cream ======/ #
+
+# ====== Double Bar Ice Cream ====== #
+set(ICE_CREAM_SOURCES
+        src/CAMEL_Double_Bar_IceCream/IceCreamSimulation.cpp
+        src/CAMEL_Double_Bar_IceCream/IceCreamSharedMemory.h
+        src/CAMEL_Double_Bar_IceCream/IceCreamRobot.cpp
+        src/CAMEL_Double_Bar_IceCream/IceCreamTestController.cpp
+        src/CAMEL_Double_Bar_IceCream/UI_RealTimePlot/operationMainwindow.cpp
+        )
+add_executable(camel-DoubleBar ${CAMEL_SOURCES} ${ICE_CREAM_SOURCES})
+target_link_libraries(camel-DoubleBar ${CAMEL_LIBS})
+# ====== Hard Ice Cream ======/ #
 ## Simulation /##
 
 ## Operation  ##

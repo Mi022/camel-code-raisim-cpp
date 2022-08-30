@@ -31,6 +31,8 @@ public:
     Eigen::VectorXd velocity;
     Eigen::VectorXd desiredPosition;
     Eigen::VectorXd desiredVelocity;
+    Eigen::VectorXd measuredAcc;
+    Eigen::VectorXd calculatedAcc;
 
     void doControl() override;
     void setTrajectory() override;
@@ -41,6 +43,7 @@ public:
 private:
     double mPGain, mDGain;
     CubicTrajectoryGenerator mTrajectoryGenerator;
+    void updateAcc();
 };
 
 

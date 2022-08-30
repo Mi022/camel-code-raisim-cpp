@@ -28,11 +28,11 @@ int iteration = 0;
 
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
-    sharedMemory->jointPosition = controller.position[1];
-    sharedMemory->jointVelocity = controller.velocity[1];
-    sharedMemory->jointTorque = controller.torque[1];
-    sharedMemory->desiredJointPosition = controller.desiredPosition[1];
-    sharedMemory->desiredJointVelocity = controller.desiredVelocity[1];
+//    sharedMemory->jointPosition = controller.position[0];
+//    sharedMemory->jointVelocity = controller.velocity[0];
+//    sharedMemory->jointTorque = controller.torque[0];
+//    sharedMemory->desiredJointPosition = controller.desiredPosition[0];
+//    sharedMemory->desiredJointVelocity = controller.desiredVelocity[0];
 }
 
 void resetSimulationVars() {
@@ -44,8 +44,7 @@ void raisimSimulation() {
     realTimePlot();
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
-        controller.doControl();
-        world.setGravity({0.0, 0.0, 0.0});
+//        controller.doControl();
         world.integrate();
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
@@ -68,7 +67,6 @@ void *rt_simulation_thread(void *arg) {
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
         raisimSimulation();
-
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
             std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
@@ -78,6 +76,9 @@ void *rt_simulation_thread(void *arg) {
 }
 
 int main(int argc, char *argv[]) {
+//    auto box = world.addBox(1, 1, 1, 10);
+//    box->setPosition(3, 3, 5);
+    world.setGravity({0.0, 0.0, -9.81});
     QApplication a(argc, argv);
     MainWindow w;
     sharedMemory = (pSHM) malloc(sizeof(SHM));

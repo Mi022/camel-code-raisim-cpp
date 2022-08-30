@@ -34,3 +34,8 @@ void IceCreamTestController::computeControlInput() {
 void IceCreamTestController::setControlInput() {
     getRobot()->robot->setGeneralizedForce(torque);
 }
+
+void IceCreamTestController::updateAcc() {
+    //calculate the acc
+
+}

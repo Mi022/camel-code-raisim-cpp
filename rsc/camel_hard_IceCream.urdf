@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<robot name = "camel_momentum_inverted_pendulum">
+<robot name = "camel_hard_IceCream">
 
   <material name="red">
     <color rgba="0.914 0.263 0.212 0.7"/>
@@ -31,6 +31,10 @@
       </geometry>
       <material name="stylish"/>
     </visual>
+    <inertial>
+      <mass value="0.01"/>
+      <inertia ixx="0.001229" ixy="0.0" ixz="0.0" iyy="0.001234" iyz="0.0" izz="0.000013"/>
+    </inertial>
   </link>
 
   <joint name="base-pitch" type="revolute">
@@ -42,7 +46,7 @@
 
   <link name="rod">
     <visual>
-      <origin rpy="0.0 0 0" xyz="0 0 0.175"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.175"/>
       <geometry>
         <box size="0.03 0.02 0.35"/>
       </geometry>
@@ -55,25 +59,41 @@
     </inertial>
 
     <collision>
-      <origin rpy="0.0 0 0" xyz="0 0 0.175"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.175"/>
       <geometry>
-        <box size="0.03 0.02 0.35"/>
+        <box size="0.003 0.002 0.35"/>
       </geometry>
     </collision>
   </link>
 
   <joint name="hip-pitch" type="revolute">
-    <origin rpy="0 0 0" xyz="0.0 0.0 0.35"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.35"/>
     <parent link="rod"/>
-    <child link="body"/>
+    <child link="body_rod"/>
     <axis xyz = "0 1 0"/>
     <limit velocity= "17"/>
 <!--    <dynamics friction = "1.0"/>-->
   </joint>
 
+  <link name="body_rod">
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.14 0.0 0.04"/>
+      <geometry>
+        <sphere radius="0.01"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="fixed_body" type="fixed">
+    <origin rpy="0.0 0.0 0.0" xyz="0.14 0.0 0.04"/>
+    <parent link="body_rod"/>
+    <child link="body"/>
+  </joint>
+
   <link name="body">
     <visual>
-      <origin rpy="0 0 0" xyz="0.14 0.0 0.04"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
       <geometry>
         <box size="0.3 0.1 0.1"/>
       </geometry>
@@ -86,5 +106,7 @@
     </inertial>
 
   </link>
+
+
 
 </robot>

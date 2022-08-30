@@ -15,7 +15,15 @@ void IceCreamRobot::initialize() {
     //base-pitch
 //    initialJointPosition[0] = 30*deg2rad;
     //hip-pitch
-    initialJointPosition[1] = 0*deg2rad;
+//    initialJointPosition[1] = -120*deg2rad;
+
+//    //base-pitch
+//    initialJointPosition[0] = 30*deg2rad;
+//    //knee-pitch
+//    initialJointPosition[1] = -60*deg2rad;
+//    //hip-pitch
+//    initialJointPosition[2] = 30*deg2rad;
+
 
     robot->setGeneralizedCoordinate(initialJointPosition);
 }

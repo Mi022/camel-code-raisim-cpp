@@ -15,6 +15,8 @@ public:
         this->mWorld = world;
         mWorld->setTimeStep(dT);
         mGround = mWorld->addGround(0,"gnd");
+        raisim::Vec<3> gravity = {0.0, 0.0, -9.81};
+        mWorld->setGravity(gravity);
     }
 
     void setGroundProperty(std::string groundProperty){mGround->setAppearance(groundProperty);}

@@ -26,6 +26,15 @@ void cylinderInertia(Eigen::Matrix3d &inertia, double mass, double radius, doubl
     inertia((circlePosition+1)%3,(circlePosition+1)%3) = mass*(3.0*radius*radius + height*height)/12.0;
     inertia((circlePosition+2)%3,(circlePosition+2)%3) = mass*(3.0*radius*radius + height*height)/12.0;
 }
+
+double cubiodInertia(double mass, double a, double b){
+    return mass*(a*a + b*b)/12.0;
+}
+
+double parallelAxis(double inertia, double mass, double length){
+    return inertia + mass*length*length;
+}
+
 int main (){
     Eigen::Matrix3d  inertia = Eigen::Matrix3d();
     inertia.setZero();
@@ -33,5 +42,15 @@ int main (){
 //    boxInertia(inertia,5.0, {0.1, 0.2, 0.3});
     cylinderInertia(inertia, 0.7, 0.05, 0.044, Y);
     std::cout<<inertia<<std::endl;
+    double robLength = 0.35;
+    double robMass = 1.2;
+    double bodyMass = 2.5;
+    double bodyLength = 0.3;
+    double Ira = parallelAxis(cubiodInertia(robMass, 0.03, robLength), robMass, robLength/2.0);
+    double IBd = cubiodInertia(bodyMass, bodyLength, 0.1);
+    double IBb = parallelAxis(IBd, bodyMass, bodyLength/2.0);
+
+    std::cout<<"Ira : " <<Ira<<std::endl;
+    std::cout<<"IBb : " <<IBb<<std::endl;
     return 0;
 }

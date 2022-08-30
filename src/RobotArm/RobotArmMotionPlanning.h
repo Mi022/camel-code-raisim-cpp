@@ -17,7 +17,7 @@ class RobotArmMotionPlanning {
 public:
     RobotArmMotionPlanning(RobotArmCollisionChecker* collisionChecker, RobotArmTrajectoryGenerator* trajectoryGenerator){
         startJoint << 0.0, 160, -90, 0.0, 114, 0.0;
-        goalJoint << 0.0, 180, -50, 0.0, 160, 0.0;
+        goalJoint << 90.0, 90, -50, 70.0, 0, -90.0;
         this->collisionChecker = collisionChecker;
         this->trajectoryGenerator = trajectoryGenerator;
     }
@@ -29,7 +29,7 @@ public:
     std::vector<int> findTree;
 
 
-    void setObstacle(Eigen::VectorXd, Eigen::MatrixXd);
+//    void setObstacle(Eigen::VectorXd, Eigen::MatrixXd);
     void generatePoint();
     void makeTree();
     void dijkstra();

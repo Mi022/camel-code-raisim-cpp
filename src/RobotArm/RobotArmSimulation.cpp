@@ -45,10 +45,10 @@ void raisimSimulation() {
         if (iteration % divider == 0) {
             //                std::cout<<"data_idx : "<<MainUI->data_idx<<std::endl;
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
-            MainUI->data_y1[MainUI->data_idx] = robot.getQ()[0];
-            MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition[5];
+            MainUI->data_y1[MainUI->data_idx] = robot.getQ()[3];
+            MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition[3];
             MainUI->data_y2[MainUI->data_idx] = robot.getQD()[0];
-            MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity[5];
+            MainUI->data_y2_desired[MainUI->data_idx] = controller.desiredVelocity[0];
 //                MainUI->data_y2[MainUI->data_idx] = controller.torque[0];
             MainUI->data_idx += 1;
         }
@@ -70,7 +70,7 @@ void *rt_simulation_thread(void *arg) {
     const long PERIOD_US = long(dT * 1e6); // 200Hz 짜리 쓰레드
 
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
-    std::cout << "bf #while" << std::endl;
+//    std::cout << "bf #while" << std::endl;
     std::cout << "control freq : "<< 1/double(PERIOD_US) *1e6 << std::endl;
     obstacleRadius << 0.2, 0.2;
     obstacleCenter <<  -1,  0,  0.5,
@@ -93,7 +93,7 @@ void *rt_simulation_thread(void *arg) {
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
-            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+//            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
     }
 }

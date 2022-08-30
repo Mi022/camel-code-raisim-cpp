@@ -16,7 +16,7 @@ public:
 
     void initialize() override;
     int dim;
-    static const double deg2rad;
+//    static const double deg2rad;
 
 private:
 };

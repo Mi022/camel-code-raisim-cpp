@@ -28,4 +28,4 @@ void IceCreamRobot::initialize() {
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
 
-const double IceCreamRobot::deg2rad = 3.141592/180;
+//const double IceCreamRobot::deg2rad = 3.141592/180;

@@ -8,11 +8,10 @@
 typedef struct _SHM_
 {
     double simTime;
-    double jointPosition;
-    double desiredJointPosition;
-    double jointVelocity;
-    double desiredJointVelocity;
-    double jointTorque;
+    double plotW1B, plotW1R, plotW2B, plotW2R, plotW3B, plotW3R;
+/* not yet */
+//    int robotDim;
+//    double deg2rad = 3.141592/180.0;
 }SHM, *pSHM;
 
 #endif //RAISIM_ICECREAMSHAREDMEMORY_H

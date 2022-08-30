@@ -29,18 +29,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_2->legend->setVisible(true);
     ui->widget_2->legend->setFont(QFont("Helvetica", 9));
     ui->widget_2->addGraph();
-    ui->widget_2->graph(0)->setName("velocity");
+    ui->widget_2->graph(0)->setName("measured acc0");
     ui->widget_2->graph(0)->setPen(QPen(QColor(0, 0, 255)));
     ui->widget_2->addGraph();
-    ui->widget_2->graph(1)->setName("desired velocity");
+    ui->widget_2->graph(1)->setName("calculated acc0");
     ui->widget_2->graph(1)->setPen(QPen(QColor(255, 0, 0)));
     ui->widget_2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     ui->widget_3->legend->setVisible(true);
     ui->widget_3->legend->setFont(QFont("Helvetica", 9));
     ui->widget_3->addGraph();
-    ui->widget_3->graph(0)->setName("torque");
+    ui->widget_3->graph(0)->setName("measured acc1");
     ui->widget_3->graph(0)->setPen(QPen(QColor(0, 0, 255)));
+    ui->widget_3->addGraph();
+    ui->widget_3->graph(1)->setName("calculated acc1");
+    ui->widget_3->graph(1)->setPen(QPen(QColor(255, 0, 0)));
     ui->widget_3->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
     connect(&dataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
@@ -53,8 +56,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_pushButton_clicked() {
     std::cout << "'Run' button is clicked" << std::endl;
-    if (button1) { button1 = false; }
-    else { button1 = true; }
+    button1 = !button1;
 }
 
 
@@ -88,12 +90,12 @@ void MainWindow::realtimeDataSlot() {
 }
 
 void MainWindow::plotWidget1() {
-    if (sharedMemory->jointPosition < yMinWidget1) { yMinWidget1 = sharedMemory->jointPosition; }
-    if (sharedMemory->jointPosition > yMaxWidget1) { yMaxWidget1 = sharedMemory->jointPosition; }
-    if (sharedMemory->desiredJointPosition < yMinWidget1) { yMinWidget1 = sharedMemory->desiredJointPosition; }
-    if (sharedMemory->desiredJointPosition > yMaxWidget1) { yMaxWidget1 = sharedMemory->desiredJointPosition; }
-    ui->widget->graph(0)->addData(sharedMemory->simTime, sharedMemory->jointPosition);
-    ui->widget->graph(1)->addData(sharedMemory->simTime, sharedMemory->desiredJointPosition);
+    if (sharedMemory->plotW1B < yMinWidget1) { yMinWidget1 = sharedMemory->plotW1B; }
+    if (sharedMemory->plotW1B > yMaxWidget1) { yMaxWidget1 = sharedMemory->plotW1B; }
+    if (sharedMemory->plotW1R < yMinWidget1) { yMinWidget1 = sharedMemory->plotW1R; }
+    if (sharedMemory->plotW1R > yMaxWidget1) { yMaxWidget1 = sharedMemory->plotW1R; }
+    ui->widget->graph(0)->addData(sharedMemory->simTime, sharedMemory->plotW1B);
+    ui->widget->graph(1)->addData(sharedMemory->simTime, sharedMemory->plotW1R);
 
     // set axes ranges, so we see all data:
     ui->widget->xAxis->setRange(0.0, sharedMemory->simTime + 0.001);
@@ -102,12 +104,12 @@ void MainWindow::plotWidget1() {
 }
 
 void MainWindow::plotWidget2() {
-    if (sharedMemory->jointVelocity < yMinWidget2) { yMinWidget2 = sharedMemory->jointVelocity; }
-    if (sharedMemory->jointVelocity > yMaxWidget2) { yMaxWidget2 = sharedMemory->jointVelocity; }
-    if (sharedMemory->desiredJointVelocity < yMinWidget2) { yMinWidget2 = sharedMemory->desiredJointVelocity; }
-    if (sharedMemory->desiredJointVelocity > yMaxWidget2) { yMaxWidget2 = sharedMemory->desiredJointVelocity; }
-    ui->widget_2->graph(0)->addData(sharedMemory->simTime, sharedMemory->jointVelocity);
-    ui->widget_2->graph(1)->addData(sharedMemory->simTime, sharedMemory->desiredJointVelocity);
+    if (sharedMemory->plotW2B < yMinWidget2) { yMinWidget2 = sharedMemory->plotW2B; }
+    if (sharedMemory->plotW2B > yMaxWidget2) { yMaxWidget2 = sharedMemory->plotW2B; }
+    if (sharedMemory->plotW2R < yMinWidget2) { yMinWidget2 = sharedMemory->plotW2R; }
+    if (sharedMemory->plotW2R > yMaxWidget2) { yMaxWidget2 = sharedMemory->plotW2R; }
+    ui->widget_2->graph(0)->addData(sharedMemory->simTime, sharedMemory->plotW2B);
+    ui->widget_2->graph(1)->addData(sharedMemory->simTime, sharedMemory->plotW2R);
 
     // set axes ranges, so we see all data:
     ui->widget_2->xAxis->setRange(0.0, sharedMemory->simTime + 0.001);
@@ -116,9 +118,12 @@ void MainWindow::plotWidget2() {
 }
 
 void MainWindow::plotWidget3() {
-    if (sharedMemory->jointTorque < yMinWidget3) { yMinWidget3 = sharedMemory->jointTorque; }
-    if (sharedMemory->jointTorque > yMaxWidget3) { yMaxWidget3 = sharedMemory->jointTorque; }
-    ui->widget_3->graph(0)->addData(sharedMemory->simTime, sharedMemory->jointTorque);
+    if (sharedMemory->plotW3B < yMinWidget3) { yMinWidget3 = sharedMemory->plotW3B; }
+    if (sharedMemory->plotW3B > yMaxWidget3) { yMaxWidget3 = sharedMemory->plotW3B; }
+    if (sharedMemory->plotW3R < yMinWidget3) { yMinWidget3 = sharedMemory->plotW3R; }
+    if (sharedMemory->plotW3R > yMaxWidget3) { yMaxWidget3 = sharedMemory->plotW3R; }
+    ui->widget_3->graph(0)->addData(sharedMemory->simTime, sharedMemory->plotW3B);
+    ui->widget_3->graph(1)->addData(sharedMemory->simTime, sharedMemory->plotW3R);
 
     // set axes ranges, so we see all data:
     ui->widget_3->xAxis->setRange(0.0, sharedMemory->simTime + 0.001);

@@ -23,6 +23,8 @@ public:
     raisim::VecDyn getQD(){return robot->getGeneralizedVelocity();}
     double getWorldTime() { return robotWorld->getWorldTime(); }
 
+    constexpr static const double deg2rad = 3.141592/180;
+
 private:
 
 };

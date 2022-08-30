@@ -42,11 +42,11 @@ int main (){
 //    boxInertia(inertia,5.0, {0.1, 0.2, 0.3});
     cylinderInertia(inertia, 0.7, 0.05, 0.044, Y);
     std::cout<<inertia<<std::endl;
-    double robLength = 0.35;
-    double robMass = 1.2;
+    double rodLength = 0.35;
+    double rodMass = 1.2;
     double bodyMass = 2.5;
     double bodyLength = 0.3;
-    double Ira = parallelAxis(cubiodInertia(robMass, 0.03, robLength), robMass, robLength/2.0);
+    double Ira = parallelAxis(cubiodInertia(rodMass, 0.03, rodLength), rodMass, rodLength/2.0);
     double IBd = cubiodInertia(bodyMass, bodyLength, 0.1);
     double IBb = parallelAxis(IBd, bodyMass, bodyLength/2.0);
 

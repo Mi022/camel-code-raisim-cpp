@@ -14,18 +14,21 @@
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 std::string urdfPath = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\kinova.urdf";
+std::string urdfPath_1 = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\kinova_1.urdf";
 std::string name = "robotArm";
 raisim::World world;
 
 
 RobotArmCollisionChecker robotArmCollisionChecker;
-Eigen::VectorXd obstacleRadius = Eigen::VectorXd(2);
-Eigen::MatrixXd obstacleCenter = Eigen::MatrixXd(2,3);
+Eigen::VectorXd obstacleRadius = Eigen::VectorXd(3);
+Eigen::MatrixXd obstacleCenter = Eigen::MatrixXd(3,3);
 
 double simulationDuration = 5.0;
 double dT = 0.005;
+double d2r = 3.141592/180;
 RobotArmSimulation sim = RobotArmSimulation(&world, dT);
 RobotArmRobot robot = RobotArmRobot(&world, urdfPath, name);
+RobotArmRobot robot_1 = RobotArmRobot(&world, urdfPath_1, "robotArmEnd");
 RobotArmPDController controller = RobotArmPDController(&robot);
 RobotArmMotionPlanning motionPlanner(&robotArmCollisionChecker,controller.getTrajectoryGenerator());
 
@@ -43,7 +46,7 @@ void raisimSimulation() {
         controller.doControl();
         world.integrate();
         if (iteration % divider == 0) {
-            //                std::cout<<"data_idx : "<<MainUI->data_idx<<std::endl;
+
             MainUI->data_x[MainUI->data_idx] = world.getWorldTime();
             MainUI->data_y1[MainUI->data_idx] = robot.getQ()[3];
             MainUI->data_y1_desired[MainUI->data_idx] = controller.desiredPosition[3];
@@ -72,18 +75,24 @@ void *rt_simulation_thread(void *arg) {
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
 //    std::cout << "bf #while" << std::endl;
     std::cout << "control freq : "<< 1/double(PERIOD_US) *1e6 << std::endl;
-    obstacleRadius << 0.2, 0.2;
-    obstacleCenter <<  -1,  0,  0.5,
-                        0,  1,  0.2;
+    obstacleRadius << 0.2, 0.15 , 0.15;
+    obstacleCenter <<  -0.5,  0.0,  0.2,
+                        0.0,  0.5,  0.15,
+                        -0.1,  0.02,  0.7;
     robotArmCollisionChecker.setObstacle(obstacleRadius, obstacleCenter);
 
-    auto obstacle1 = world.addSphere(obstacleRadius(0), 1.0);
-    auto obstacle2 = world.addSphere(obstacleRadius(1), 1.0);
+    auto obstacle1 = world.addSphere(obstacleRadius(0), 0.0);
+    auto obstacle2 = world.addSphere(obstacleRadius(1), 0.0);
+    auto obstacle3 = world.addSphere(obstacleRadius(2), 0.0);
     obstacle1->setPosition(obstacleCenter(0,0),obstacleCenter(0,1),obstacleCenter(0,2));
     obstacle2->setPosition(obstacleCenter(1,0),obstacleCenter(1,1),obstacleCenter(1,2));
+    obstacle3->setPosition(obstacleCenter(2,0),obstacleCenter(2,1),obstacleCenter(2,2));
 
     motionPlanner.makeTree();
     motionPlanner.dijkstra();
+
+//    std::cout << d2r * motionPlanner.wayPoints << std::endl;
+
 
     while (true) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
@@ -105,6 +114,5 @@ int main(int argc, char *argv[]) {
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
     w.show();
-
     return a.exec();
 }

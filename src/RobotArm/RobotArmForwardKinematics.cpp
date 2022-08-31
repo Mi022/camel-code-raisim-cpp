@@ -67,7 +67,6 @@ Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joi
     linkPoint.row(6) = mT01 * mT12 * mT23 * mT34 * mT45 * mT56 * mT67 * start;
 
     linkPoint = removeMatrix.removeColumn(linkPoint,linkPoint.cols());
-//    std::cout << linkPoint << std::endl;
 
     return linkPoint;
 }

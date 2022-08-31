@@ -10,12 +10,17 @@
 class RobotArmRobot : public Robot {
 public:
     RobotArmRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
-        initialize();
+        if(name == "robotArm"){
+            initialize();
+        }
+        else if(name == "robotArmEnd"){
+            final();
+        }
     }
 
     void initialize() override;
-//    double getQ();
-//    double getQD();
+    void final() ;
+
     raisim::VecDyn getQ();
     raisim::VecDyn getQD();
 };

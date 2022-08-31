@@ -24,8 +24,8 @@ public:
 
     Eigen::MatrixXd getObstacleCenter() {return mObstacleCenter;}
 private:
-    Eigen::VectorXd mObstacleRadius = Eigen::VectorXd(2);
-    Eigen::MatrixXd mObstacleCenter = Eigen::MatrixXd(2,3);
+    Eigen::VectorXd mObstacleRadius = Eigen::VectorXd(3);
+    Eigen::MatrixXd mObstacleCenter = Eigen::MatrixXd(3,3);
 
 };
 

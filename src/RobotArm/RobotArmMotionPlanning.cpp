@@ -24,6 +24,8 @@ void RobotArmMotionPlanning::generatePoint() {
     armPose.conservativeResize(armPose.rows()+1, armPose.cols());
     armPose.row(currentIndex+1) = goalJoint;
 
+    std::cout << "The end Generate Point " <<std::endl;
+
 }
 
 void RobotArmMotionPlanning::makeTree() {
@@ -58,11 +60,10 @@ void RobotArmMotionPlanning::makeTree() {
         }
     }
 
-//    cout << "childTree :  "<<endl;
-//    cout <<  childTree <<  endl;
-
     pare.conservativeResize(pare.rows()-2,pare.cols());
     pare = removeMatrix.removeRow(pare,0);
+
+    std::cout << "The end Make Tree" <<std::endl;
 
 }
 
@@ -132,8 +133,7 @@ void RobotArmMotionPlanning::dijkstra() {
         Q = result;
 
         uIdxChild = childTree.row(Uidx);
-//        cout<<"uIdxChild : ";
-//        cout<<uIdxChild<<endl;
+
         for (int i = 0; i < uIdxChild.size(); i++) {
             int vIdx = uIdxChild[i];
             if (uD[vIdx] > (uD[Uidx] + Uweight(Uidx, vIdx))) {
@@ -158,17 +158,13 @@ void RobotArmMotionPlanning::dijkstra() {
         cout << "findTree " << i << endl;
         cout << findTree[i] << endl;
     }
-
-    Eigen::MatrixXd wayPoints = Eigen::MatrixXd(findTree.size(), 6);
+    Eigen::MatrixXd endEffector ;
+    wayPoints.conservativeResize(findTree.size(), 6);
     for (int i = 0; i < findTree.size(); i++) {
         wayPoints.row(i) = armPose.row(findTree[i]);
+        endEffector = forwardKinematics.forwardKinematics(wayPoints.row(i));
     }
-//    Eigen::MatrixXd wayPoints = Eigen::MatrixXd(4, 6);
 
-//    wayPoints << 20.0, 120.0, 90, 0.0, 90.0, 40.0,
-//            20.0, 120.0, 90, 70.0, 90.0, 40.0,
-//            20.0, 130.0, 90, 20.0, 80.0, 30.0,
-//            20.0, 160.0, 90, 0.0, 70.0, 60.0;
 
     trajectoryGenerator->setWaypoints(wayPoints);
 

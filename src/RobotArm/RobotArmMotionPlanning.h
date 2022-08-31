@@ -17,7 +17,8 @@ class RobotArmMotionPlanning {
 public:
     RobotArmMotionPlanning(RobotArmCollisionChecker* collisionChecker, RobotArmTrajectoryGenerator* trajectoryGenerator){
         startJoint << 0.0, 160, -90, 0.0, 114, 0.0;
-        goalJoint << 90.0, 90, -50, 70.0, 0, -90.0;
+        goalJoint << -5.7, -2.0, 1.8, 2.0, 3.14, 6.0;
+        goalJoint = (180/3.141592)*goalJoint;
         this->collisionChecker = collisionChecker;
         this->trajectoryGenerator = trajectoryGenerator;
     }
@@ -27,9 +28,8 @@ public:
     Eigen::MatrixXd pareAdd = Eigen::MatrixXd::Zero(1,3);
     Eigen::MatrixXd childTree ;
     std::vector<int> findTree;
+    Eigen::MatrixXd wayPoints;
 
-
-//    void setObstacle(Eigen::VectorXd, Eigen::MatrixXd);
     void generatePoint();
     void makeTree();
     void dijkstra();
@@ -40,8 +40,6 @@ public:
     RemoveMatrix removeMatrix;
     RobotArmTrajectoryGenerator* trajectoryGenerator;
 
-//    Eigen::VectorXd getObstacleRadius(){return mObstacleRadius;}
-//    Eigen::MatrixXd getObstacleCenter(){return mObstacleCenter;}
 
 private:
     Eigen::VectorXd mObstacleRadius = Eigen::VectorXd(2);

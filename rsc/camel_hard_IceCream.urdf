@@ -77,7 +77,7 @@
 
   <link name="body_rod">
     <visual>
-      <origin rpy="0.0 0.0 0.0" xyz="0.14 0.0 0.04"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.15 0.0 0.0"/>
       <geometry>
         <sphere radius="0.01"/>
       </geometry>
@@ -86,7 +86,7 @@
   </link>
 
   <joint name="fixed_body" type="fixed">
-    <origin rpy="0.0 0.0 0.0" xyz="0.14 0.0 0.04"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.15 0.0 0.0"/>
     <parent link="body_rod"/>
     <child link="body"/>
   </joint>

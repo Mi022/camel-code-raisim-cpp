@@ -16,7 +16,7 @@ std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\
 std::string name = "cuteIceCream";
 
 raisim::World world;
-double simulationDuration = 0.005;
+double simulationDuration = 4.0;
 double dT = 0.005;
 
 IceCreamSimulation sim = IceCreamSimulation(&world, dT);
@@ -28,9 +28,10 @@ int iteration = 0;
 
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
-    sharedMemory->plotW1B = controller.position[1];
-    sharedMemory->plotW1R = controller.desiredPosition[1];
+    sharedMemory->plotW1B = controller.torque[1];
+    sharedMemory->plotW1R = controller.desiredVelocity[1];
     sharedMemory->plotW2B = controller.measuredAcc[0];
+//    sharedMemory->plotW2R = controller.torque[1];
     sharedMemory->plotW2R = controller.calculatedAcc[0];
     sharedMemory->plotW3B = controller.measuredAcc[1];
     sharedMemory->plotW3R = controller.calculatedAcc[1];
@@ -46,6 +47,8 @@ void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
         controller.doControl();
+//        std::cout<<"tau2 : "<<controller.torque[1]<<std::endl;
+//        std::cout<<"acc1 : "<<controller.measuredAcc[0]<<std::endl;
         world.integrate();
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
@@ -79,7 +82,7 @@ void *rt_simulation_thread(void *arg) {
 int main(int argc, char *argv[]) {
 //    auto box = world.addBox(1, 1, 1, 10);
 //    box->setPosition(3, 3, 5);
-    world.setGravity({0.0, 0.0, 0.0});
+//    world.setGravity({0.0, 0.0, 0.0});
     QApplication a(argc, argv);
     MainWindow w;
     sharedMemory = (pSHM) malloc(sizeof(SHM));

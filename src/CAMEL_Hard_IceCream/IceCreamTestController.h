@@ -28,8 +28,10 @@ public:
         mTrajectoryGenerator.updateTrajectory(position[1], -90*robot->deg2rad, robot->getWorldTime(), 3.0);
         mEndTime = robot->getWorldTime() + 1.0;
 
-        mPGain = 1.0;
-        mDGain = 0.4;
+        mPGain = Eigen::VectorXd(robot-> dim);
+        mDGain = Eigen::VectorXd(robot-> dim);
+        mPGain << -30.0, 6.0;
+        mDGain << -1.5, 3.0;
 
         mIra = parallelAxis(cubiodInertia(mRodMass, 0.03, mRodLength), mRodMass, mRodLength/2.0);
         mIBb = parallelAxis(cubiodInertia(mBodyMass, mBodyLength, 0.1), mBodyMass, mBodyLength/2.0);
@@ -51,7 +53,7 @@ public:
     void setControlInput() override;
 
 private:
-    double mPGain, mDGain;
+    Eigen::VectorXd mPGain, mDGain;
     double mEndTime;
     double mDT;
     CubicTrajectoryGenerator mTrajectoryGenerator;

@@ -20,8 +20,11 @@ void IceCreamTestController::setTrajectory() {
 //        mTrajectoryGenerator.updateTrajectory(position[1], -90*getRobot()->deg2rad, getRobot()->getWorldTime(), 1.0);
 //        mEndTime = getRobot()->getWorldTime() + 3.0;
 //    }
-    desiredPosition[1] = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
-    desiredVelocity[1] = mTrajectoryGenerator.getVelocityTrajectory(getRobot()->getWorldTime());
+//    desiredPosition[1] = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
+//    desiredVelocity[1] = mTrajectoryGenerator.getVelocityTrajectory(getRobot()->getWorldTime());
+
+    desiredPosition << 0.0, -90*getRobot()->deg2rad;
+    desiredVelocity << 0.0, 0.0;
 }
 
 // update states of the robot
@@ -34,8 +37,8 @@ void IceCreamTestController::updateState() {
 // compute control inputs based on PD control method
 void IceCreamTestController::computeControlInput() {
     torque.setZero();
-    torque[1] = mPGain*(desiredPosition[1] - position[1]) + mDGain*(desiredVelocity[1] - velocity[1]);
-//    torque[1] = -0.1;
+    torque[1] = mPGain[0]*(desiredPosition[0] - position[0]) + mDGain[0]*(desiredVelocity[0] - velocity[0]) + mPGain[1]*(desiredPosition[1] - position[1]) + mDGain[1]*(desiredVelocity[1] - velocity[1]);
+//    torque[1] = +2.0;
 }
 
 // set computed force(torque) to the robot
@@ -48,7 +51,7 @@ void IceCreamTestController::updateAcc() {
     double lda = sqrt(pow(mRodLength*cos(position[0]) - mBodyLength*sin(position[0] + position[1])/2.0, 2.0)
             + pow(mRodLength*sin(position[0]) + mBodyLength*cos(position[0] + position[1])/2.0, 2.0));
     mIBa = parallelAxis(cubiodInertia(mBodyMass, mBodyLength, 0.1), mBodyMass, lda);
-    mIICa = mIra + mIBb;
+    mIICa = mIra + mIBa;
 
     calculatedAcc[0] = -torque[1]/mIICa;
     calculatedAcc[1] = torque[1]/(mIBb + mIICa);

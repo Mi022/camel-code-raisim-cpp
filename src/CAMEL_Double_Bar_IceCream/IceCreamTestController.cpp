@@ -27,7 +27,8 @@ void IceCreamTestController::updateState() {
 void IceCreamTestController::computeControlInput() {
     torque.setZero();
 //    torque[1] = mPGain*(desiredPosition[1] - position[1]) + mDGain*(desiredVelocity[1] - velocity[1]);
-//    torque[1] = -0.1;
+    torque[1] = 0.9;
+    torque[2] = 1.0;
 }
 
 // set computed force(torque) to the robot

@@ -13,9 +13,9 @@ void IceCreamRobot::initialize() {
     double theta2 = -60*deg2rad;
 
     //base-pitch
-//    initialJointPosition[0] = 30*deg2rad;
+    initialJointPosition[0] = 10*deg2rad;
     //hip-pitch
-//    initialJointPosition[1] = -120*deg2rad;
+    initialJointPosition[1] = -120*deg2rad;
 
 //    //base-pitch
 //    initialJointPosition[0] = 30*deg2rad;

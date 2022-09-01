@@ -16,7 +16,7 @@ std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\
 std::string name = "cuteIceCream";
 
 raisim::World world;
-double simulationDuration = 3.0;
+double simulationDuration = 0.005;
 double dT = 0.005;
 
 IceCreamSimulation sim = IceCreamSimulation(&world, dT);
@@ -44,9 +44,7 @@ void raisimSimulation() {
     realTimePlot();
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
-        world.setGravity({0.0, 0.0, 0.0});
         controller.doControl();
-        world.setGravity({0.0, 0.0, 0.0});
         world.integrate();
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
@@ -85,6 +83,7 @@ int main(int argc, char *argv[]) {
     int thread_id_simulation = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 1, 99,
                                                   NULL);
     raisim::RaisimServer server(&world);
+//    world.setGravity({0.0, 0.0, 0.0});
     server.launchServer(8080);
     w.show();
 

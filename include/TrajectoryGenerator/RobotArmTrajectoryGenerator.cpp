@@ -21,8 +21,6 @@ void RobotArmTrajectoryGenerator::updateTrajectory(double currentTime, double ti
 }
 
 void RobotArmTrajectoryGenerator::calculateCoefficient() {
-    std::cout << " way point " << std::endl;
-    std::cout << mWaypoints << std::endl;
     mFunctionValue.row(0) = mWaypoints.row(0);
     mFunctionValue.row(1) = mWaypoints.row(1);
 
@@ -35,8 +33,8 @@ void RobotArmTrajectoryGenerator::calculateCoefficient() {
 std::vector<double> RobotArmTrajectoryGenerator::getPositionTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     std::vector<double> position(6);
-    std::cout << " mCoefficient " << std::endl;
-    std::cout << mCoefficient << std::endl;
+//    std::cout << " mCoefficient " << std::endl;
+//    std::cout << mCoefficient << std::endl;
     for (int i = 0; i < 6; ++i)
     {
         position[i] = mCoefficient(0, i) * pow(normalizedTime, 3.0) + mCoefficient(1, i) * pow(normalizedTime, 2.0) +

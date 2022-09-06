@@ -29,6 +29,11 @@ double d2r = 3.141592/180;
 RobotArmSimulation sim = RobotArmSimulation(&world, dT);
 RobotArmRobot robot = RobotArmRobot(&world, urdfPath, name);
 RobotArmRobot robot_1 = RobotArmRobot(&world, urdfPath_1, "robotArmEnd");
+RobotArmRobot robot_2 = RobotArmRobot(&world, urdfPath_1, "robotArmTra0");
+RobotArmRobot robot_3 = RobotArmRobot(&world, urdfPath_1, "robotArmTra1");
+RobotArmRobot robot_4 = RobotArmRobot(&world, urdfPath_1, "robotArmTra2");
+RobotArmRobot robot_5 = RobotArmRobot(&world, urdfPath_1, "robotArmTra3");
+RobotArmRobot robot_6 = RobotArmRobot(&world, urdfPath_1, "robotArmTra4");
 RobotArmPDController controller = RobotArmPDController(&robot);
 RobotArmMotionPlanning motionPlanner(&robotArmCollisionChecker,controller.getTrajectoryGenerator());
 
@@ -38,6 +43,17 @@ int iteration = 0;
 
 void raisimSimulation() {
 
+    Eigen::VectorXd initialJointPosition(robot.robot->getGeneralizedCoordinateDim());
+    initialJointPosition << -5.7, -2.0, 1.8, 2.0, 3.14, 6.0;
+    robot_1.robot->setGeneralizedCoordinate(initialJointPosition);
+    initialJointPosition << 2.86957, -1.52747  ,1.95443 , 1.69121 , 2.54122 ,0.672938;
+    robot_2.robot->setGeneralizedCoordinate(initialJointPosition);
+    initialJointPosition <<  2.32255,  -4.8231,  2.63775, 0.186505,  8.22863, -3.83899;
+    robot_3.robot->setGeneralizedCoordinate(initialJointPosition);
+    initialJointPosition << -1.62723, -8.42197,  3.79778,  1.28668,  5.46195,  1.44308;
+    robot_4.robot->setGeneralizedCoordinate(initialJointPosition);
+    initialJointPosition << -3.65073, -2.49245 , 6.60219, -2.71833 , 5.49619,  2.77762;
+    robot_5.robot->setGeneralizedCoordinate(initialJointPosition);
     // TODO : Relieve CPU. Now, CPU usage is 100% !!!!!
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         // control robot and data plot thread
@@ -91,7 +107,8 @@ void *rt_simulation_thread(void *arg) {
     motionPlanner.makeTree();
     motionPlanner.dijkstra();
 
-//    std::cout << d2r * motionPlanner.wayPoints << std::endl;
+    std::cout << "wayPoints" << std::endl;
+    std::cout << d2r * motionPlanner.wayPoints << std::endl;
 
 
     while (true) {

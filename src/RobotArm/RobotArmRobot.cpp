@@ -10,12 +10,6 @@ void RobotArmRobot::initialize() {
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
 
-void RobotArmRobot::final() {
-    Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
-    initialJointPosition << -5.7, -2.0, 1.8, 2.0, -1.57, 0.0;
-    robot->setGeneralizedCoordinate(initialJointPosition);
-}
-
 raisim::VecDyn RobotArmRobot::getQ() {
     return this->robot->getGeneralizedCoordinate();
 }

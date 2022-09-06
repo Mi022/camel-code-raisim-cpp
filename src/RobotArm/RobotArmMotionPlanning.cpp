@@ -8,11 +8,11 @@
 using namespace std;
 
 void RobotArmMotionPlanning::generatePoint() {
-    int randNum = 100;
+    int randNum = 1000;
     armPose.row(0)=startJoint;
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
-        Eigen::MatrixXd joint = 100*Eigen::MatrixXd::Random(1,6);
+        Eigen::MatrixXd joint = 500*Eigen::MatrixXd::Random(1,6);
         if(collisionChecker->jointChecker(joint)){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
@@ -24,50 +24,61 @@ void RobotArmMotionPlanning::generatePoint() {
     armPose.conservativeResize(armPose.rows()+1, armPose.cols());
     armPose.row(currentIndex+1) = goalJoint;
 
-    std::cout << "The end Generate Point " <<std::endl;
-
+    std::cout << endl << "The end Generate Point " <<std::endl;
 }
 
 void RobotArmMotionPlanning::makeTree() {
     generatePoint();
-    float k=200;
-    Eigen::MatrixXd currentPoint = Eigen::MatrixXd::Zero(6,3);
-    Eigen::MatrixXd nextPoint = Eigen::MatrixXd::Zero(6,3);
+    float k=400;
+    Eigen::MatrixXd currentPoint;
+    Eigen::MatrixXd nextPoint;
     float currentDistance;
     int count = 0;
     int treeNum;
     len = armPose.rows();
     childTree.conservativeResize(len,len);
     childTree.setZero();
-
+    treeStart = time(NULL);
     for(int i=0; i<len ; i++){
         treeNum = 0;
         for(int j=0 ; j<len ; j++){
-//            currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
-//            nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
             currentDistance = distance.distance(armPose.row(i),armPose.row(j));
-            if( currentDistance > 0.01 and currentDistance < k )
-            {
-                pareAdd(0,0) = i;
-                pareAdd(0,1) = j;
-                pareAdd(0,2)=currentDistance;
-                pare.row(count)=pareAdd;
-                pare.conservativeResize(pare.rows()+1,pare.cols());
-                count ++;
-                childTree(i,treeNum) = j;
-                treeNum++;
+//            cout << "i : " << i << " j : " << j << " distance : " << currentDistance << endl;
+            if( currentDistance > 0.01 and currentDistance < k ) {
+                currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
+                nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
+                if (collisionChecker->lineChecker(currentPoint.row(6),nextPoint.row(6))
+                    and collisionChecker->lineChecker(currentPoint.row(5),nextPoint.row(5))
+                    and collisionChecker->lineChecker(currentPoint.row(4),nextPoint.row(4))
+                    and collisionChecker->lineChecker(currentPoint.row(3),nextPoint.row(3))
+                    and collisionChecker->lineChecker(currentPoint.row(2),nextPoint.row(2))) {
+
+                    pareAdd(0, 0) = i;
+                    pareAdd(0, 1) = j;
+                    pareAdd(0, 2) = currentDistance;
+                    pare.row(count) = pareAdd;
+                    pare.conservativeResize(pare.rows() + 1, pare.cols());
+                    count++;
+                    childTree(i, treeNum) = j;
+                    treeNum++;
+
+                }
             }
         }
     }
 
-    pare.conservativeResize(pare.rows()-2,pare.cols());
-    pare = removeMatrix.removeRow(pare,0);
 
-    std::cout << "The end Make Tree" <<std::endl;
+    pare.conservativeResize(pare.rows()-1,pare.cols());
 
+    treeEnd=time(NULL);
+
+    std::cout << endl << "The end Make Tree" <<std::endl;
+    std::cout << "The time is " << (double)(treeEnd-treeStart) << "ms" <<std::endl;
 }
 
 void RobotArmMotionPlanning::dijkstra() {
+
+    searchStart = time(NULL);
 
     vector<int> Q(len);
     for (int i = 0; i < len; i++) {
@@ -162,9 +173,12 @@ void RobotArmMotionPlanning::dijkstra() {
     wayPoints.conservativeResize(findTree.size(), 6);
     for (int i = 0; i < findTree.size(); i++) {
         wayPoints.row(i) = armPose.row(findTree[i]);
-        endEffector = forwardKinematics.forwardKinematics(wayPoints.row(i));
     }
 
+    searchEnd = time(NULL);
+
+    std::cout << "The end Find Trajectory" <<std::endl;
+    std::cout << "The time is " << (double)(searchEnd-searchStart) << "ms" <<std::endl;
 
     trajectoryGenerator->setWaypoints(wayPoints);
 

@@ -5,12 +5,14 @@
 #ifndef RAISIM_ROBOTARMMOTIONPLANNING_H
 #define RAISIM_ROBOTARMMOTIONPLANNING_H
 #include "Eigen/Eigen"
+#include "iostream"
+#include <time.h>
 #include "src/RobotArm/RobotArmCollisionChecker.h"
 #include "src/RobotArm/DistanceCalculator.h"
 #include "src/RobotArm/RobotArmForwardKinematics.h"
 #include "src/RobotArm/RemoveMatrix.h"
 #include "include/TrajectoryGenerator/RobotArmTrajectoryGenerator.h"
-#include "iostream"
+
 
 
 class RobotArmMotionPlanning {
@@ -46,6 +48,7 @@ private:
     Eigen::MatrixXd mObstacleCenter = Eigen::MatrixXd(2,3);
     Eigen::VectorXd startJoint = Eigen::VectorXd(6);
     Eigen::VectorXd goalJoint = Eigen::VectorXd(6);
+    time_t treeStart,treeEnd,searchStart,searchEnd;
 
 };
 

@@ -11,36 +11,50 @@ void RobotArmCollisionChecker::setObstacle(Eigen::VectorXd obstacleRadius, Eigen
 }
 
 bool RobotArmCollisionChecker::collisionCircle(Eigen::MatrixXd center,double radius, Eigen::MatrixXd point){
-    if(distanceCalculator.distance(center,point) <= radius+5){
+    if(distanceCalculator.distance(center,point) <= radius){
         return true;}
     else{
         return false;}
 }
 
+/**
+ * if collide obstacle return false , not collide obstacle return true
+ * @param point
+ * @return
+ */
 bool RobotArmCollisionChecker::obstacleChecker(Eigen::MatrixXd point){
     int collisionCount = 0;
-
+    bool avoid;
     for(int i=0; i<mObstacleRadius.size() ;i++){
         if(collisionCircle(mObstacleCenter.row(i),mObstacleRadius(i),point)){
             collisionCount += 1 ;
         }
     }
     if(collisionCount > 0)
-        return false;
+        avoid = false;
     else
-        return true;
+        avoid = true;
+
+    return avoid;
 }
 
+/**
+ * if exist obstacle between two points return false
+ * @param point1
+ * @param point2
+ * @return
+ */
 bool RobotArmCollisionChecker::lineChecker(Eigen::MatrixXd point1,Eigen::MatrixXd point2){
-    int splitSize = 3;
+    int splitSize = 20;
     Eigen::VectorXd xStep;
     Eigen::VectorXd yStep;
     Eigen::VectorXd zStep;
+    Eigen::MatrixXd stepPoint = Eigen::MatrixXd(1,3);
+
     xStep = interpolation.interpolation(point1(0),point2(0),splitSize);
     yStep = interpolation.interpolation(point1(1),point2(1),splitSize);
     zStep = interpolation.interpolation(point1(2),point2(2),splitSize);
-//    std::cout << xStep(1) << yStep(2) << zStep(1) <<std::endl;
-    Eigen::MatrixXd stepPoint = Eigen::MatrixXd(1,3);
+
     for(int i = 0; i<splitSize ; i++){
         stepPoint(0)=xStep[i];
         stepPoint(1)=yStep[i];
@@ -55,6 +69,11 @@ bool RobotArmCollisionChecker::lineChecker(Eigen::MatrixXd point1,Eigen::MatrixX
     return true;
 }
 
+/**
+ * if exist obstacle between each links return false
+ * @param joint
+ * @return
+ */
 bool RobotArmCollisionChecker::jointChecker(Eigen::MatrixXd joint){
     Eigen::MatrixXd linkPoint = forwardKinematics.forwardKinematics(joint);
     for(int i =0; i < linkPoint.rows()-1 ; i++){
@@ -62,7 +81,7 @@ bool RobotArmCollisionChecker::jointChecker(Eigen::MatrixXd joint){
             continue;
         }
         else
-            return true;
+            return false;
     }
-    return false;
+    return true;
 }

@@ -43,17 +43,14 @@ int iteration = 0;
 
 void raisimSimulation() {
 
-    Eigen::VectorXd initialJointPosition(robot.robot->getGeneralizedCoordinateDim());
-    initialJointPosition << -5.7, -2.0, 1.8, 2.0, 3.14, 6.0;
-    robot_1.robot->setGeneralizedCoordinate(initialJointPosition);
-    initialJointPosition << 2.86957, -1.52747  ,1.95443 , 1.69121 , 2.54122 ,0.672938;
-    robot_2.robot->setGeneralizedCoordinate(initialJointPosition);
-    initialJointPosition <<  2.32255,  -4.8231,  2.63775, 0.186505,  8.22863, -3.83899;
-    robot_3.robot->setGeneralizedCoordinate(initialJointPosition);
-    initialJointPosition << -1.62723, -8.42197,  3.79778,  1.28668,  5.46195,  1.44308;
-    robot_4.robot->setGeneralizedCoordinate(initialJointPosition);
-    initialJointPosition << -3.65073, -2.49245 , 6.60219, -2.71833 , 5.49619,  2.77762;
-    robot_5.robot->setGeneralizedCoordinate(initialJointPosition);
+    Eigen::MatrixXd initialJointPosition(robot.robot->getGeneralizedCoordinateDim(),motionPlanner.wayPoints.rows());
+    initialJointPosition = d2r*motionPlanner.wayPoints;
+    robot_1.robot->setGeneralizedCoordinate(initialJointPosition.row(0%motionPlanner.wayPoints.rows()));
+    robot_2.robot->setGeneralizedCoordinate(initialJointPosition.row(1%motionPlanner.wayPoints.rows()));
+    robot_3.robot->setGeneralizedCoordinate(initialJointPosition.row(2%motionPlanner.wayPoints.rows()));
+    robot_4.robot->setGeneralizedCoordinate(initialJointPosition.row(3%motionPlanner.wayPoints.rows()));
+    robot_5.robot->setGeneralizedCoordinate(initialJointPosition.row(4%motionPlanner.wayPoints.rows()));
+    robot_6.robot->setGeneralizedCoordinate(initialJointPosition.row(5%motionPlanner.wayPoints.rows()));
     // TODO : Relieve CPU. Now, CPU usage is 100% !!!!!
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         // control robot and data plot thread
@@ -91,7 +88,7 @@ void *rt_simulation_thread(void *arg) {
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
 //    std::cout << "bf #while" << std::endl;
     std::cout << "control freq : "<< 1/double(PERIOD_US) *1e6 << std::endl;
-    obstacleRadius << 0.2, 0.15 , 0.15;
+    obstacleRadius << 0.15, 0.15 , 0.15;
     obstacleCenter <<  -0.5,  0.0,  0.2,
                         0.0,  0.5,  0.15,
                         -0.1,  0.02,  0.7;

@@ -18,8 +18,10 @@
 class RobotArmMotionPlanning {
 public:
     RobotArmMotionPlanning(RobotArmCollisionChecker* collisionChecker, RobotArmTrajectoryGenerator* trajectoryGenerator){
-        startJoint << 0.0, 160, -90, 0.0, 114, 0.0;
-        goalJoint << -150 , 130, -90, 0.0, 114, 0.0;
+        startJoint << 0.0, 2.79, -1.57, 0.0, 1.98, 0.0;
+        goalJoint << -5.7, -2.0, 1.8, 2.0, 3.14, 6.0;
+        startJoint = (180/3.141592)*startJoint;
+        goalJoint = (180/3.141592)*goalJoint;
         this->collisionChecker = collisionChecker;
         this->trajectoryGenerator = trajectoryGenerator;
     }

@@ -50,13 +50,13 @@ Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joi
     linkLength << 0.15675,0.11875,0.0016,0.4100,0.2073,0.0014,0.10375,0.1600;
     start << 0,0,0,1;
 
-    mT01 = translationMatrix(0,0,linkLength(0)) * rotationMatrix(ROLL,-pi);
-    mT12 = rotationMatrix(YAW,joint(0)) * translationMatrix(0,linkLength(2),-linkLength(1)) * rotationMatrix(ROLL,pi/2);
-    mT23 = rotationMatrix(YAW,joint(1)) * translationMatrix(0,-linkLength(3),0) * rotationMatrix(ROLL,pi);
-    mT34 = rotationMatrix(YAW,joint(2)) * translationMatrix(0,-linkLength(4),linkLength(5)) * rotationMatrix(ROLL,pi/2);
-    mT45 = rotationMatrix(YAW,joint(3)) * translationMatrix(0,0,-linkLength(6)) * rotationMatrix(ROLL,-pi/2);
-    mT56 = rotationMatrix(YAW,joint(4)) * translationMatrix(0,linkLength(6),0) * rotationMatrix(ROLL,pi/2);
-    mT67 = rotationMatrix(YAW,joint(5)) * translationMatrix(0,0,-linkLength(7)) * rotationMatrix(ROLL,pi) * rotationMatrix(ROLL,-pi);
+    mT01 = translationMatrix(0,0,linkLength(0)) * rotationMatrix(PITCH,pi);
+    mT12 = rotationMatrix(YAW,joint(0)) * translationMatrix(0,linkLength(2),-linkLength(1)) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
+    mT23 = rotationMatrix(YAW,joint(1)) * translationMatrix(0,-linkLength(3),0) * rotationMatrix(PITCH,pi);
+    mT34 = rotationMatrix(YAW,joint(2)) * translationMatrix(0,linkLength(4),-linkLength(5)) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
+    mT45 = rotationMatrix(YAW,joint(3)) * translationMatrix(0,0,-linkLength(6)) * rotationMatrix(ROLL,pi/2) * rotationMatrix(YAW,pi);
+    mT56 = rotationMatrix(YAW,joint(4)) * translationMatrix(0,linkLength(6),0) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
+    mT67 = rotationMatrix(YAW,joint(5)) * translationMatrix(0,0,-linkLength(7)) * rotationMatrix(ROLL,pi);
 
     linkPoint.row(0) = mT01 * start;
     linkPoint.row(1) = mT01 * mT12 * start;

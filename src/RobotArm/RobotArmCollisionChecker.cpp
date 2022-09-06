@@ -77,11 +77,13 @@ bool RobotArmCollisionChecker::lineChecker(Eigen::MatrixXd point1,Eigen::MatrixX
 bool RobotArmCollisionChecker::jointChecker(Eigen::MatrixXd joint){
     Eigen::MatrixXd linkPoint = forwardKinematics.forwardKinematics(joint);
     for(int i =0; i < linkPoint.rows()-1 ; i++){
-        if(lineChecker(linkPoint.row(i),linkPoint.row(i+1))){
+        if(lineChecker(linkPoint.row(i),linkPoint.row(i+1))
+            and linkPoint(i,2) > 0.15 and linkPoint(i+1,2) > 0.15){
             continue;
         }
         else
             return false;
     }
+    std::cout << linkPoint << std::endl;
     return true;
 }

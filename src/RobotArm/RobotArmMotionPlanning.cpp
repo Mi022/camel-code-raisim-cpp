@@ -12,7 +12,7 @@ void RobotArmMotionPlanning::generatePoint() {
     armPose.row(0)=startJoint;
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
-        Eigen::MatrixXd joint = 300*Eigen::MatrixXd::Random(1,6);
+        Eigen::MatrixXd joint = 500*Eigen::MatrixXd::Random(1,6);
         if(collisionChecker->jointChecker(joint)){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
@@ -42,10 +42,10 @@ void RobotArmMotionPlanning::makeTree() {
     for(int i=0; i<len ; i++){
         treeNum = 0;
         for(int j=0 ; j<len ; j++){
-            currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
-            nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
-            currentDistance = distance.distance(armPose.row(i),armPose.row(j)) + 100*distance.distance(currentPoint.row(6),nextPoint.row(6));
+            currentDistance = distance.distance(armPose.row(i),armPose.row(j));
             if( currentDistance > 0.01 and currentDistance < k ) {
+                currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
+                nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
                 if (collisionChecker->lineChecker(currentPoint.row(6),nextPoint.row(6))
                     and collisionChecker->lineChecker(currentPoint.row(5),nextPoint.row(5))
                     and collisionChecker->lineChecker(currentPoint.row(4),nextPoint.row(4))

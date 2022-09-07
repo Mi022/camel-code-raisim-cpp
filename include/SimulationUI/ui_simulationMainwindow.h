@@ -18,16 +18,6 @@
 #include <QtWidgets/QWidget>
 #include "qcustomplot.h"
 
-#include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QWidget>
-#include "qcustomplot.h"
-
 QT_BEGIN_NAMESPACE
 
 class Ui_MainWindow

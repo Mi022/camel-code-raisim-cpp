@@ -17,11 +17,3 @@ double SingleLeggedRobot::getGRFz() {
     double dT = 0.005;
     return robot -> getContacts()[0].getImpulse()[2]/dT;
 }
-
-raisim::VecDyn SingleLeggedRobot::getQ() {
-    return this->robot->getGeneralizedCoordinate();
-}
-
-raisim::VecDyn SingleLeggedRobot::getQD() {
-    return this->robot->getGeneralizedVelocity();
-}

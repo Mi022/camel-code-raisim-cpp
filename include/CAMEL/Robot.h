@@ -7,6 +7,8 @@
 
 #include"raisim/World.hpp"
 
+//TODO : making getQ and getQD, and update all robot classes
+
 class Robot {
 public:
     raisim::ArticulatedSystem *robot;
@@ -19,7 +21,8 @@ public:
     }
 
     virtual void initialize() = 0;
-
+    raisim::VecDyn getQ(){return robot->getGeneralizedCoordinate();}
+    raisim::VecDyn getQD(){return robot->getGeneralizedVelocity();}
     double getWorldTime() { return robotWorld->getWorldTime(); }
 
 private:

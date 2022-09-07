@@ -12,11 +12,3 @@ void SingleLeggedRobot::initialize() {
     initialJointPosition[2] = -120.0 * 3.141592 / 180.0;
     robot->setGeneralizedCoordinate(initialJointPosition);
 }
-
-raisim::VecDyn SingleLeggedRobot::getQ() {
-    return this->robot->getGeneralizedCoordinate();
-}
-
-raisim::VecDyn SingleLeggedRobot::getQD() {
-    return this->robot->getGeneralizedVelocity();
-}

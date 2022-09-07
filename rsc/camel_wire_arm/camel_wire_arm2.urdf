@@ -9,11 +9,11 @@
   </material>
 
   <material name="black1">
-      <color rgba="0.25 0.25 0.25 0.90"/>
+      <color rgba="0.75 0.25 0.25 0.50"/>
   </material>
 
   <material name="black2">
-      <color rgba="0.35 0.35 0.35 0.90"/>
+      <color rgba="0.25 0.25 0.25 0.90"/>
   </material>
 
   <link name="world"/>
@@ -29,7 +29,7 @@
       <geometry>
         <mesh filename="upper_arm.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="black1"/>
+      <material name="black2"/>
     </visual>
 
     <inertial>
@@ -47,7 +47,7 @@
 
   <link name="upper_arm">
     <visual>
-      <origin rpy="0 -1.570796 0" xyz="0 0 0.0"/>
+      <origin rpy="0 -1.570796 0" xyz="0 -0.006 0.0"/>
       <geometry>
         <mesh filename="fore_arm.stl" scale="0.001 0.001 0.001"/>
       </geometry>

@@ -77,7 +77,7 @@
 
 class A1JointPDController : public Controller {
 public:
-    Eigen::VectorXd torque = Eigen::VectorXd(18);
+    raisim::VecDyn torque = raisim::VecDyn(18);
     raisim::VecDyn position = raisim::VecDyn(19);
     raisim::VecDyn velocity = raisim::VecDyn(18);
     Eigen::VectorXd positionError = Eigen::VectorXd(12);
@@ -91,21 +91,21 @@ public:
 
     A1JointPDController(Robot *robot) : Controller(robot) {
         torque.setZero();
-        desiredPosition[0] = -0.15;
-        desiredPosition[1] = 0.6;
-        desiredPosition[2] = -1.1;
+        desiredPosition[0] = 0.0;
+        desiredPosition[1] = 0.5;
+        desiredPosition[2] = -0.9;
 
-        desiredPosition[3] = 0.15;
-        desiredPosition[4] = 0.6;
-        desiredPosition[5] = -1.1;
+        desiredPosition[3] = -0.0;
+        desiredPosition[4] = 0.5;
+        desiredPosition[5] = -0.9;
 
-        desiredPosition[6] = -0.15;
-        desiredPosition[7] = 0.6;
-        desiredPosition[8] = -1.1;
+        desiredPosition[6] = 0.0;
+        desiredPosition[7] = 0.5;
+        desiredPosition[8] = -0.9;
 
-        desiredPosition[9] = 0.15;
-        desiredPosition[10] = 0.6;
-        desiredPosition[11] = -1.1;
+        desiredPosition[9] = -0.0;
+        desiredPosition[10] = 0.5;
+        desiredPosition[11] = -0.9;
 
         desiredVelocity.setZero();
 

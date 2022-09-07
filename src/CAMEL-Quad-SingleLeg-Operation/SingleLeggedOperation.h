@@ -9,6 +9,8 @@
 #include "SingleLeggedRobotOperation.h"
 #include "SingleLeggedPDControllerOperation.h"
 #include "SingleLeggedIDControllerOperation.h"
+#include "SingleLeggedMPCqpoasesOperation.h"
+#include "SingleLeggedMPCOperation.h"
 
 class SingleLeggedOperation : public Operation {
 public:

@@ -51,6 +51,30 @@ set(CAMEL_A1_SIMULATION_UI_SOURCES
         src/A1/mainwindow.cpp)
 
 ## Simulation ##
+# ====== CANINE ======  #
+set(CANINE_SOURCES
+        src/CANINE/CanineMain.cpp
+        src/CANINE/canine/CanineRobot.cpp
+        )
+
+set(CMPC_SOURCES
+        src/CANINE/convexMPC/EigenTypes.h
+        src/CANINE/convexMPC/Gait.cpp
+        src/CANINE/convexMPC/MPCController.cpp
+        src/CANINE/convexMPC/qpsolver.cpp
+        src/CANINE/convexMPC/Trajectory.cpp
+        )
+set(CANINE_GUI_SOURCES
+        src/CANINE/GUI/mainwindow.cpp
+        include/SimulationUI/qcustomplot.cpp
+        )
+
+add_executable(camel-CANINE ${CAMEL_SOURCES} ${CANINE_SOURCES} ${CMPC_SOURCES} ${CANINE_GUI_SOURCES})
+target_link_libraries(camel-CANINE ${CAMEL_LIBS})
+
+# ====== CANINE ======/ #
+
+
 # ====== Simple Pendulum ======  #
 set(SIMPLE_PENDULUM_SOURCES
         src/Tutorial_SimplePendulum/SimplePendulumSimulation.cpp

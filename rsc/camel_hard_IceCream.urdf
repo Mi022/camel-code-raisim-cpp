@@ -32,6 +32,7 @@
       <material name="stylish"/>
     </visual>
     <inertial>
+      <origin rpy="1.570796 0 0 " xyz="0 0 0.01275"/>
       <mass value="0.01"/>
       <inertia ixx="0.001229" ixy="0.0" ixz="0.0" iyy="0.001234" iyz="0.0" izz="0.000013"/>
     </inertial>
@@ -54,6 +55,7 @@
     </visual>
 
     <inertial>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.175"/>
       <mass value="1.2"/>
       <inertia ixx="0.01229" ixy="0.0" ixz="0.0" iyy="0.01234" iyz="0.0" izz="0.00013"/>
     </inertial>
@@ -69,31 +71,15 @@
   <joint name="hip-pitch" type="revolute">
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.35"/>
     <parent link="rod"/>
-    <child link="body_rod"/>
+    <child link="body"/>
     <axis xyz = "0 1 0"/>
     <limit velocity= "17"/>
 <!--    <dynamics friction = "1.0"/>-->
   </joint>
 
-  <link name="body_rod">
-    <visual>
-      <origin rpy="0.0 0.0 0.0" xyz="0.15 0.0 0.0"/>
-      <geometry>
-        <sphere radius="0.01"/>
-      </geometry>
-      <material name="red"/>
-    </visual>
-  </link>
-
-  <joint name="fixed_body" type="fixed">
-    <origin rpy="0.0 0.0 0.0" xyz="0.15 0.0 0.0"/>
-    <parent link="body_rod"/>
-    <child link="body"/>
-  </joint>
-
   <link name="body">
     <visual>
-      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.15 0.0 0.0"/>
       <geometry>
         <box size="0.3 0.1 0.1"/>
       </geometry>
@@ -101,12 +87,10 @@
     </visual>
 
     <inertial>
+      <origin rpy="0.0 0.0 0.0" xyz="0.15 0.0 0.0"/>
       <mass value="2.5"/>
       <inertia ixx="0.00416667" ixy="0.0" ixz="0.0" iyy="0.0208333" iyz="0.0" izz="0.0208333"/>
     </inertial>
-
   </link>
-
-
 
 </robot>

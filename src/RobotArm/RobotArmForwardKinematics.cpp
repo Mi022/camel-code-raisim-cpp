@@ -42,7 +42,7 @@ Eigen::MatrixXd RobotArmForwardKinematics::translationMatrix(double x, double y,
 
 
 Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joint) {
-    float pi = 3.141592;
+    float pi = 3.14159265359;
     joint = joint*(pi/180);
     Eigen::MatrixXd linkPoint(7,4);
     Eigen::VectorXd linkLength(8);
@@ -50,21 +50,21 @@ Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joi
     linkLength << 0.15675,0.11875,0.0016,0.4100,0.2073,0.0014,0.10375,0.1600;
     start << 0,0,0,1;
 
-    mT01 = translationMatrix(0,0,linkLength(0)) * rotationMatrix(PITCH,pi);
-    mT12 = rotationMatrix(YAW,joint(0)) * translationMatrix(0,linkLength(2),-linkLength(1)) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
-    mT23 = rotationMatrix(YAW,joint(1)) * translationMatrix(0,-linkLength(3),0) * rotationMatrix(PITCH,pi);
-    mT34 = rotationMatrix(YAW,joint(2)) * translationMatrix(0,linkLength(4),-linkLength(5)) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
-    mT45 = rotationMatrix(YAW,joint(3)) * translationMatrix(0,0,-linkLength(6)) * rotationMatrix(ROLL,pi/2) * rotationMatrix(YAW,pi);
-    mT56 = rotationMatrix(YAW,joint(4)) * translationMatrix(0,linkLength(6),0) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
-    mT67 = rotationMatrix(YAW,joint(5)) * translationMatrix(0,0,-linkLength(7)) * rotationMatrix(ROLL,pi);
+    mT01 = rotationMatrix(YAW,joint(0)) * translationMatrix(0,0,linkLength(0)) * rotationMatrix(PITCH,pi);
+    mT12 = rotationMatrix(YAW,joint(1)) * translationMatrix(0,linkLength(2),-linkLength(1)) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
+    mT23 = rotationMatrix(YAW,joint(2)) * translationMatrix(0,-linkLength(3),0) * rotationMatrix(PITCH,pi);
+    mT34 = rotationMatrix(YAW,joint(3)) * translationMatrix(0,linkLength(4),-linkLength(5)) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
+    mT45 = rotationMatrix(YAW,joint(4)) * translationMatrix(0,0,-linkLength(6)) * rotationMatrix(ROLL,pi/2) * rotationMatrix(YAW,pi);
+    mT56 = rotationMatrix(YAW,joint(5)) * translationMatrix(0,linkLength(6),0) * rotationMatrix(ROLL,-pi/2) * rotationMatrix(YAW,pi);
+    mT67 = translationMatrix(0,0,-linkLength(7)) * rotationMatrix(ROLL,pi);
 
-    linkPoint.row(0) = mT01 * start;
-    linkPoint.row(1) = mT01 * mT12 * start;
-    linkPoint.row(2) = mT01 * mT12 * mT23 * start;
-    linkPoint.row(3) = mT01 * mT12 * mT23 * mT34 * start;
-    linkPoint.row(4) = mT01 * mT12 * mT23 * mT34 * mT45 * start;
-    linkPoint.row(5) = mT01 * mT12 * mT23 * mT34 * mT45 * mT56 * start;
-    linkPoint.row(6) = mT01 * mT12 * mT23 * mT34 * mT45 * mT56 * mT67 * start;
+    linkPoint.row(0) = mT01.col(3);
+    linkPoint.row(1) = (mT01 * mT12).col(3);
+    linkPoint.row(2) = (mT01 * mT12 * mT23).col(3);
+    linkPoint.row(3) = (mT01 * mT12 * mT23 * mT34).col(3);
+    linkPoint.row(4) = (mT01 * mT12 * mT23 * mT34 * mT45).col(3);
+    linkPoint.row(5) = (mT01 * mT12 * mT23 * mT34 * mT45 * mT56).col(3);
+    linkPoint.row(6) = (mT01 * mT12 * mT23 * mT34 * mT45 * mT56 * mT67).col(3);
 
     linkPoint = removeMatrix.removeColumn(linkPoint,linkPoint.cols());
 

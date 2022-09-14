@@ -9,7 +9,7 @@ float DistanceCalculator::distance(Eigen::MatrixXd point1, Eigen::MatrixXd point
     float distanceValue;
     int size = point1.cols();
     for(int i =0;i<size;i++){
-        distanceValue = distanceValue + pow(point1(i) - point2(i),2);
+        distanceValue = distanceValue + (6-i) * (pow(point1(i) - point2(i),2));
     }
     distanceValue = sqrt(distanceValue);
 

@@ -13,13 +13,11 @@
 #include "src/RobotArm/RemoveMatrix.h"
 #include "include/TrajectoryGenerator/RobotArmTrajectoryGenerator.h"
 
-
-
 class RobotArmMotionPlanning {
 public:
     RobotArmMotionPlanning(RobotArmCollisionChecker* collisionChecker, RobotArmTrajectoryGenerator* trajectoryGenerator){
-        startJoint << 0.0, 2.79, -1.57, 0.0, 1.98, 0.0;
-        goalJoint << -5.7, -2.0, 1.8, 2.0, 3.14, 6.0;
+        startJoint << 0.12, 0.12, 0.12, 0.12,0.12, 0.12;
+        goalJoint << 3.14, 2.0, -2.6, 2.0, 3.14, 6.0;
         startJoint = (180/3.141592)*startJoint;
         goalJoint = (180/3.141592)*goalJoint;
         this->collisionChecker = collisionChecker;
@@ -27,7 +25,7 @@ public:
     }
     Eigen::MatrixXd armPose = Eigen::MatrixXd(1,6);
     int len ;
-    Eigen::MatrixXd pare = Eigen::MatrixXd::Random(1,3);
+    Eigen::MatrixXd pare = Eigen::MatrixXd::Zero(1,3);
     Eigen::MatrixXd pareAdd = Eigen::MatrixXd::Zero(1,3);
     Eigen::MatrixXd childTree ;
     std::vector<int> findTree;
@@ -42,7 +40,6 @@ public:
     DistanceCalculator distance;
     RemoveMatrix removeMatrix;
     RobotArmTrajectoryGenerator* trajectoryGenerator;
-
 
 private:
     Eigen::VectorXd mObstacleRadius = Eigen::VectorXd(2);

@@ -13,7 +13,7 @@ void RobotArmMotionPlanning::generatePoint() {
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
         Eigen::MatrixXd joint = 500*Eigen::MatrixXd::Random(1,6);
-        if(collisionChecker->jointChecker(joint)){
+        if(collisionChecker->jointChecker(joint) ){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
             armPose.row(currentIndex)=joint;
@@ -56,6 +56,8 @@ void RobotArmMotionPlanning::makeTree() {
                     pareAdd(0, 1) = j;
                     pareAdd(0, 2) = currentDistance;
                     pare.row(count) = pareAdd;
+//                    std::cout << "pare" << std::endl;
+//                    std::cout << pareAdd << std::endl;
                     pare.conservativeResize(pare.rows() + 1, pare.cols());
                     count++;
                     childTree(i, treeNum) = j;
@@ -70,6 +72,10 @@ void RobotArmMotionPlanning::makeTree() {
     pare.conservativeResize(pare.rows()-1,pare.cols());
 
     treeEnd=time(NULL);
+
+//    std::cout << "child tree" << std::endl;
+//    std::cout << pare << std::endl;
+
 
     std::cout << endl << "The end Make Tree" <<std::endl;
     std::cout << "The time is " << (double)(treeEnd-treeStart) << "ms" <<std::endl;
@@ -167,6 +173,8 @@ void RobotArmMotionPlanning::dijkstra() {
     for(int i = 0 ; i < findTree.size() ; i++){
         cout << "findTree " << i << endl;
         cout << findTree[i] << endl;
+        cout << "tree link point" << endl;
+        cout << forwardKinematics.forwardKinematics(armPose.row(findTree[i])) << endl;
     }
     Eigen::MatrixXd endEffector ;
     wayPoints.conservativeResize(findTree.size(), 6);

@@ -11,7 +11,7 @@ void RobotArmCollisionChecker::setObstacle(Eigen::VectorXd obstacleRadius, Eigen
 }
 
 bool RobotArmCollisionChecker::collisionCircle(Eigen::MatrixXd center,double radius, Eigen::MatrixXd point){
-    if(distanceCalculator.distance(center,point) <= radius){
+    if(distanceCalculator.distance(center,point) <= radius+0.01){
         return true;}
     else{
         return false;}
@@ -45,7 +45,7 @@ bool RobotArmCollisionChecker::obstacleChecker(Eigen::MatrixXd point){
  * @return
  */
 bool RobotArmCollisionChecker::lineChecker(Eigen::MatrixXd point1,Eigen::MatrixXd point2){
-    int splitSize = 20;
+    int splitSize = 50;
     Eigen::VectorXd xStep;
     Eigen::VectorXd yStep;
     Eigen::VectorXd zStep;
@@ -78,12 +78,11 @@ bool RobotArmCollisionChecker::jointChecker(Eigen::MatrixXd joint){
     Eigen::MatrixXd linkPoint = forwardKinematics.forwardKinematics(joint);
     for(int i =0; i < linkPoint.rows()-1 ; i++){
         if(lineChecker(linkPoint.row(i),linkPoint.row(i+1))
-            and linkPoint(i,2) > 0.15 and linkPoint(i+1,2) > 0.15){
+            and linkPoint(i,2) > 0.01 and linkPoint(i+1,2) > 0.01){
             continue;
         }
         else
             return false;
     }
-    std::cout << linkPoint << std::endl;
     return true;
 }

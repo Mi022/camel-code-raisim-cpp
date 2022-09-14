@@ -13,7 +13,7 @@
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
-std::string urdfPath = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\kinova.urdf";
+std::string urdfPath = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\m1013.urdf";
 std::string urdfPath_1 = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\kinova_1.urdf";
 std::string name = "robotArm";
 raisim::World world;

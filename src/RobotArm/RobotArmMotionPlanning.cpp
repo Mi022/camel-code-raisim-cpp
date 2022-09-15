@@ -8,11 +8,11 @@
 using namespace std;
 
 void RobotArmMotionPlanning::generatePoint() {
-    int randNum = 1000;
+    int randNum = 500;
     armPose.row(0)=startJoint;
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
-        Eigen::MatrixXd joint = 500*Eigen::MatrixXd::Random(1,6);
+        Eigen::MatrixXd joint = 180*Eigen::MatrixXd::Random(1,6);
         if(collisionChecker->jointChecker(joint) ){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
@@ -29,7 +29,7 @@ void RobotArmMotionPlanning::generatePoint() {
 
 void RobotArmMotionPlanning::makeTree() {
     generatePoint();
-    float k=400;
+    float k=150;
     Eigen::MatrixXd currentPoint;
     Eigen::MatrixXd nextPoint;
     float currentDistance;
@@ -44,37 +44,28 @@ void RobotArmMotionPlanning::makeTree() {
         for(int j=0 ; j<len ; j++){
             currentDistance = distance.distance(armPose.row(i),armPose.row(j));
             if( currentDistance > 0.01 and currentDistance < k ) {
-                currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
-                nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
-                if (collisionChecker->lineChecker(currentPoint.row(6),nextPoint.row(6))
-                    and collisionChecker->lineChecker(currentPoint.row(5),nextPoint.row(5))
-                    and collisionChecker->lineChecker(currentPoint.row(4),nextPoint.row(4))
-                    and collisionChecker->lineChecker(currentPoint.row(3),nextPoint.row(3))
-                    and collisionChecker->lineChecker(currentPoint.row(2),nextPoint.row(2))) {
-
                     pareAdd(0, 0) = i;
                     pareAdd(0, 1) = j;
                     pareAdd(0, 2) = currentDistance;
                     pare.row(count) = pareAdd;
-//                    std::cout << "pare" << std::endl;
-//                    std::cout << pareAdd << std::endl;
                     pare.conservativeResize(pare.rows() + 1, pare.cols());
                     count++;
                     childTree(i, treeNum) = j;
                     treeNum++;
 
-                }
             }
         }
     }
-
 
     pare.conservativeResize(pare.rows()-1,pare.cols());
 
     treeEnd=time(NULL);
 
-//    std::cout << "child tree" << std::endl;
-//    std::cout << pare << std::endl;
+    std::cout << "pare" << std::endl;
+    std::cout << pare << std::endl;
+
+    std::cout << "child tree" << std::endl;
+    std::cout << childTree << std::endl;
 
 
     std::cout << endl << "The end Make Tree" <<std::endl;
@@ -172,7 +163,7 @@ void RobotArmMotionPlanning::dijkstra() {
 
     for(int i = 0 ; i < findTree.size() ; i++){
         cout << "findTree " << i << endl;
-        cout << findTree[i] << endl;
+        cout << armPose.row(findTree[i]) << endl;
         cout << "tree link point" << endl;
         cout << forwardKinematics.forwardKinematics(armPose.row(findTree[i])) << endl;
     }

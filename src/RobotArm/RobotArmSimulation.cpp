@@ -13,7 +13,7 @@
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
-std::string urdfPath = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\m1013.urdf";
+std::string urdfPath = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\kinova.urdf";
 std::string urdfPath_1 = "\\home\\jy\\raisimLib\\camel-code-raisim-cpp\\rsc\\robotArm\\urdf\\kinova_1.urdf";
 std::string name = "robotArm";
 raisim::World world;
@@ -91,7 +91,7 @@ void *rt_simulation_thread(void *arg) {
     obstacleRadius << 0.15, 0.15 , 0.15;
     obstacleCenter <<  -0.5,  0.0,  0.2,
                         0.0,  0.5,  0.15,
-                        -0.1,  0.02,  0.7;
+                        -0.1,  0.02,  0.6;
     robotArmCollisionChecker.setObstacle(obstacleRadius, obstacleCenter);
 
     auto obstacle1 = world.addSphere(obstacleRadius(0), 0.0);

@@ -32,7 +32,7 @@ void A1MPCController::getGait(){
 }
 
 void A1MPCController::doControl() {
-    std::cout<<"simTime : "<<getRobot()->getWorldTime()<<std::endl;
+//    std::cout<<"simTime : "<<getRobot()->getWorldTime()<<std::endl;
     updateState();
     setTrajectory();
     getMetrices();
@@ -40,6 +40,7 @@ void A1MPCController::doControl() {
     setLegcontrol();
     computeControlInput();
     setControlInput();
+    getRobot()->robot->setExternalForce(getRobot()->robot->getBodyIdx("FR_calf"),{0,0,-0.1},{-50,0,-50});
 }
 
 void A1MPCController::updateState(){
@@ -432,6 +433,7 @@ void A1MPCController::setControlInput() {
         }
     }
     getRobot()->robot->setGeneralizedForce(torque);
+
 }
 
 //=============================================================

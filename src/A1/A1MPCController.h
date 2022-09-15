@@ -4,7 +4,6 @@
 
 #ifndef RAISIM_A1MPCCONTROLLER_H
 #define RAISIM_A1MPCCONTROLLER_H
-
 #include "include/CAMEL/Controller.h"
 #include "A1Robot.h"
 #include <unsupported/Eigen/MatrixFunctions>

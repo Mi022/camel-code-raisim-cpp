@@ -13,9 +13,9 @@ int main(int argc, char* argv[]) {
 
     /// create objects
     world.addGround();
-    auto robot = world.addArticulatedSystem("\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wire_arm\\camel_wire_arm.urdf");
-    auto robot1 = world.addArticulatedSystem("\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wire_arm\\camel_wire_arm1.urdf");
-    auto robot2 = world.addArticulatedSystem("\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wire_arm\\camel_wire_arm2.urdf");
+    auto robot = world.addArticulatedSystem("\\home\\cha\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wire_arm\\camel_wire_arm.urdf");
+    auto robot1 = world.addArticulatedSystem("\\home\\cha\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wire_arm\\camel_wire_arm1.urdf");
+    auto robot2 = world.addArticulatedSystem("\\home\\cha\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_wire_arm\\camel_wire_arm2.urdf");
 
     /// kinova joint PD controller
     Eigen::VectorXd jointNominalConfig(robot->getGeneralizedCoordinateDim()), jointVelocityTarget(robot->getDOF());

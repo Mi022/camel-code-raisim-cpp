@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include "include/RT/rb_utils.h"
 #include "SharedMemory.h"
+#include "A1CollisionDetecter.h"
 #include <QApplication>
 #include <cmath>
 
@@ -13,15 +14,20 @@ extern MainWindow *MainUI;
 pthread_t thread_simulation;
 pSHM smem;
 
-std::string urdfPath = "\\home\\hs\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
+std::string urdfPath = "\\home\\cha\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
 std::string name = "cuteA1";
+
 raisim::World world;
+
+Eigen::Matrix3d EulerAngle(double roll, double pitch, double yaw);
 
 double simulationDuration = 10.0;
 double dT = 0.005;
 A1Simulation sim = A1Simulation(&world, dT);
 A1Robot robot = A1Robot(&world, urdfPath, name);
 A1MPCController MPCcontroller = A1MPCController(&robot, dT);
+
+A1CollisionDetecter ColOb;
 
 double oneCycleSimTime = 0;
 int iteration = 0;
@@ -65,13 +71,43 @@ void realTimePlot(){
 
 void raisimSimulation()
 {
+    Eigen::VectorXd beta = Eigen::VectorXd(2);
+    Eigen::VectorXd momentum = Eigen::VectorXd(2);
+    Eigen::VectorXd momentumPrev = Eigen::VectorXd(2);
+    Eigen::VectorXd residual = Eigen::VectorXd(2);
+    Eigen::VectorXd dqMat = Eigen::VectorXd(2);
+    Eigen::Matrix2d gainK;
+    Eigen::VectorXd tempTorque = Eigen::VectorXd(2);
+    gainK(0, 0) = 100, gainK(0, 1) = 0;
+    gainK(1, 0) = 0, gainK(1, 1) = 100;
+    bool firstRun = true;
+
     realTimePlot();
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration))
     {
         oneCycleSimTime = iteration * dT;
         MPCcontroller.doControl();
+        tempTorque[0] = MPCcontroller.torque[7];
+        tempTorque[1] = MPCcontroller.torque[8];
+        beta = ColOb.Beta(robot.getQ()[8],robot.getQD()[7],robot.getQ()[9],robot.getQD()[8]);
         world.integrate();
         iteration++;
+
+        if (firstRun == true) {
+            momentumPrev[0] = 0;
+            momentumPrev[1] = 0;
+            residual[0] = 0;
+            residual[1] = 0;
+            firstRun = false;
+        }
+        dqMat[0] = robot.getQD()[7];
+        dqMat[1] = robot.getQD()[8];
+        momentum = momentumPrev +  tempTorque * 0.005 - beta * 0.005 + residual * 0.005;
+        residual = gainK * (-momentum +
+                            ColOb.MassMat(robot.getQ()[7], robot.getQ()[8]) *
+                            dqMat);
+        momentumPrev = momentum;
+        std::cout << "joint1: " << residual[0] << "," <<" joint2: "<<residual[1] << ", motor torque : "<< tempTorque[0]<<", "<<tempTorque[1]<<std::endl;
     }
     else if (oneCycleSimTime >= simulationDuration)
     {
@@ -110,7 +146,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     smem = (pSHM) malloc(sizeof(SHM));
-
+    world.addArticulatedSystem("\\home\\cha\\git\\repository-group\\raisimLib\\camel-code-raisim-cpp\\rsc\\obstacle.urdf");
     int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);
 
@@ -123,4 +159,17 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
+Eigen::Matrix3d EulerAngle(double roll, double pitch, double yaw){
+    Eigen::Matrix3d eulerAngle;
+    eulerAngle(0,0)=cos(yaw)*cos(pitch);
+    eulerAngle(0,1)=cos(yaw)*sin(pitch)*sin(roll)-cos(roll)*sin(yaw);
+    eulerAngle(0,2)=sin(yaw)*sin(roll)+cos(yaw)*cos(roll)*sin(pitch);
+    eulerAngle(1,0)=cos(pitch)*sin(yaw);
+    eulerAngle(1,1)=cos(yaw)*cos(roll)+sin(yaw)*sin(pitch)*sin(roll);
+    eulerAngle(1,2)=cos(roll)*sin(yaw)*sin(pitch)-cos(yaw)*sin(roll);
+    eulerAngle(2,0)=-sin(pitch);
+    eulerAngle(2,1)=cos(pitch)*sin(roll);
+    eulerAngle(2,2)=cos(pitch)*cos(yaw);
 
+    return eulerAngle;
+}

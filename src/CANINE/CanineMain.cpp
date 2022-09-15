@@ -9,7 +9,7 @@ extern MainWindow *MainUI;
 pthread_t thread_simulation;
 pSHM smem;
 
-std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\canine\\urdf\\canineV1.urdf";
+std::string urdfPath = "\\home\\cha\\raisimLib\\camel-code-raisim-cpp\\rsc\\canine\\urdf\\canineV1.urdf";
 std::string name = "CANINE";
 raisim::World world;
 
@@ -92,6 +92,9 @@ void *rt_simulation_thread(void *arg)
     std::cout << "bf #while" << std::endl;
     std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 << std::endl;
 
+    auto obstacle1 = world.addSphere(0.10,10.0);
+    obstacle1->setPosition(4,-0.15,1);
+
     while (true) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
         timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
@@ -112,6 +115,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     smem = (pSHM) malloc(sizeof(SHM));
+
+    world.addArticulatedSystem("\\home\\cha\\git\\repository-group\\raisimLib\\camel-code-raisim-cpp\\rsc\\obstacle.urdf");
 
     raisim::RaisimServer server(&world);
     server.launchServer(8080);

@@ -13,11 +13,9 @@ extern MainWindow *MainUI;
 pthread_t thread_simulation;
 pSHM sharedMemory;
 
-<<<<<<< HEAD
-std::string urdfPath = "\\home\\cha\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg\\camel_single_leg.urdf";
-=======
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg.urdf";
->>>>>>> d620b6738b25106075a1e90761133c49ca78970c
+
+std::string urdfPath = "\\home\\cha\\git\\repository-group\\raisimLib\\camel-code-raisim-cpp\\rsc\\test_a1_single_leg_right\\camel_single_leg.urdf";
+
 std::string name = "single_leg";
 raisim::World world;
 

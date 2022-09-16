@@ -13,6 +13,9 @@ void RobotArmMotionPlanning::generatePoint() {
     int currentIndex = 0;
     for(int i=0 ; i<randNum ; i++){
         Eigen::MatrixXd joint = 180*Eigen::MatrixXd::Random(1,6);
+//        for (int j = 0; j < 6; ++j) {
+//            joint.col(j) = (max(abs(startJoint(j)),abs(goalJoint(j))) + 20.0)*Eigen::VectorXd::Random(1);
+//        }
         if(collisionChecker->jointChecker(joint) ){
             currentIndex += 1;
             armPose.conservativeResize(armPose.rows()+1, armPose.cols());
@@ -24,15 +27,20 @@ void RobotArmMotionPlanning::generatePoint() {
     armPose.conservativeResize(armPose.rows()+1, armPose.cols());
     armPose.row(currentIndex+1) = goalJoint;
 
+    cout << "pose number" << endl;
+    cout << armPose.rows() << endl;
+
     std::cout << endl << "The end Generate Point " <<std::endl;
 }
 
 void RobotArmMotionPlanning::makeTree() {
     generatePoint();
-    float k=150;
+    float jointDistance=400;
+    float eeDistance = 0.5;
     Eigen::MatrixXd currentPoint;
     Eigen::MatrixXd nextPoint;
-    float currentDistance;
+    float currentJointDistance;
+    float currentEEDistance;
     int count = 0;
     int treeNum;
     len = armPose.rows();
@@ -42,17 +50,21 @@ void RobotArmMotionPlanning::makeTree() {
     for(int i=0; i<len ; i++){
         treeNum = 0;
         for(int j=0 ; j<len ; j++){
-            currentDistance = distance.distance(armPose.row(i),armPose.row(j));
-            if( currentDistance > 0.01 and currentDistance < k ) {
+            currentJointDistance = distance.distance(armPose.row(i),armPose.row(j));
+            if( currentJointDistance > 0.00001 and currentJointDistance < jointDistance ) {
+                currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
+                nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
+                currentEEDistance = distance.distance(currentPoint.row(6),nextPoint.row(6));
+                if(currentEEDistance > 0.00001 and currentEEDistance < eeDistance) {
                     pareAdd(0, 0) = i;
                     pareAdd(0, 1) = j;
-                    pareAdd(0, 2) = currentDistance;
+                    pareAdd(0, 2) = currentJointDistance ;
                     pare.row(count) = pareAdd;
                     pare.conservativeResize(pare.rows() + 1, pare.cols());
                     count++;
                     childTree(i, treeNum) = j;
                     treeNum++;
-
+                }
             }
         }
     }
@@ -62,11 +74,10 @@ void RobotArmMotionPlanning::makeTree() {
     treeEnd=time(NULL);
 
     std::cout << "pare" << std::endl;
-    std::cout << pare << std::endl;
+    std::cout << pare.rows() << std::endl;
 
-    std::cout << "child tree" << std::endl;
-    std::cout << childTree << std::endl;
-
+//    std::cout << "childTree" << std::endl;
+//    std::cout << childTree << std::endl;
 
     std::cout << endl << "The end Make Tree" <<std::endl;
     std::cout << "The time is " << (double)(treeEnd-treeStart) << "ms" <<std::endl;
@@ -153,6 +164,7 @@ void RobotArmMotionPlanning::dijkstra() {
     }
 
     int find_idx = parentTree.size() - 1;
+    float jointDistanceSum = 0;
     findTree.push_back(find_idx);
 
     while (find_idx != 0) {
@@ -164,14 +176,20 @@ void RobotArmMotionPlanning::dijkstra() {
     for(int i = 0 ; i < findTree.size() ; i++){
         cout << "findTree " << i << endl;
         cout << armPose.row(findTree[i]) << endl;
-        cout << "tree link point" << endl;
-        cout << forwardKinematics.forwardKinematics(armPose.row(findTree[i])) << endl;
     }
     Eigen::MatrixXd endEffector ;
     wayPoints.conservativeResize(findTree.size(), 6);
-    for (int i = 0; i < findTree.size(); i++) {
+    for (int i = 0; i < findTree.size(); i++)
+    {
         wayPoints.row(i) = armPose.row(findTree[i]);
     }
+    for (int i = 0; i < findTree.size()-1; i++)
+    {
+        jointDistanceSum = jointDistanceSum + distance.distance(wayPoints.row(i),wayPoints.row(i+1));
+    }
+    jointDistanceSum = jointDistanceSum + distance.distance(wayPoints.row(wayPoints.rows()-2),wayPoints.row(wayPoints.rows()-1));
+
+    cout << "jointDistance : " << jointDistanceSum << endl;
 
     searchEnd = time(NULL);
 

@@ -11,7 +11,7 @@ void RobotArmCollisionChecker::setObstacle(Eigen::VectorXd obstacleRadius, Eigen
 }
 
 bool RobotArmCollisionChecker::collisionCircle(Eigen::MatrixXd center,double radius, Eigen::MatrixXd point){
-    if(distanceCalculator.distance(center,point) <= radius+0.01){
+    if(distanceCalculator.distance(center,point) <= radius+0.1){
         return true;}
     else{
         return false;}

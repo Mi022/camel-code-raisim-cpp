@@ -9,23 +9,21 @@
 
 class RobotArmTrajectoryGenerator {
 public:
-
-    RobotArmTrajectoryGenerator()
-    {
-        mMatrixA << 2.0, -2.0, 1.0, 1.0, -3.0, 3.0, -2.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0;
-    }
+//    RobotArmTrajectoryGenerator()
+//    {
+//
+//    }
     void setWaypoints(Eigen::MatrixXd);
-    void calculateCoefficient();
+    void caculateCoefficient();
     void updateTrajectory(double currentTime,double timeDuration);
     std::vector<double> getPositionTrajectory(double currentTime);
     std::vector<double> getVelocityTrajectory(double currentTime);
 
 
 private:
-    Eigen::MatrixXd mMatrixA = Eigen::MatrixXd(4,4);
+
     Eigen::MatrixXd mWaypoints;
-    Eigen::MatrixXd mCoefficient = Eigen::MatrixXd(4, 6);
-    Eigen::MatrixXd mFunctionValue = Eigen::MatrixXd(4, 6);
+    Eigen::MatrixXd coefficient;
     int pointNum;
     double mReferenceTime;
     double mTimeDuration;

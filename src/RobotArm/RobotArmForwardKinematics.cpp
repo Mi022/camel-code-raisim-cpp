@@ -47,7 +47,6 @@ Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joi
     Eigen::MatrixXd linkPoint(7,4);
     Eigen::VectorXd linkLength(8);
     Eigen::VectorXd start(4);
-//    linkLength << 0.15675,0.11875,0.0016,0.4100,0.2073,0.0014,0.10375,0.1600;
     start << 0,0,0,1;
 
     mT01 = translationMatrix(0,0,0.15675) * rotationMatrix(PITCH,pi) * rotationMatrix(YAW,joint(0));

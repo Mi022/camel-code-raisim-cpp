@@ -34,6 +34,7 @@ RobotArmRobot robot_3 = RobotArmRobot(&world, urdfPath_1, "robotArmTra1");
 RobotArmRobot robot_4 = RobotArmRobot(&world, urdfPath_1, "robotArmTra2");
 RobotArmRobot robot_5 = RobotArmRobot(&world, urdfPath_1, "robotArmTra3");
 RobotArmRobot robot_6 = RobotArmRobot(&world, urdfPath_1, "robotArmTra4");
+RobotArmRobot robot_7 = RobotArmRobot(&world, urdfPath_1, "robotArmTra4");
 RobotArmPDController controller = RobotArmPDController(&robot);
 RobotArmMotionPlanning motionPlanner(&robotArmCollisionChecker,controller.getTrajectoryGenerator());
 
@@ -51,6 +52,7 @@ void raisimSimulation() {
     robot_4.robot->setGeneralizedCoordinate(initialJointPosition.row(3%motionPlanner.wayPoints.rows()));
     robot_5.robot->setGeneralizedCoordinate(initialJointPosition.row(4%motionPlanner.wayPoints.rows()));
     robot_6.robot->setGeneralizedCoordinate(initialJointPosition.row(5%motionPlanner.wayPoints.rows()));
+    robot_7.robot->setGeneralizedCoordinate(initialJointPosition.row(6%motionPlanner.wayPoints.rows()));
     // TODO : Relieve CPU. Now, CPU usage is 100% !!!!!
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         // control robot and data plot thread

@@ -13,7 +13,7 @@ extern MainWindow *MainUI;
 pthread_t thread_simulation;
 pSHM sharedMemory;
 
-std::string urdfPath = "\\home\\jaehoon\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_right\\camel_single_swingleg.urdf";
 std::string name = "single_leg";
 raisim::World world;
 
@@ -24,8 +24,9 @@ SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
 
 //SingleLeggedPDController controller = SingleLeggedPDController(&robot);
 //SingleLeggedIDController controller = SingleLeggedIDController(&robot, dT);
-SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
+//SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
 //SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&robot, dT);
+SwingLegController controller = SwingLegController(&robot);
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
@@ -35,14 +36,14 @@ struct timespec TIME_TOC;
 
 void updateSHM() {
     sharedMemory->time = world.getWorldTime();
-    sharedMemory->position_z = controller.position[0];
-    sharedMemory->desiredPosition_z = controller.desiredPosition;
-    sharedMemory->velocity_z = controller.velocity[0];
-    sharedMemory->desiredVelocity_z = controller.desiredVelocity;
-    sharedMemory->jointPosition[0] = controller.position[1];
-    sharedMemory->jointPosition[1] = controller.position[2];
-    sharedMemory->jointVelocity[0] = controller.velocity[1];
-    sharedMemory->jointVelocity[1] = controller.velocity[2];
+    sharedMemory->position[0] = controller.footPosition[0];
+    sharedMemory->desiredPosition[0] = controller.desiredPosition[0];
+    sharedMemory->position[1] = controller.footPosition[2]-0.5;
+    sharedMemory->desiredPosition[1] = controller.desiredPosition[1];
+    sharedMemory->jointPosition[0] = controller.position[0];
+    sharedMemory->jointPosition[1] = controller.position[1];
+    sharedMemory->jointVelocity[0] = controller.velocity[0];
+    sharedMemory->jointVelocity[1] = controller.velocity[1];
     sharedMemory->jointTorque[0] = controller.torque[0];
     sharedMemory->jointTorque[1] = controller.torque[1];
 }
@@ -59,7 +60,7 @@ void raisimSimulation() {
         clock_gettime(CLOCK_REALTIME, &TIME_TIC);
         controller.doControl();
         clock_gettime(CLOCK_REALTIME, &TIME_TOC);
-        std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
+        std::cout << "Controller time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
 
         world.integrate();
         updateSHM();

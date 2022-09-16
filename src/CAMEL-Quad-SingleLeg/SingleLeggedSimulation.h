@@ -11,6 +11,7 @@
 #include "SingleLeggedIDController.h"
 #include "SingleLeggedMPCController.h"
 #include "SingleLeggedMPCqpoases.h"
+#include "SwingLegController.h"
 
 class SingleLeggedSimulation : public Simulation {
 

@@ -1,0 +1,176 @@
+<!-- author : Jaehoon An, Jaehyung Park -->
+<!-- TODO: inertia should be updated by Hwa-young Song -->
+<?xml version="1.0" ?>
+<robot name="camel_single_leg_bot">
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="light_gray">
+     <color rgba="0.75 0.75 0.75 1.0"/>
+  </material>
+
+  <material name="black1">
+      <color rgba="0.25 0.25 0.25 0.90"/>
+  </material>
+
+  <material name="black2">
+      <color rgba="0.35 0.35 0.35 0.90"/>
+  </material>
+  <link name="world"/>
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <geometry>
+        <box size="0.025 0.025 1.0"/>
+      </geometry>
+      <material name="light_gray"/>
+    </visual>
+
+    <collision>
+        <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <geometry>
+        <box size="0.025 0.025 1.0"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="linear_guide" type="fixed">
+    <origin rpy="0 0 0" xyz="0 -0.025 0.5"/>
+    <parent link="base"/>
+    <child link="RF_hip"/>
+  </joint>
+
+  <link name="RF_hip">
+    <inertial>
+      <origin xyz="0 0 0" rpy="-3.1254 0 0" />
+      <mass value="0.32" />
+      <inertia ixx="0.000215"
+               ixy="0"
+               ixz="0"
+               iyy="0.000215"
+               iyz="0"
+               izz="0.000384" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="-3.1254 0 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_U_hip.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0145 0 0" rpy="0 1.57079632679 0" />
+      <geometry>
+        <cylinder length="0.029" radius="0.049"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="RF_THIGH" type="revolute">
+    <origin xyz="0.0705 -0.030496 0" rpy="0 0 0" />
+    <parent link="RF_hip" />
+    <child link="RF_thigh" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RF_thigh">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 -0.445 0" />
+      <mass value="0.66" />
+      <inertia ixx="0.002977"
+               ixy="0"
+               ixz="0"
+               iyy="0.002977"
+               iyz="0"
+               izz="0.000135" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.445 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_U_thigh.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.032 0." rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.124996" radius="0.049"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 -0.077 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.035 0.035 0.23" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="RF_KNEE" type="revolute">
+    <origin xyz="0 -0.077 -0.23" rpy="0 0 0" />
+    <parent link="RF_thigh" />
+    <child link="RF_calf" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RF_calf">
+    <inertial>
+      <origin xyz="0 0.0135 0" rpy="0 0.805 0" />
+      <mass value="0.08" />
+      <inertia ixx="0.002930"
+               ixy="0"
+               ixz="0"
+               iyy="0.002930"
+               iyz="0"
+               izz="0.000040" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0.0135 0" rpy="0 0.805 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_U_calf.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.019 0.019 0.23" />
+      </geometry>
+    </collision>-
+  </link>
+
+  <joint name="RF_FOOT" type="fixed">
+    <origin xyz="0 0 -0.23" rpy="0 0 0" />
+    <parent link="RF_calf" />
+    <child link="RF_foot" />
+  </joint>
+  <link name="RF_foot">
+    <inertial>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <mass value="0.1"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.019" radius="0.015"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

@@ -28,14 +28,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
-    ui->widget_2->legend->setVisible(true);
-    ui->widget_2->legend->setFont(QFont("Helvetica", 9));
+/*    ui->widget_2->legend->setVisible(true);
+    ui->widget_2->legend->setFont(QFont("Helvetica", 9));*/
     ui->widget_2->addGraph();
     ui->widget_2->graph(0)->setName("velocity_z");
     ui->widget_2->graph(0)->setPen(QPen(QColor(0, 0, 255)));
-    ui->widget_2->addGraph();
+    ui->widget_2->graph(0)->setLineStyle((QCPGraph::LineStyle)QCPGraph::lsNone);
+    ui->widget_2->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,2));
+/*    ui->widget_2->addGraph();
     ui->widget_2->graph(1)->setName("desired velocity_z");
-    ui->widget_2->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+    ui->widget_2->graph(1)->setPen(QPen(QColor(255, 0, 0)));*/
     ui->widget_2->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
     ui->widget_2->setInteractions(QCP::iRangeZoom | QCP::iRangeDrag);
 
@@ -80,12 +82,12 @@ void MainWindow::on_pushButton_clicked() {
 }
 
 void MainWindow::plotWidget1() {
-    if (sharedMemory->position_z < yMinWidget1) { yMinWidget1 = sharedMemory->position_z; }
-    if (sharedMemory->position_z > yMaxWidget1) { yMaxWidget1 = sharedMemory->position_z; }
-    if (sharedMemory->desiredPosition_z < yMinWidget1) { yMinWidget1 = sharedMemory->desiredPosition_z; }
-    if (sharedMemory->desiredPosition_z > yMaxWidget1) { yMaxWidget1 = sharedMemory->desiredPosition_z; }
-    ui->widget->graph(0)->addData(sharedMemory->time, sharedMemory->position_z);
-    ui->widget->graph(1)->addData(sharedMemory->time, sharedMemory->desiredPosition_z);
+    if (sharedMemory->position[1] < yMinWidget1) { yMinWidget1 = sharedMemory->position[1]; }
+    if (sharedMemory->position[1] > yMaxWidget1) { yMaxWidget1 = sharedMemory->position[1]; }
+    if (sharedMemory->desiredPosition[1] < yMinWidget1) { yMinWidget1 = sharedMemory->desiredPosition[1]; }
+    if (sharedMemory->desiredPosition[1] > yMaxWidget1) { yMaxWidget1 = sharedMemory->desiredPosition[1]; }
+    ui->widget->graph(0)->addData(sharedMemory->time, sharedMemory->position[1]);
+    ui->widget->graph(1)->addData(sharedMemory->time, sharedMemory->desiredPosition[1]);
 
     // set axes ranges, so we see all data:
     ui->widget->xAxis->setRange(sharedMemory->time - intervalTime, sharedMemory->time + 0.001);
@@ -94,16 +96,10 @@ void MainWindow::plotWidget1() {
 }
 
 void MainWindow::plotWidget2() {
-    if (sharedMemory->velocity_z < yMinWidget2) { yMinWidget2 = sharedMemory->velocity_z; }
-    if (sharedMemory->velocity_z > yMaxWidget2) { yMaxWidget2 = sharedMemory->velocity_z; }
-    if (sharedMemory->desiredVelocity_z < yMinWidget2) { yMinWidget2 = sharedMemory->desiredVelocity_z; }
-    if (sharedMemory->desiredVelocity_z > yMaxWidget2) { yMaxWidget2 = sharedMemory->desiredVelocity_z; }
-    ui->widget_2->graph(0)->addData(sharedMemory->time, sharedMemory->velocity_z);
-    ui->widget_2->graph(1)->addData(sharedMemory->time, sharedMemory->desiredVelocity_z);
-
+    ui->widget_2->graph(0)->addData(sharedMemory->position[0], sharedMemory->position[1]);
     // set axes ranges, so we see all data:
-    ui->widget_2->xAxis->setRange(sharedMemory->time - intervalTime, sharedMemory->time + 0.001);
-    ui->widget_2->yAxis->setRange(-0.7, 0.7);
+    ui->widget_2->xAxis->setRange(0.0, 0.3);
+    ui->widget_2->yAxis->setRange(-0.4, -0.2);
     ui->widget_2->replot();
 }
 

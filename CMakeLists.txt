@@ -111,7 +111,8 @@ set(CANINE_SINGLE_LEG_SOURCES
         src/CAMEL-Quad-SingleLeg/SingleLeggedMPCController.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedMPCqpoases.cpp
         src/CAMEL-Quad-SingleLeg/SingleLeggedSharedMemory.h
-        src/CAMEL-Quad-SingleLeg/UI/simulationMainwindow.cpp)
+        src/CAMEL-Quad-SingleLeg/UI/simulationMainwindow.cpp
+        src/CAMEL-Quad-SingleLeg/SwingLegController.cpp)
 
 add_executable(camel-canine_single_leg_simulation ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_SOURCES})
 target_link_libraries(camel-canine_single_leg_simulation ${CAMEL_LIBS} qpOASES)

@@ -8,10 +8,10 @@
 typedef struct _SHM_
 {
     double time;
-    double position_z;
-    double desiredPosition_z;
-    double velocity_z;
-    double desiredVelocity_z;
+    double position[2];
+    double desiredPosition[2];
+    double velocity[2];
+    double desiredVelocity_z[2];
     double jointPosition[2];
     double jointVelocity[2];
     double jointTorque[2];

@@ -140,17 +140,16 @@ void *rt_simulation_thread(void *arg)
         }
     }
 }
-
-<<<<<<< HEAD
-int main(int argc, char *argv[]) {
-    std::string urdfPath = "\\home\\cha\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
-    std::string name = "cuteA1";
-    raisim::World world;
-    double simulationDuration = 3.0;
-    A1Simulation sim = A1Simulation(&world, 0.001);
-    A1Robot robotA1 = A1Robot(&world, urdfPath, name);
-    A1JointPDController PDcontroller = A1JointPDController(&robotA1);
-=======
+//
+//int main(int argc, char *argv[]) {
+//    std::string urdfPath = "\\home\\cha\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
+//    std::string name = "cuteA1";
+//    raisim::World world;
+//    double simulationDuration = 3.0;
+//    A1Simulation sim = A1Simulation(&world, 0.001);
+//    A1Robot robotA1 = A1Robot(&world, urdfPath, name);
+//    A1JointPDController PDcontroller = A1JointPDController(&robotA1);
+//
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -159,7 +158,6 @@ int main(int argc, char *argv[])
     world.addArticulatedSystem("\\home\\cha\\git\\repository-group\\raisimLib\\camel-code-raisim-cpp\\rsc\\obstacle.urdf");
     int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);
->>>>>>> d620b6738b25106075a1e90761133c49ca78970c
 
     raisim::RaisimServer server(&world);
     server.launchServer(8080);

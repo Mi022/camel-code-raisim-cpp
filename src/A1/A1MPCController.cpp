@@ -40,7 +40,7 @@ void A1MPCController::doControl() {
     setLegcontrol();
     computeControlInput();
     setControlInput();
-    getRobot()->robot->setExternalForce(getRobot()->robot->getBodyIdx("FR_calf"),{0,0,-0.1},{-50,0,-50});
+//    getRobot()->robot->setExternalForce(getRobot()->robot->getBodyIdx("FR_calf"),{0,0,-0.1},{-50,0,-50});
 }
 
 void A1MPCController::updateState(){

@@ -5,6 +5,7 @@
 #include "IceCreamSimulation.h"
 #include "IceCreamRobot.h"
 #include "IceCreamTestController.h"
+#include "IceCreamLQRController.h"
 #include "IceCreamSharedMemory.h"
 
 extern MainWindow *MainUI;
@@ -21,7 +22,8 @@ double dT = 0.005;
 
 IceCreamSimulation sim = IceCreamSimulation(&world, dT);
 IceCreamRobot robot = IceCreamRobot(&world, urdfPath, name);
-IceCreamTestController controller = IceCreamTestController(&robot, dT);
+//IceCreamTestController controller = IceCreamTestController(&robot, dT);
+IceCreamLQRController controller = IceCreamLQRController(&robot, dT);
 
 double oneCycleSimTime = 0;
 int iteration = 0;
@@ -29,12 +31,12 @@ int iteration = 0;
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
     sharedMemory->plotW1B = controller.torque[1];
-    sharedMemory->plotW1R = controller.desiredVelocity[1];
-    sharedMemory->plotW2B = controller.measuredAcc[0];
+    sharedMemory->plotW1R = 0;
+    sharedMemory->plotW2B = 0;
 //    sharedMemory->plotW2R = controller.torque[1];
-    sharedMemory->plotW2R = controller.calculatedAcc[0];
-    sharedMemory->plotW3B = controller.measuredAcc[1];
-    sharedMemory->plotW3R = controller.calculatedAcc[1];
+    sharedMemory->plotW2R = 0;
+    sharedMemory->plotW3B = 0;
+    sharedMemory->plotW3R = 0;
 }
 
 void resetSimulationVars() {
@@ -46,7 +48,7 @@ void raisimSimulation() {
     realTimePlot();
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
-        controller.doControl();
+//        controller.doControl();
 //        std::cout<<"tau2 : "<<controller.torque[1]<<std::endl;
 //        std::cout<<"acc1 : "<<controller.measuredAcc[0]<<std::endl;
         world.integrate();

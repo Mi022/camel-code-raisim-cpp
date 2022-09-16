@@ -146,6 +146,7 @@ set(ICE_CREAM_SOURCES
         src/CAMEL_Hard_IceCream/IceCreamRobot.cpp
         src/CAMEL_Hard_IceCream/IceCreamTestController.cpp
         src/CAMEL_Hard_IceCream/UI_RealTimePlot/operationMainwindow.cpp
+        src/CAMEL_Hard_IceCream/IceCreamLQRController.cpp
         )
 add_executable(camel-IceCream ${CAMEL_SOURCES} ${ICE_CREAM_SOURCES})
 target_link_libraries(camel-IceCream ${CAMEL_LIBS})

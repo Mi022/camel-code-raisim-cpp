@@ -140,16 +140,7 @@ void *rt_simulation_thread(void *arg)
         }
     }
 }
-//
-//int main(int argc, char *argv[]) {
-//    std::string urdfPath = "\\home\\cha\\raisimLib\\rsc\\a1\\urdf\\a1.urdf";
-//    std::string name = "cuteA1";
-//    raisim::World world;
-//    double simulationDuration = 3.0;
-//    A1Simulation sim = A1Simulation(&world, 0.001);
-//    A1Robot robotA1 = A1Robot(&world, urdfPath, name);
-//    A1JointPDController PDcontroller = A1JointPDController(&robotA1);
-//
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

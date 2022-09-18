@@ -42,20 +42,15 @@ void realTimePlot(){
     smem->GetRotZ = MPCcontroller.cmpcSolver.q[2];
     smem->DesRotZ = MPCcontroller.cmpcSolver.desiredRotationZ;
 
-    smem->FR_hipJoint = MPCcontroller.position[7];
-    smem->FL_hipJoint = MPCcontroller.position[10];
-    smem->RR_hipJoint = MPCcontroller.position[13];
-    smem->RL_hipJoint = MPCcontroller.position[16];
+    smem->footPointX[0] = MPCcontroller.footPosition[0][0];
+    smem->footPointX[1] = MPCcontroller.footPosition[1][0];
+    smem->footPointX[2] = MPCcontroller.footPosition[2][0];
+    smem->footPointX[3] = MPCcontroller.footPosition[3][0];
 
-    smem->FR_thightJoint = MPCcontroller.position[8];
-    smem->FL_thightJoint= MPCcontroller.position[11];
-    smem->RR_thightJoint= MPCcontroller.position[14];
-    smem->RL_thightJoint = MPCcontroller.position[17];
-
-    smem->FR_calfJoint = MPCcontroller.position[9];
-    smem->FL_calfJoint = MPCcontroller.position[12];
-    smem->RR_calfJoint = MPCcontroller.position[15];
-    smem->RL_calfJoint = MPCcontroller.position[18];
+    smem->footPointZ[0] = MPCcontroller.footPosition[0][2];
+    smem->footPointZ[1] = MPCcontroller.footPosition[1][2];
+    smem->footPointZ[2] = MPCcontroller.footPosition[2][2];
+    smem->footPointZ[3] = MPCcontroller.footPosition[3][2];
 }
 
 void raisimSimulation()

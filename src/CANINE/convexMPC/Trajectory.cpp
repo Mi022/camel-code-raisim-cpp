@@ -29,20 +29,16 @@ double LegTrajectory::factorial(double value){
 
 void LegTrajectory::getPositionTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    int scheduler = floor(normalizedTime);
-    normalizedTime -= scheduler;
+    normalizedTime -= floor(normalizedTime);
     sumX = 0.0;
     sumZ = 0.0;
 
-    if(scheduler/2 == 0)
-    {
-        double coeff = 0.0;
-        for(int i=0; i<PNUM; i++){
-            coeff = factorial(PNUM-1) / (factorial(i)* factorial(PNUM-1-i))
-                    * pow(normalizedTime,i) * pow((1-normalizedTime), (PNUM-1-i));
-            sumX +=  coeff * px[i];
-            sumZ +=  coeff * pz[i];
-        }
+    double coeff = 0.0;
+    for(int i=0; i<PNUM; i++){
+        coeff = factorial(PNUM-1) / (factorial(i)* factorial(PNUM-1-i))
+                * pow(normalizedTime,i) * pow((1-normalizedTime), (PNUM-1-i));
+        sumX +=  coeff * px[i];
+        sumZ +=  coeff * pz[i];
     }
 
 }

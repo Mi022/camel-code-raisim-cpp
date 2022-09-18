@@ -76,49 +76,28 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widget_7->legend->setVisible(true);
     ui->widget_7->legend->setFont(QFont("Helvetica", 9));
     ui->widget_7->addGraph();
-    ui->widget_7->graph(0)->setName("FR");
+    ui->widget_7->graph(0)->setName("FR_FootPosition");
     ui->widget_7->graph(0)->setPen(QPen(QColor(0, 0, 255)));
-    ui->widget_7->addGraph();
-    ui->widget_7->graph(1)->setName("FL");
-    ui->widget_7->graph(1)->setPen(QPen(QColor(255, 0, 0)));
-    ui->widget_7->addGraph();
-    ui->widget_7->graph(2)->setName("RR");
-    ui->widget_7->graph(2)->setPen(QPen(QColor(0, 255, 0)));
-    ui->widget_7->addGraph();
-    ui->widget_7->graph(3)->setName("RL");
-    ui->widget_7->graph(3)->setPen(QPen(QColor(255, 255, 0)));
+    ui->widget_7->graph(0)->setLineStyle((QCPGraph::LineStyle)QCPGraph::lsNone);
+    ui->widget_7->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,2));
     ui->widget_7->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     ui->widget_8->legend->setVisible(true);
     ui->widget_8->legend->setFont(QFont("Helvetica", 9));
     ui->widget_8->addGraph();
-    ui->widget_8->graph(0)->setName("FR");
+    ui->widget_8->graph(0)->setName("FL_FootPosition");
     ui->widget_8->graph(0)->setPen(QPen(QColor(0, 0, 255)));
-    ui->widget_8->addGraph();
-    ui->widget_8->graph(1)->setName("FL");
-    ui->widget_8->graph(1)->setPen(QPen(QColor(255, 0, 0)));
-    ui->widget_8->addGraph();
-    ui->widget_8->graph(2)->setName("RR");
-    ui->widget_8->graph(2)->setPen(QPen(QColor(0, 255, 0)));
-    ui->widget_8->addGraph();
-    ui->widget_8->graph(3)->setName("RL");
-    ui->widget_8->graph(3)->setPen(QPen(QColor(255, 255, 0)));
+    ui->widget_8->graph(0)->setLineStyle((QCPGraph::LineStyle)QCPGraph::lsNone);
+    ui->widget_8->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,2));
     ui->widget_8->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     ui->widget_9->legend->setVisible(true);
     ui->widget_9->legend->setFont(QFont("Helvetica", 9));
     ui->widget_9->addGraph();
-    ui->widget_9->graph(0)->setName("FR");
+    ui->widget_9->graph(0)->setName("HR_FootPosition");
     ui->widget_9->graph(0)->setPen(QPen(QColor(0, 0, 255)));
-    ui->widget_9->addGraph();
-    ui->widget_9->graph(1)->setName("FL");
-    ui->widget_9->graph(1)->setPen(QPen(QColor(255, 0, 0)));
-    ui->widget_9->addGraph();
-    ui->widget_9->graph(2)->setName("RR");
-    ui->widget_9->graph(2)->setPen(QPen(QColor(0, 255, 0)));
-    ui->widget_9->addGraph();
-    ui->widget_9->graph(3)->setName("RL");
-    ui->widget_9->graph(3)->setPen(QPen(QColor(255, 255, 0)));
+    ui->widget_9->graph(0)->setLineStyle((QCPGraph::LineStyle)QCPGraph::lsNone);
+    ui->widget_9->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle,2));
     ui->widget_9->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     connect(&dataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
@@ -252,61 +231,34 @@ void MainWindow::plotWidget6() {
 }
 
 void MainWindow::plotWidget7() {
-    if (smem->FR_hipJoint < yMinWidget7) { yMinWidget7 = smem->FR_hipJoint; }
-    if (smem->FR_hipJoint > yMaxWidget7) { yMaxWidget7 = smem->FR_hipJoint; }
-    if (smem->FL_hipJoint < yMinWidget7) { yMinWidget7 = smem->FL_hipJoint; }
-    if (smem->FL_hipJoint > yMaxWidget7) { yMaxWidget7 = smem->FL_hipJoint; }
-    if (smem->RR_hipJoint < yMinWidget7) { yMinWidget7 = smem->RR_hipJoint; }
-    if (smem->RR_hipJoint > yMaxWidget7) { yMaxWidget7 = smem->RR_hipJoint; }
-    if (smem->RL_hipJoint < yMinWidget7) { yMinWidget7 = smem->RL_hipJoint; }
-    if (smem->RL_hipJoint > yMaxWidget7) { yMaxWidget7 = smem->RL_hipJoint; }
-    ui->widget_7->graph(0)->addData(smem->simTime, smem->FR_hipJoint);
-    ui->widget_7->graph(1)->addData(smem->simTime, smem->FL_hipJoint);
-    ui->widget_7->graph(2)->addData(smem->simTime, smem->RR_hipJoint);
-    ui->widget_7->graph(3)->addData(smem->simTime, smem->RL_hipJoint);
+    if (smem->footPointX[0] < xMinWidget7) { xMinWidget7 = smem->footPointX[0]; }
+    if (smem->footPointX[0] > xMaxWidget7) { xMaxWidget7 = smem->footPointX[0]; }
+    ui->widget_7->graph(0)->addData(smem->footPointX[0] , smem->footPointZ[0]);
 
     // set axes ranges, so we see all data:
-    ui->widget_7->xAxis->setRange(0.0, smem->simTime + 0.001);
-    ui->widget_7->yAxis->setRange(yMinWidget7 - 0.001, yMaxWidget7 + 0.001);
+    ui->widget_7->xAxis->setRange(xMinWidget7 - 0.001, xMaxWidget7 + 0.001);
+    ui->widget_7->yAxis->setRange(-0.4, -0.3);
     ui->widget_7->replot();
 }
 
 void MainWindow::plotWidget8() {
-    if (smem->FR_thightJoint < yMinWidget8) { yMinWidget8 = smem->FR_thightJoint; }
-    if (smem->FR_thightJoint > yMaxWidget8) { yMaxWidget8 = smem->FR_thightJoint; }
-    if (smem->FL_thightJoint < yMinWidget8) { yMinWidget8 = smem->FL_thightJoint; }
-    if (smem->FL_thightJoint > yMaxWidget8) { yMaxWidget8 = smem->FL_thightJoint; }
-    if (smem->RR_thightJoint < yMinWidget8) { yMinWidget8 = smem->RR_thightJoint; }
-    if (smem->RR_thightJoint > yMaxWidget8) { yMaxWidget8 = smem->RR_thightJoint; }
-    if (smem->RL_thightJoint < yMinWidget8) { yMinWidget8 = smem->RL_thightJoint; }
-    if (smem->RL_thightJoint > yMaxWidget8) { yMaxWidget8 = smem->RL_thightJoint; }
-    ui->widget_8->graph(0)->addData(smem->simTime, smem->FR_thightJoint);
-    ui->widget_8->graph(1)->addData(smem->simTime, smem->FL_thightJoint);
-    ui->widget_8->graph(2)->addData(smem->simTime, smem->RR_thightJoint);
-    ui->widget_8->graph(3)->addData(smem->simTime, smem->RL_thightJoint);
+    if (smem->footPointX[1] < xMinWidget8) { xMinWidget8 = smem->footPointX[1]; }
+    if (smem->footPointX[1] > xMaxWidget8) { xMaxWidget8 = smem->footPointX[1]; }
+    ui->widget_8->graph(0)->addData(smem->footPointX[1] , smem->footPointZ[1]);
 
     // set axes ranges, so we see all data:
-    ui->widget_8->xAxis->setRange(0.0, smem->simTime + 0.001);
-    ui->widget_8->yAxis->setRange(yMinWidget8 - 0.001, yMaxWidget8 + 0.001);
+    ui->widget_8->xAxis->setRange(xMinWidget8 - 0.001, xMaxWidget8 + 0.001);
+    ui->widget_8->yAxis->setRange(-0.4, -0.3);
     ui->widget_8->replot();
 }
 
 void MainWindow::plotWidget9() {
-    if (smem->FR_calfJoint < yMinWidget9) { yMinWidget9 = smem->FR_calfJoint; }
-    if (smem->FR_calfJoint > yMaxWidget9) { yMaxWidget9 = smem->FR_calfJoint; }
-    if (smem->FL_calfJoint < yMinWidget9) { yMinWidget9 = smem->FL_calfJoint; }
-    if (smem->FL_calfJoint > yMaxWidget9) { yMaxWidget9 = smem->FL_calfJoint; }
-    if (smem->RR_calfJoint < yMinWidget9) { yMinWidget9 = smem->RR_calfJoint; }
-    if (smem->RR_calfJoint > yMaxWidget9) { yMaxWidget9 = smem->RR_calfJoint; }
-    if (smem->RL_calfJoint < yMinWidget9) { yMinWidget9 = smem->RL_calfJoint; }
-    if (smem->RL_calfJoint > yMaxWidget9) { yMaxWidget9 = smem->RL_calfJoint; }
-    ui->widget_9->graph(0)->addData(smem->simTime, smem->FR_calfJoint);
-    ui->widget_9->graph(1)->addData(smem->simTime, smem->FL_calfJoint);
-    ui->widget_9->graph(2)->addData(smem->simTime, smem->RR_calfJoint);
-    ui->widget_9->graph(3)->addData(smem->simTime, smem->RL_calfJoint);
+    if (smem->footPointX[2] < xMinWidget9) { xMinWidget9 = smem->footPointX[2]; }
+    if (smem->footPointX[2] > xMaxWidget9) { xMaxWidget9 = smem->footPointX[2]; }
+    ui->widget_9->graph(0)->addData(smem->footPointX[2] , smem->footPointZ[2]);
 
     // set axes ranges, so we see all data:
-    ui->widget_9->xAxis->setRange(0.0, smem->simTime + 0.001);
-    ui->widget_9->yAxis->setRange(yMinWidget9 - 0.001, yMaxWidget9 + 0.001);
+    ui->widget_9->xAxis->setRange(xMinWidget9 - 0.001, xMaxWidget9 + 0.001);
+    ui->widget_9->yAxis->setRange(-0.4, -0.3);
     ui->widget_9->replot();
 }

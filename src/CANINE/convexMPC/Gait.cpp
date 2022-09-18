@@ -5,6 +5,13 @@
 #include "Gait.h"
 #include <iostream>
 
+/**
+ *
+ * @param mpcHorizon
+ * @param offsets
+ * @param durations
+ * @param cyclePeriod  1Cycle = dt * cyclePeriod
+ */
 OffsetGait::OffsetGait(int mpcHorizon, Vec4<int> offsets, Vec4<int> durations, int cyclePeriod) :
 _offsets(offsets.array()),
 _durations(durations.array()),

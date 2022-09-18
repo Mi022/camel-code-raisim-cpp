@@ -22,21 +22,11 @@ typedef struct _SHM_
     double DesRotY;
     double DesRotZ;
 
+    double footPointX[4];
+    double footPointY[4];
+    double footPointZ[4];
 
-    double FR_hipJoint;
-    double FL_hipJoint;
-    double RR_hipJoint;
-    double RL_hipJoint;
 
-    double FR_thightJoint;
-    double FL_thightJoint;
-    double RR_thightJoint;
-    double RL_thightJoint;
-
-    double FR_calfJoint;
-    double FL_calfJoint;
-    double RR_calfJoint;
-    double RL_calfJoint;
 }SHM, *pSHM;
 
 #endif //RAISIM_SHAREDMEMORY_H

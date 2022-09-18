@@ -35,6 +35,7 @@ public:
     // For real-time plotting
     ConvexMPCSolver cmpcSolver;
     raisim::VecDyn position = raisim::VecDyn(19);
+    raisim::Vec<3> footPosition[4];
 
 private:
 
@@ -60,7 +61,6 @@ private:
     raisim::VecDyn Legtemptorque = raisim::VecDyn(12);
 
     raisim::Mat<3, 3> bdyInertia;
-    raisim::Vec<3> footPosition[4];
 
     Eigen::Matrix<double,3,1> f[4], robottorque[4];
     Eigen::Matrix<double,3,3> robotJacobian[4];

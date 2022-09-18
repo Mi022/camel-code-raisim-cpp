@@ -7,10 +7,10 @@
 MPCController::MPCController(Robot *robot, double dT):
 Controller(robot),
 mDT(dT), mMPCHorizon(5),
-stand(mMPCHorizon, Vec4<int>(50,50,50,50), Vec4<int>(50,50,50,50), 50),
-trot(mMPCHorizon, Vec4<int>(0,25,25,0), Vec4<int>(25,25,25,25), 50),
-pace(mMPCHorizon, Vec4<int>(25,0,25,0), Vec4<int>(25,25,25,25), 50),
-bound(mMPCHorizon, Vec4<int>(0,0,25,25), Vec4<int>(25,25,25,25), 50)
+stand(mMPCHorizon, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100),
+trot(mMPCHorizon, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100),
+pace(mMPCHorizon, Vec4<int>(50,0,50,0), Vec4<int>(50,50,50,50), 100),
+bound(mMPCHorizon, Vec4<int>(0,0,50,50), Vec4<int>(50,50,50,50), 100)
 {
     currentGait = &stand;
     currentGaitName = GaitType::STAND;
@@ -23,7 +23,7 @@ bound(mMPCHorizon, Vec4<int>(0,0,25,25), Vec4<int>(25,25,25,25), 50)
     cmpcSolver.setWeights(weightMat, alpha);
     cmpcSolver.resizeMatrix();
 
-    legGenerator.updateTrajectory(getRobot()->getWorldTime(), 0.125);
+    legGenerator.updateTrajectory(getRobot()->getWorldTime(), 0.25);
 
     initialize();
 }

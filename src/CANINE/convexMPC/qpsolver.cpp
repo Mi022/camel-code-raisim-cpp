@@ -148,8 +148,8 @@ void ConvexMPCSolver::setTrajectory(double currentTime,GaitType currentGait) {
             xd(i*13+9,0) = 0.0;
         }
         else{
-            xd(i*13+3,0) = p[0]+0.7*(_Dt*i);
-            xd(i*13+9,0) = 0.7;
+            xd(i*13+3,0) = p[0]+1.0*(_Dt*i);
+            xd(i*13+9,0) = 1.0;
         }
     }
 

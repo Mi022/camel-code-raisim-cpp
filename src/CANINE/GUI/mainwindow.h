@@ -32,8 +32,16 @@ public:
 
     double yMinWidget7;
     double yMaxWidget7;
+    double xMinWidget7;
+    double xMaxWidget7;
+
+    double xMinWidget8;
+    double xMaxWidget8;
     double yMinWidget8;
     double yMaxWidget8;
+
+    double xMinWidget9;
+    double xMaxWidget9;
     double yMinWidget9;
     double yMaxWidget9;
 

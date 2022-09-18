@@ -23,7 +23,7 @@ bound(mMPCHorizon, Vec4<int>(0,0,25,25), Vec4<int>(25,25,25,25), 50)
     cmpcSolver.setWeights(weightMat, alpha);
     cmpcSolver.resizeMatrix();
 
-    legGenerator.updateTrajectory(getRobot()->getWorldTime(), 1);
+    legGenerator.updateTrajectory(getRobot()->getWorldTime(), 0.125);
 
     initialize();
 }
@@ -76,13 +76,27 @@ void MPCController::updateState(){
 
 void MPCController::setLegcontrol() {
     double currentTime = getRobot()->getWorldTime();
-    legDpos = legGenerator.getPositionTrajectory(currentTime + mDT);
+    legGenerator.getPositionTrajectory(currentTime + mDT);
+    desiredPosition[0] = legGenerator.sumX;
+    desiredPosition[1] = legGenerator.sumZ;
+
+    double d = sqrt(pow(desiredPosition[0],2)+pow(desiredPosition[1],2));
+    double phi = acos(abs(desiredPosition[0])/ d);
+    double psi = acos(pow(d,2)/(2*0.23*d));
 
     double jointPos[3];
     double jointVel[3];
+
     jointPos[0] = 0.f;
-    jointPos[1] = acos(std::abs(legDpos)/ 0.46);
-    jointPos[2] = -2*jointPos[1];
+    if (desiredPosition[0] < 0)
+        jointPos[1] = 1.57 - phi + psi;
+    else if(desiredPosition[0] == 0)
+        jointPos[1] = psi;
+    else
+        jointPos[1] = phi + psi - 1.57;
+    jointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
+
+
     jointVel[0] = 0.f;
     jointVel[1] = 0.f;
     jointVel[2] = 0.f;

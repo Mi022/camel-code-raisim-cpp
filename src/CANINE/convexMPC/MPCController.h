@@ -52,7 +52,7 @@ private:
 
     double alpha = 1e-10;
     double torqueLimit = 50.0;
-    double legDpos = 0.0;
+    double desiredPosition[2] = {0.0, 0.0};
 
 
     raisim::VecDyn velocity = raisim::VecDyn(18);

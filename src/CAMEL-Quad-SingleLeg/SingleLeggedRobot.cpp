@@ -16,7 +16,11 @@
 void SingleLeggedRobot::initialize() {
     Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
-    initialJointPosition[0] = 0.7;
-    initialJointPosition[1] = -1.4;
+/*    initialJointPosition[0] = 0.7;
+    initialJointPosition[1] = -1.4;*/
+    initialJointPosition[0] = 0.881691;
+    initialJointPosition[1] = -1.11338;
     robot->setGeneralizedCoordinate(initialJointPosition);
+
+
 }

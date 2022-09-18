@@ -98,8 +98,8 @@ void MainWindow::plotWidget1() {
 void MainWindow::plotWidget2() {
     ui->widget_2->graph(0)->addData(sharedMemory->position[0], sharedMemory->position[1]);
     // set axes ranges, so we see all data:
-    ui->widget_2->xAxis->setRange(0.0, 0.3);
-    ui->widget_2->yAxis->setRange(-0.4, -0.2);
+    ui->widget_2->xAxis->setRange(-0.17, 0.17);
+    ui->widget_2->yAxis->setRange(-0.45, -0.25);
     ui->widget_2->replot();
 }
 

@@ -56,8 +56,8 @@ void resetSimVarialbes() {
 void raisimSimulation() {
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
-
         clock_gettime(CLOCK_REALTIME, &TIME_TIC);
+
         controller.doControl();
         clock_gettime(CLOCK_REALTIME, &TIME_TOC);
         std::cout << "Controller time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
@@ -66,6 +66,7 @@ void raisimSimulation() {
         updateSHM();
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
+
         MainUI->button1 = false;
         MainUI->isSimulationEnd = true;
         resetSimVarialbes();
@@ -82,6 +83,7 @@ void *rt_simulation_thread(void *arg) {
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
     std::cout << "bf #while" << std::endl;
     std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 << std::endl;
+
     while (true) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
         timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함

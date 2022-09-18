@@ -46,7 +46,7 @@
   </link>
 
   <joint name="linear_guide" type="fixed">
-    <origin rpy="0 0 0" xyz="0 -0.025 0.5"/>
+    <origin rpy="0 0 0" xyz="0 -0.0125 0.5"/>
     <parent link="base"/>
     <child link="RF_hip"/>
   </joint>
@@ -63,7 +63,7 @@
                izz="0.000384" />
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="-3.1254 0 0" />
+      <origin xyz="-0.0705 0 0" rpy="-3.1254 0 0" />
       <geometry>
         <mesh filename="package://canine/meshes/R_U_hip.STL" />
       </geometry>
@@ -72,15 +72,15 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.0145 0 0" rpy="0 1.57079632679 0" />
+      <origin xyz="0 -0.015248 0." rpy="1.57079632679 0 0" />
       <geometry>
-        <cylinder length="0.029" radius="0.049"/>
+        <cylinder length="0.030496" radius="0.049"/>
       </geometry>
     </collision>
   </link>
 
   <joint name="RF_THIGH" type="revolute">
-    <origin xyz="0.0705 -0.030496 0" rpy="0 0 0" />
+    <origin xyz="0.0 -0.030496 0" rpy="0 0 0" />
     <parent link="RF_hip" />
     <child link="RF_thigh" />
     <axis xyz="0 1 0" />
@@ -107,9 +107,9 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -0.032 0." rpy="1.57079632679 0 0" />
+      <origin xyz="0 -0.0473 0." rpy="1.57079632679 0 0" />
       <geometry>
-        <cylinder length="0.124996" radius="0.049"/>
+        <cylinder length="0.0945" radius="0.049"/>
       </geometry>
     </collision>
     <collision>

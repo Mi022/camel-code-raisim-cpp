@@ -19,7 +19,7 @@ public:
     Eigen::VectorXd desiredJointPosition = Eigen::VectorXd(2);
     Eigen::VectorXd desiredJointVelocity = Eigen::VectorXd(2);
 
-    double desiredPosition[2];
+    double desiredPosition[2] = {-0.125,-0.37};
     double desiredVelocity[2];
     raisim::Vec<3> footPosition;
 

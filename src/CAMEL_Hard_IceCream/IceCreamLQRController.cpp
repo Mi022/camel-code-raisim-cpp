@@ -12,13 +12,13 @@ void IceCreamLQRController::setMatrix() {
 
     Ac <<   0, 0, 1, 0,
             0, 0, 0, 1,
-            52.1064, -39.7950, 0, 0,
-            -43.0680, 53.2449, 0, 0;
+            -27.9229, 0, 0, 0,
+            27.9229, 0, 0, 0;
 
     Bc <<   0,
             0,
-            2.3899,
-            -3.1977;
+            1.5495,
+            -2.7718;
 
     ABc.setZero();
 
@@ -82,7 +82,11 @@ void IceCreamLQRController::findK() {
 }
 
 void IceCreamLQRController::doControl() {
-
+    updateState();
+    if(mIsSExist){
+        computeControlInput();
+        setControlInput();
+    }
 }
 
 void IceCreamLQRController::setTrajectory() {
@@ -90,14 +94,38 @@ void IceCreamLQRController::setTrajectory() {
 }
 
 void IceCreamLQRController::updateState() {
+    position = getRobot()->getQ().e();
+    velocity = getRobot()->getQD().e();
+
+    mX[0] = position[0];
+    mX[1] = position[1] - desiredPosition[1];
+    mX[3] = velocity[0];
+    mX[2] = velocity[1];
 
 }
 
 void IceCreamLQRController::computeControlInput() {
-
+    torque[1] = mK*mX;
+//    if(torque[1] > mTorqueLimit)
+//    {
+//        torque[1] = mTorqueLimit;
+//    }
+//    else if(torque[1] < -mTorqueLimit)
+//    {
+//        torque[1] = -mTorqueLimit;
+//    }
+    std::cout<<"torque: "<<std::endl<<torque<<std::endl;
 }
 
 void IceCreamLQRController::setControlInput() {
+    getRobot()->robot->setGeneralizedForce(torque);
+}
+
+void IceCreamLQRController::raisimDynamics() {
+        std::cout<<"mass matrix: "<<std::endl<<getRobot()->robot->getMassMatrix()<<std::endl;
+        std::cout<<"inverse mass matrix: "<<std::endl<<getRobot()->robot->getInverseMassMatrix()<<std::endl;
+        std::cout<<"nonlinear matrix: "<<std::endl<<getRobot()->robot->getNonlinearities({9.81, 0.0, 0.0})<<std::endl;
+        std::cout<<"square: "<<std::endl<<getRobot()->robot->getInverseMassMatrix().e()*getRobot()->robot->getNonlinearities({9.81, 0.0, 0.0}).e()<<std::endl;
 
 }
 const int IceCreamLQRController::mMaximumIteration = 10000;

@@ -13,7 +13,14 @@ class IceCreamLQRController : public Controller {
 public:
     IceCreamLQRController(IceCreamRobot *robot, double dT) : Controller(robot){
         torque = Eigen::VectorXd(robot->dim);
+        desiredPosition = Eigen::VectorXd(robot->dim);
+        desiredVelocity = Eigen::VectorXd(robot->dim);
         torque.setZero();
+        desiredPosition.setZero();
+        desiredVelocity.setZero();
+
+        desiredPosition[1] = -90*3.141592/180.0;
+
         position = getRobot() -> getQ().e();
         velocity = getRobot() -> getQD().e();
 
@@ -21,8 +28,8 @@ public:
         mIteration = 0;
         setMatrix();
         setSNGain({100.0, 100.0, 100.0, 100.0});
-        setQGain({10.0, 10.0, 10.0, 10.0});
-        setRGain(1.0);
+        setQGain({1000, 100, 1000, 100});
+        setRGain(25.7);
         mS.setZero();
         findS();
         if(mIsSExist) {
@@ -39,6 +46,8 @@ public:
     Eigen::VectorXd torque;
     Eigen::VectorXd position;
     Eigen::VectorXd velocity;
+    Eigen::VectorXd desiredPosition;
+    Eigen::VectorXd desiredVelocity;
 
     void doControl() override;
     void setTrajectory() override;
@@ -58,7 +67,7 @@ private:
     Eigen::Matrix<double, 1, 4> mK;
     Eigen::Matrix<double, 4, 1> mX;
     bool mIsSExist = true;
-    double mTorqueLimit = 3.5;
+    double mTorqueLimit = 8;
 
     void setSNGain(Eigen::Vector4d D);
     void setQGain(Eigen::Vector4d D);
@@ -66,6 +75,7 @@ private:
     void setMatrix();
     void findS();
     void findK();
+    void raisimDynamics();
     bool IsSEnough(Eigen::MatrixXd SN, Eigen::MatrixXd Snext);
 
     static const int mMaximumIteration;

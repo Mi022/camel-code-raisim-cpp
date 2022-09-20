@@ -28,8 +28,8 @@ public:
         mIteration = 0;
         setMatrix();
         setSNGain({100.0, 100.0, 100.0, 100.0});
-        setQGain({1000, 100, 1000, 100});
-        setRGain(25.7);
+        setQGain({100, 100, 100, 100});
+        setRGain(1000);
         mS.setZero();
         findS();
         if(mIsSExist) {
@@ -75,6 +75,7 @@ private:
     void setMatrix();
     void findS();
     void findK();
+    void torqueLimit();
     void raisimDynamics();
     bool IsSEnough(Eigen::MatrixXd SN, Eigen::MatrixXd Snext);
 

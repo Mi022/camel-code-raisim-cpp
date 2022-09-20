@@ -12,13 +12,13 @@ void IceCreamLQRController::setMatrix() {
 
     Ac <<   0, 0, 1, 0,
             0, 0, 0, 1,
-            -27.9229, 0, 0, 0,
-            27.9229, 0, 0, 0;
+            30.0552, -39.0838, 9.42587e-10, 4.23916e-10,
+            -36.699,  117.033,  -2.49571e-09,  -9.42587e-10;
 
     Bc <<   0,
             0,
-            1.5495,
-            -2.7718;
+            -8.53125,
+            22.5884;
 
     ABc.setZero();
 
@@ -99,26 +99,28 @@ void IceCreamLQRController::updateState() {
 
     mX[0] = position[0];
     mX[1] = position[1] - desiredPosition[1];
-    mX[3] = velocity[0];
-    mX[2] = velocity[1];
+    mX[2] = velocity[0];
+    mX[3] = velocity[1];
 
 }
 
 void IceCreamLQRController::computeControlInput() {
-    torque[1] = mK*mX;
-//    if(torque[1] > mTorqueLimit)
-//    {
-//        torque[1] = mTorqueLimit;
-//    }
-//    else if(torque[1] < -mTorqueLimit)
-//    {
-//        torque[1] = -mTorqueLimit;
-//    }
-    std::cout<<"torque: "<<std::endl<<torque<<std::endl;
+    torque[1] = -mK*mX;
 }
 
 void IceCreamLQRController::setControlInput() {
     getRobot()->robot->setGeneralizedForce(torque);
+}
+
+void IceCreamLQRController::torqueLimit(){
+    if(torque[1] > mTorqueLimit)
+    {
+        torque[1] = mTorqueLimit;
+    }
+    else if(torque[1] < -mTorqueLimit)
+    {
+        torque[1] = -mTorqueLimit;
+    }
 }
 
 void IceCreamLQRController::raisimDynamics() {

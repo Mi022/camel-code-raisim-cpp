@@ -1,23 +1,22 @@
 //
-// Created by cha on 22. 9. 14.
+// Created by cha on 22. 9. 19.
 //
 
-#ifndef RAISIM_A1COLLISIONDETECTER_H
-#define RAISIM_A1COLLISIONDETECTER_H
-
+#ifndef RAISIM_A1COLLISIONDETECTERNOINERTIA_H
+#define RAISIM_A1COLLISIONDETECTERNOINERTIA_H
 #include "raisim/World.hpp"
 
-class A1CollisionDetecter {
+class A1CollisionDetecterNoInertia {
 public:
-    A1CollisionDetecter(){
+    A1CollisionDetecterNoInertia(){
         mlink1 = 0.2;
-        mmass1 = 1.013;
+        mmass1 = 0;
         mclink1 = 0.027;
-        minertia1 = 0.0085;
-        mlink2 = 0.22;
-        mmass2 = 0.172;
+        minertia1 = 0.0135;
+        mlink2 = 0.2;
+        mmass2 = 0.166;
         mclink2 = 0.134;
-        minertia2 = 0.0058;
+        minertia2 = 0.00058;
     }
 
 private:
@@ -76,7 +75,7 @@ public:
      * @return      2x2 mass matrix
      */
     Eigen::Matrix2d MassMat(double q1, double q2);
-
 };
 
-#endif //RAISIM_A1COLLISIONDETECTER_H
+
+#endif //RAISIM_A1COLLISIONDETECTERNOINERTIA_H

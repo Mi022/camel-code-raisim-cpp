@@ -198,10 +198,10 @@ target_link_libraries(camel-test_real_time_thread ${CAMEL_LIBS})
 add_executable(camel-test_gradient_descent_optimizer src/Test/Test_GradientDescentOptimizer.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_gradient_descent_optimizer ${CAMEL_LIBS})
 
-add_executable(camel-test_urdf src/Test/Test_urdf.cpp)
+add_executable(camel-test_urdf src/Test/Test_urdf.cpp )
 target_link_libraries(camel-test_urdf ${CAMEL_LIBS})
 
-add_executable(camel-test_fr_cd src/Test/Test_fr_cd.cpp)
+add_executable(camel-test_fr_cd src/Test/Test_fr_cd.cpp src/Test/A1CollisionDetecter.cpp src/Test/A1CollisionDetecterNoInertia.cpp)
 target_link_libraries(camel-test_fr_cd ${CAMEL_LIBS})
 
 add_executable(camel-test_real_time_graph src/Test/Qt_RealTimeGraph/Test_RealTimeGraph.cpp src/Test/Qt_RealTimeGraph/simulationMainwindow.cpp ${CAMEL_SOURCES})

@@ -75,7 +75,7 @@
   </link>
 
   <joint name="hip_pitch" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.090 0.0"/>
+    <origin rpy="0 1.570796 3.141592" xyz="0 -0.090 0.0"/>
     <parent link="hip_1"/>
     <child link="upper_leg"/>
     <axis xyz="0 1 0"/>
@@ -83,22 +83,22 @@
 
   <link name="upper_leg">
     <visual>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
+      <origin rpy="0 1.570796 0" xyz="0 0 -0.1"/>
       <geometry>
         <box size="0.2 0.0245 0.034"/>
       </geometry>
       <material name="black2"/>
     </visual>
     <collision>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
+      <origin rpy="0 1.570796 0" xyz="0 0 -0.1"/>
       <geometry>
         <box size="0.2 0.0245 0.034"/>
       </geometry>
     </collision>
-
     <inertial>
-      <mass value="0.221"/>
-      <inertia ixx="0.000981608" ixy="0.0" ixz="0.0" iyy="0.000990817" iyz="0.0" izz="0.000023942"/>
+      <origin rpy="0 0 0" xyz="-0.003237 0.022327 -0.027326"/>
+      <mass value="1.013"/>
+      <inertia ixx="0.005529065" ixy="-4.825e-06" ixz="0.000343869" iyy="0.005139339" iyz="-2.2448e-05" izz="0.001367788"/>
     </inertial>
   </link>
 
@@ -126,8 +126,9 @@
     </collision>
 
     <inertial>
-      <mass value="0.221"/>
-      <inertia ixx="0.000981608" ixy="0.0" ixz="0.0" iyy="0.000990817" iyz="0.0" izz="0.000023942"/>
+      <origin rpy="0 0 0" xyz="0.006435 0.0 -0.107388"/>
+      <mass value="0.166"/>
+      <inertia ixx="0.002997972" ixy="0.0" ixz="-0.000141163" iyy="0.003014022" iyz="0.0" izz="3.2426e-05"/>
     </inertial>
   </link>
 

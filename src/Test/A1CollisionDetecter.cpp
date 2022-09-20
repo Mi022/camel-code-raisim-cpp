@@ -33,16 +33,16 @@ Eigen::Matrix2d A1CollisionDetecter::CoriloisMat(double q1, double dq1, double q
 
 Eigen::Vector2d A1CollisionDetecter::GravityMat(double q1, double q2) {
     Eigen::Vector2d gravityMat;
-    gravityMat[0] = (mmass1*mclink1 + mmass2*mlink1)*9.8*std::cos(q1) + mmass2*mclink2*9.8*std::sin(q1+q2);
+    gravityMat[0] = (mmass1*mclink1 + mmass2*mlink1)*9.8*std::cos(q1) + mmass2*mclink2*9.8*std::cos(q1+q2);
     gravityMat[1] = mmass2*mclink2*9.8*std::cos(q1+q2);
     return gravityMat;
 };
 
 Eigen::Matrix2d A1CollisionDetecter::MassMat(double q1, double q2) {
     Eigen::Matrix2d massMat;
-    massMat(0,0) = mmass1 * mclink1 * mclink1 + mmass2 * (mlink1 * mlink1 + 2 * mlink1 * mclink2 * std::cos(q1) + mclink2 * mclink2) + minertia1 + minertia2;
-    massMat(0,1) = mmass2 * (mclink2 * mclink2 + mlink1 * mlink2 * std::cos(q2)) + minertia2;
-    massMat(1,0) = mmass2 * (mclink2 * mclink2 + mlink1 * mlink2 * std::cos(q2)) + minertia2;
+    massMat(0,0) = mmass1 * mclink1 * mclink1 + mmass2 * (mlink1 * mlink1 + 2 * mlink1 * mclink2 * std::cos(q2) + mclink2 * mclink2)+ minertia1 + minertia2;
+    massMat(0,1) = mmass2 * (mclink2 * mclink2 + mlink1 * mclink2 * std::cos(q2)) + minertia2;
+    massMat(1,0) = mmass2 * (mclink2 * mclink2 + mlink1 * mclink2 * std::cos(q2)) + minertia2;
     massMat(1,1) = mmass2 * mclink2 * mclink2 + minertia2;
     return massMat;
 };

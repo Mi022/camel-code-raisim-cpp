@@ -6,26 +6,21 @@
 
 void IceCreamRobot::initialize() {
     Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
+    Eigen::VectorXd initialJointVelocity(robot->getGeneralizedCoordinateDim());
     std::cout<<initialJointPosition.size()<<std::endl;
     initialJointPosition.setZero();
+    initialJointVelocity.setZero();
     double l = 0.2;
     double theta1 = 30*deg2rad;
     double theta2 = -60*deg2rad;
 
     //base-pitch
-    initialJointPosition[0] = 10*deg2rad;
+    initialJointPosition[0] = -10*deg2rad;
     //hip-pitch
-    initialJointPosition[1] = -120*deg2rad;
-
-//    //base-pitch
-//    initialJointPosition[0] = 30*deg2rad;
-//    //knee-pitch
-//    initialJointPosition[1] = -60*deg2rad;
-//    //hip-pitch
-//    initialJointPosition[2] = 30*deg2rad;
-
+    initialJointPosition[1] = -60*deg2rad;
 
     robot->setGeneralizedCoordinate(initialJointPosition);
+    robot->setGeneralizedVelocity(initialJointVelocity);
 }
 
 //const double IceCreamRobot::deg2rad = 3.141592/180;

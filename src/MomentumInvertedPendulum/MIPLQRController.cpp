@@ -48,18 +48,12 @@ void MIPLQRController::findS() {
 }
 
 bool MIPLQRController::IsSEnough(Eigen::Matrix3d S, Eigen::Matrix3d Snext) {
-    bool tempJudge = true;
     for(int r = 0; r<3; r++){
         for(int c = 0; c<3; c++){
-            tempJudge = tempJudge && abs(S(r,c) - Snext(r, c)) < TOLERANCE;
+            if(abs(S(r,c) - Snext(r, c)) >= TOLERANCE)  return false;
         }
     }
-    if(tempJudge){
-        return true;
-    }
-    else{
-        return false;
-    }
+    return true;
 }
 void MIPLQRController::findK() {
     double temp = mB.transpose()*mS*mB + mR;
@@ -111,6 +105,10 @@ void MIPLQRController::doControl() {
 void MIPLQRController::updateState() {
     mPosition = getRobot()->getQ();
     mVelocity = getRobot()->getQD();
+
+    mX[0] = mPosition[0];
+    mX[1] = mVelocity[0];
+    mX[2] = mVelocity[1];
 }
 
 void MIPLQRController::computeControlInput() {

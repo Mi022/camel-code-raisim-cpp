@@ -12,16 +12,17 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 find_package(raisim CONFIG REQUIRED)
 find_package(Eigen3 REQUIRED HINTS ${Eigen3_HINT})
-find_package(RBDL REQUIRED)
+find_package(RBDL COMPONENTS URDFREADER REQUIRED)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../rsc" DESTINATION ${CMAKE_BINARY_DIR}/camel-code-raisim-cpp)
 
 include_directories(${EIGEN3_INCLUDE_DIRS})
 include_directories("qpOASES/include")
-include_directories( ${RBDL_INCLIDE_DIR} )
+include_directories( ${RBDL_INCLIDE_DIR})
 
 add_subdirectory(qpOASES)
 
+ADD_COMPILE_DEFINITIONS (URDF_RSC_DIR="${CMAKE_CURRENT_SOURCE_DIR}/rsc")
 
 set(CAMEL_LIBS
         Qt5::Widgets
@@ -147,9 +148,10 @@ set(ICE_CREAM_SOURCES
         src/CAMEL_Hard_IceCream/IceCreamTestController.cpp
         src/CAMEL_Hard_IceCream/UI_RealTimePlot/operationMainwindow.cpp
         src/CAMEL_Hard_IceCream/IceCreamLQRController.cpp
+        src/CAMEL_Hard_IceCream/IceCreamRBDL.cpp
         )
 add_executable(camel-IceCream ${CAMEL_SOURCES} ${ICE_CREAM_SOURCES})
-target_link_libraries(camel-IceCream ${CAMEL_LIBS})
+target_link_libraries(camel-IceCream ${CAMEL_LIBS} ${RBDL_LIBRARY})
 # ====== Hard Ice Cream ======/ #
 
 # ====== Double Bar Ice Cream ====== #
@@ -217,4 +219,6 @@ add_executable(camel-test_SGDmodel src/Test/Test_SGDmodel.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_SGDmodel ${CAMEL_LIBS})
 add_executable(camel-test_calculateInertia src/Test/Test_calculateInertia.cpp)
 add_executable(camel-test_Eigen src/Test/Test_Eigen.cpp)
+add_executable(camel-test-RBDL src/Test/Test_RBDL.cpp)
+target_link_libraries(camel-test-RBDL ${RBDL_LIBRARY} ${RBDL_URDFREADER_LIBRARY})
 ## TEST FILES /##

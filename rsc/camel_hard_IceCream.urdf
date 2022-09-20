@@ -73,7 +73,6 @@
     <parent link="rod"/>
     <child link="body"/>
     <axis xyz = "0 1 0"/>
-    <limit velocity= "17"/>
   </joint>
 
   <link name="body">

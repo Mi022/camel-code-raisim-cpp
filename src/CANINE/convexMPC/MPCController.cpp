@@ -76,6 +76,7 @@ void MPCController::updateState(){
 
 void MPCController::setLegcontrol() {
     double currentTime = getRobot()->getWorldTime();
+
     legGenerator.getPositionTrajectory(currentTime + mDT);
     desiredPosition[0] = legGenerator.sumX;
     desiredPosition[1] = legGenerator.sumZ;

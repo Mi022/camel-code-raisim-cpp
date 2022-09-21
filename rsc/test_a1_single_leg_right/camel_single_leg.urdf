@@ -45,8 +45,8 @@
     </inertial>
   </link>
 
-  <joint name="linear_guide" type="fixed">
-    <origin rpy="0 0 0" xyz="0 -0.025 0.5"/>
+  <joint name="linear_guide" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 -0.025 0.0"/>
     <parent link="base"/>
     <child link="hip_1"/>
     <axis xyz="0 0 1"/>
@@ -75,10 +75,38 @@
   </link>
 
   <joint name="hip_pitch" type="revolute">
-    <origin rpy="0 1.570796 3.141592" xyz="0 -0.090 0.0"/>
+    <origin rpy="0 0 0" xyz="0 -0.090 0.0"/>
     <parent link="hip_1"/>
-    <child link="upper_leg"/>
+    <child link="hip_2"/>
     <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="hip_2">
+    <visual>
+      <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+        <cylinder length="0.034" radius="0.049"/>
+      </geometry>
+      <material name="black1"/>
+    </visual>
+
+    <collision>
+      <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+        <cylinder length="0.034" radius="0.049"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.7835"/>
+      <inertia ixx="0.000545773" ixy="0.0" ixz="0.0" iyy="0.000940592" iyz="0.0" izz="0.000545773"/>
+    </inertial>
+  </link>
+
+  <joint name="hip_upper" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="hip_2"/>
+    <child link="upper_leg"/>
   </joint>
 
   <link name="upper_leg">

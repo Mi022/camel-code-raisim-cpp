@@ -204,6 +204,21 @@ target_link_libraries(camel-test_urdf ${CAMEL_LIBS})
 add_executable(camel-test_fr_cd src/Test/Test_fr_cd.cpp src/Test/A1CollisionDetecter.cpp src/Test/A1CollisionDetecterNoInertia.cpp)
 target_link_libraries(camel-test_fr_cd ${CAMEL_LIBS})
 
+# ====== ETO with A1 Single Leg ======  #
+set(ETO_A1_SINGLE_LEG
+        src/Test/ETO-A1-Quad-SingleLeg/SingleLeggedSimulation.cpp
+        src/Test/ETO-A1-Quad-SingleLeg/SingleLeggedMPCController.cpp
+        src/Test/ETO-A1-Quad-SingleLeg/SingleLeggedMPCqpoases.cpp
+        src/Test/ETO-A1-Quad-SingleLeg/SingleLeggedRobot.cpp
+        src/Test/ETO-A1-Quad-SingleLeg/A1CollisionDetecter.cpp
+        src/CAMEL-Quad-SingleLeg/SingleLeggedSharedMemory.h
+        src/CAMEL-Quad-SingleLeg/UI/simulationMainwindow.cpp
+        )
+
+add_executable(camel-test_ETO_A1_Quad_SingleLeg ${CAMEL_SOURCES} ${ETO_A1_SINGLE_LEG})
+target_link_libraries(camel-test_ETO_A1_Quad_SingleLeg ${CAMEL_LIBS})
+
+
 add_executable(camel-test_real_time_graph src/Test/Qt_RealTimeGraph/Test_RealTimeGraph.cpp src/Test/Qt_RealTimeGraph/simulationMainwindow.cpp ${CAMEL_SOURCES})
 target_link_libraries(camel-test_real_time_graph ${CAMEL_LIBS})
 

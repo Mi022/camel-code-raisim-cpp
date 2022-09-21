@@ -8,11 +8,11 @@
 #include "include/RT/rb_utils.h"
 #include <QApplication>
 #include <cmath>
+#include "A1CollisionDetecter.h"
 
 extern MainWindow *MainUI;
 pthread_t thread_simulation;
 pSHM sharedMemory;
-
 
 std::string urdfPath = "\\home\\cha\\git\\repository-group\\raisimLib\\camel-code-raisim-cpp\\rsc\\test_a1_single_leg_right\\camel_single_leg.urdf";
 
@@ -28,6 +28,17 @@ SingleLeggedRobot robot = SingleLeggedRobot(&world, urdfPath, name);
 //SingleLeggedIDController controller = SingleLeggedIDController(&robot, dT);
 SingleLeggedMPCController controller = SingleLeggedMPCController(&robot, dT);
 //SingleLeggedMPCqpoases controller = SingleLeggedMPCqpoases(&robot, dT);
+
+/// for momentum observer
+A1CollisionDetecter FrontRightExteranlTorqueObserver;
+Eigen::VectorXd momentum = Eigen::VectorXd(2);
+Eigen::VectorXd momentumPrev = Eigen::VectorXd(2);
+Eigen::VectorXd residual = Eigen::VectorXd(2);
+Eigen::VectorXd beta = Eigen::VectorXd(2);
+Eigen::VectorXd dqMat = Eigen::VectorXd(2);
+Eigen::Matrix2d gainK;
+Eigen::Vector2d tempTorque;
+bool firstRun = true;
 
 double oneCycleSimTime = 0;
 int divider = ceil(simulationDuration / dT / 200);
@@ -47,6 +58,7 @@ void updateSHM() {
     sharedMemory->jointVelocity[1] = controller.velocity[2];
     sharedMemory->jointTorque[0] = controller.torque[0];
     sharedMemory->jointTorque[1] = controller.torque[1];
+
 }
 
 void resetSimVarialbes() {
@@ -60,12 +72,37 @@ void raisimSimulation() {
 
         clock_gettime(CLOCK_REALTIME, &TIME_TIC);
         controller.doControl();
+        //sharedMemory->beta = FrontRightExteranlTorqueObserver.Beta(robot.getQ()[1], robot.getQD()[1], robot.getQ()[2], robot.getQD()[2]);
+        beta = FrontRightExteranlTorqueObserver.Beta(robot.getQ()[1], robot.getQD()[1], robot.getQ()[2], robot.getQD()[2]);
         clock_gettime(CLOCK_REALTIME, &TIME_TOC);
-        std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
-
+        //std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
+//        std::cout << robot.getQ()[0]<<", "<< robot.getQ()[1]*180/3.141592<<", "<< robot.getQ()[2]*180/3.141592<< std::endl;
+        robot.robot->setExternalForce(robot.robot->getBodyIdx("lower_leg"),{0,0,-0.1},{-20,0,-20});
         world.integrate();
         updateSHM();
+        tempTorque[0] = controller.torque[1];
+        tempTorque[1] = controller.torque[2];
         iteration++;
+
+        //std::cout << sharedMemory->firstRun << std::endl;
+
+        if (firstRun == true) {
+            momentumPrev[0] = 0;
+            momentumPrev[1] = 0;
+            residual[0] = 0;
+            residual[1] = 0;
+            firstRun = false;
+        }
+
+        dqMat[0] = robot.getQD()[1];
+        dqMat[1] = robot.getQD()[2];
+        momentum = momentumPrev + tempTorque*dT - beta*dT + residual*dT;
+        residual = gainK*(-momentum + FrontRightExteranlTorqueObserver.MassMat(sharedMemory->jointPosition[0],sharedMemory->jointPosition[1])*dqMat);
+        momentumPrev = momentum;
+//        FrontRightExteranlTorqueObserver.MassMat(robot.getQ()[1],robot.getQ()[2]);
+        std::cout << "joint 1 : "<<residual[0] << " joint 2 : " << residual[1] <<" torque1 :" <<controller.torque[1] <<" torque2 :" <<controller.torque[2] <<" beta 1 : "<<beta[0]<<" beta 2 : "<<beta[1] <<std::endl;
+
+
     } else if (oneCycleSimTime >= simulationDuration) {
         MainUI->button1 = false;
         MainUI->isSimulationEnd = true;
@@ -104,6 +141,15 @@ int main(int argc, char *argv[]) {
     sim.setGroundProperty("wheat");
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
+    sharedMemory->custom = 0.0;
+
+    gainK(0,0) = 100;
+    gainK(0,1) = 0;
+    gainK(1,0) = 0;
+    gainK(1,1) = 100;
+
+    controller.setFrontLegTorqueObserver(&FrontRightExteranlTorqueObserver);
+
     int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 0, 99,
                                                    NULL);
     w.show();

@@ -42,20 +42,21 @@
 
   <link name="calf">
     <visual>
-      <origin rpy="0.0 0 0" xyz="0 0 0.1"/>
+      <origin rpy="0.0 0 0" xyz="0 0 0.115"/>
       <geometry>
-        <box size="0.03 0.02 0.2"/>
+        <box size="0.03 0.02 0.23"/>
       </geometry>
       <material name="blue"/>
     </visual>
 
     <inertial>
-      <mass value="0.2"/>
-      <inertia ixx="0.00067333" ixy="0" ixz="0" iyy="0.00068167" iyx="0" iyz="0" izz="0.00002167" izx="0" izy="0"/>
+      <origin rpy="0.0 0 0" xyz="0 0 0.115"/>
+      <mass value="0.207"/>
+      <inertia ixx="0.000922668" ixy="0" ixz="0" iyy="0.000922668" iyx="0" iyz="0" izz="2.0286e-05" izx="0" izy="0"/>
     </inertial>
 
     <collision>
-      <origin rpy="0.0 0 0" xyz="0 0 0.1"/>
+      <origin rpy="0.0 0 0" xyz="0 0 0.115"/>
       <geometry>
         <box size="0.003 0.002 0.2"/>
       </geometry>
@@ -63,7 +64,7 @@
   </link>
 
   <joint name="knee-pitch" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0.2"/>
+    <origin rpy="0 0 0" xyz="0 0 0.23"/>
     <parent link="calf"/>
     <child link="thigh"/>
     <axis xyz="0 1 0"/>
@@ -71,22 +72,23 @@
 
   <link name="thigh">
     <visual>
-      <origin rpy="0.0 0 0" xyz="0 0 0.1"/>
+      <origin rpy="0.0 0 0" xyz="0 0 0.115"/>
       <geometry>
-        <box size="0.03 0.02 0.2"/>
+        <box size="0.03 0.02 0.23"/>
       </geometry>
       <material name="blue"/>
     </visual>
 
     <inertial>
-      <mass value="0.2"/>
-      <inertia ixx="0.00067333" ixy="0" ixz="0" iyy="0.00068167" iyx="0" iyz="0" izz="0.00002167" izx="0" izy="0"/>
+      <origin rpy="0.0 0 0" xyz="0 0 0.115"/>
+      <mass value="1.229"/>
+      <inertia ixx="0.00624742" ixy="0" ixz="0" iyy="0.00605702" iyx="0" iyz="0" izz="0.00146876" izx="0" izy="0"/>
     </inertial>
 
   </link>
 
   <joint name="hip-pitch" type="revolute">
-    <origin rpy="0 0 0" xyz="0.0 0.0 0.2"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.23"/>
     <parent link="thigh"/>
     <child link="body"/>
     <axis xyz = "0 1 0"/>
@@ -95,17 +97,26 @@
 
   <link name="body">
     <visual>
-      <origin rpy="0 0 0" xyz="0.14 0.0 0.0"/>
+      <origin rpy="0 0 0" xyz="0.241 0.0 0.0"/>
       <geometry>
-        <box size="0.3 0.1 0.1"/>
+        <box size="0.482 0.122265 0.111"/>
       </geometry>
       <material name="red"/>
     </visual>
 
     <inertial>
-      <mass value="2.5"/>
-      <inertia ixx="0.00416667" ixy="0.0" ixz="0.0" iyy="0.0208333" iyz="0.0" izz="0.0208333"/>
+      <origin rpy="0 0 0" xyz="0.241 0.0 0.0"/>
+      <mass value="5.0075"/>
+      <inertia ixx="0.0113794" ixy="0.0" ixz="0.0" iyy="0.102088" iyz="0.0" izz="0.103185"/>
     </inertial>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0.241 0.0 0.0"/>
+      <geometry>
+        <box size="0.482 0.122265 0.111"/>
+      </geometry>
+      <material name="red"/>
+    </collision>
 
   </link>
 

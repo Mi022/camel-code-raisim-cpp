@@ -15,8 +15,10 @@ public:
     }
 
     void initialize() override;
+    Eigen::VectorXd diffWay();
+    Eigen::VectorXd sameWay();
     int dim;
-//    static const double deg2rad;
+    static const double deg2rad;
 
 private:
 };

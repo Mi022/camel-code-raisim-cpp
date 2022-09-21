@@ -33,7 +33,6 @@ void realTimePlot() {
     sharedMemory->plotW1B = controller.torque[1];
     sharedMemory->plotW1R = 0;
     sharedMemory->plotW2B = 0;
-//    sharedMemory->plotW2R = controller.torque[1];
     sharedMemory->plotW2R = 0;
     sharedMemory->plotW3B = 0;
     sharedMemory->plotW3R = 0;
@@ -48,9 +47,7 @@ void raisimSimulation() {
     realTimePlot();
     if ((MainUI->button1) && (oneCycleSimTime < simulationDuration)) {
         oneCycleSimTime = iteration * dT;
-//        controller.doControl();
-//        std::cout<<"tau2 : "<<controller.torque[1]<<std::endl;
-//        std::cout<<"acc1 : "<<controller.measuredAcc[0]<<std::endl;
+        controller.doControl();
         world.integrate();
         iteration++;
     } else if (oneCycleSimTime >= simulationDuration) {
@@ -81,10 +78,13 @@ void *rt_simulation_thread(void *arg) {
     }
 }
 
+void gravityCheck(){
+    auto box = world.addBox(1, 1, 1, 10);
+    box->setPosition(3, 3, 5);
+    world.setGravity({0.0, 0.0, 0.0});
+}
+
 int main(int argc, char *argv[]) {
-//    auto box = world.addBox(1, 1, 1, 10);
-//    box->setPosition(3, 3, 5);
-//    world.setGravity({0.0, 0.0, 0.0});
     QApplication a(argc, argv);
     MainWindow w;
     sharedMemory = (pSHM) malloc(sizeof(SHM));

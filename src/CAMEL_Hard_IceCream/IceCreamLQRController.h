@@ -67,7 +67,7 @@ private:
     Eigen::Matrix<double, 1, 4> mK;
     Eigen::Matrix<double, 4, 1> mX;
     bool mIsSExist = true;
-    double mTorqueLimit = 8;
+    double mTorqueLimit = 16.5;
 
     void setSNGain(Eigen::Vector4d D);
     void setQGain(Eigen::Vector4d D);

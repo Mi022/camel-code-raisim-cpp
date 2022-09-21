@@ -106,6 +106,7 @@ void IceCreamLQRController::updateState() {
 
 void IceCreamLQRController::computeControlInput() {
     torque[1] = -mK*mX;
+    torqueLimit();
 }
 
 void IceCreamLQRController::setControlInput() {

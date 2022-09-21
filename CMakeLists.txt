@@ -181,6 +181,21 @@ add_executable(camel-canine_single_leg_opertaion_circle ${CAMEL_SOURCES} ${CANIN
 target_link_libraries(camel-canine_single_leg_opertaion_circle ${CAMEL_LIBS})
 # ====== Canine Single Leg Circle====== /#
 
+# ====== Canine Single Leg Ver 2======  #
+set(CANINE_SINGLE_LEG_VER2_OPERATION_SOURCES
+        src/CANINE-Leg/Command/Command.cpp
+        src/CANINE-Leg/Controllers/JointPDController.cpp
+        src/CANINE-Leg/GUI/mainwindow.cpp
+        src/CANINE-Leg/Robot/RobotDescription.h
+        src/CANINE-Leg/Robot/RobotVisualization.cpp
+        src/CANINE-Leg/Utils/MotorCAN.cpp
+        src/CANINE-Leg/Utils/SharedMemory.h
+        src/CANINE-Leg/CanineLegOperation.cpp)
+
+add_executable(camel-canine_single_leg_operation_ver2 ${CAMEL_SOURCES} ${CANINE_SINGLE_LEG_VER2_OPERATION_SOURCES})
+target_link_libraries(camel-canine_single_leg_operation_ver2 ${CAMEL_LIBS})
+# ====== Canine Single Leg Ver 2====== /#
+
 
 ## Operation /##
 

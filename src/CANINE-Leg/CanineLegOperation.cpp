@@ -21,7 +21,7 @@ pthread_t NRTThreadVisual;
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
 
-MotorCAN can("can5");
+MotorCAN can("can9");
 Command userCommand(&can);
 JointPDController userController(&can);
 
@@ -76,17 +76,19 @@ void clearSharedMemory()
     sharedMemory->newCommand = false;
     sharedMemory->canStatus = false;
     sharedMemory->motorStatus = false;
-    sharedMemory->motorErrorStatus = 0;
-    sharedMemory->motorId = 0;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
-    sharedMemory->motorTemp = 0;
     sharedMemory->localTime = 0;
-    sharedMemory->motorPosition = 0;
-    sharedMemory->motorVelocity = 0;
-    sharedMemory->motorTorque = 0;
-    sharedMemory->motorDesiredTorque = 0;
-    sharedMemory->motorVoltage = 0;
+    for(int index = 0; index < MOTOR_NUM ; index++)
+    {
+        sharedMemory->motorErrorStatus[index] = 0;
+        sharedMemory->motorTemp[index] = 0;
+        sharedMemory->motorPosition[index] = 0;
+        sharedMemory->motorVelocity[index] = 0;
+        sharedMemory->motorTorque[index] = 0;
+        sharedMemory->motorDesiredTorque[index] = 0;
+        sharedMemory->motorVoltage[index] = 0;
+    }
 }
 
 int main(int argc, char *argv[]) {

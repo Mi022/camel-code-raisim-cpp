@@ -25,14 +25,14 @@ void Command::commandFunction()
             }
             case MOTOR_ON:
             {
+                sharedMemory->controlState = STATE_CONTROL_STOP;
                 mCan->turnOnMotor();
                 sharedMemory->controlState = STATE_READY;
                 break;
             }
             case MOTOR_OFF:
             {
-                mCan->turnOffMotor();
-                sharedMemory->controlState = STATE_CONTROL_STOP;
+                sharedMemory->controlState = STATE_MOTOR_OFF;
                 break;
             }
             case HOME:

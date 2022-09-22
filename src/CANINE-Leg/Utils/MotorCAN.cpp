@@ -8,7 +8,6 @@ void MotorCAN::canInit()
             "sudo ip link set " + mCanName + " up type can bitrate 1000000";
     const char *c3 = command3.c_str();
     system(c3);
-    sharedMemory->motorId = mMotorId - 0x141;
     mSock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
     if (mSock == -1) {
         perror("Fail to create can socket for ");
@@ -39,9 +38,9 @@ void MotorCAN::canInit()
     sharedMemory->canStatus = true;
 }
 
-void MotorCAN::canSend(const u_int8_t *data)
+void MotorCAN::canSend(int motorIndex, const u_int8_t *data)
 {
-    u_int32_t tempid = mMotorId & 0x1fffffff;
+    u_int32_t tempid = mMotorId[motorIndex] & 0x1fffffff;
     mFrame.can_id = tempid;
     memcpy(mFrame.data, data, sizeof(data));
     mFrame.can_dlc = sizeof(data);
@@ -69,202 +68,216 @@ void MotorCAN::canRead()
 
 void MotorCAN::readEncoder()
 {
-    u_int8_t data[8] = {0X90, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
-    canSend(data);
-    canRead();
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
+    {
+        u_int8_t data[8] = {0X90, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
+        canSend(motorIndex, data);
+        canRead();
 
-    mEncoderPast = mEncoderTemp;
-    mEncoderTemp = mFrame.data[2] + mFrame.data[3] * 256;
-    mEncoderRaw = mFrame.data[4] + mFrame.data[5] * 256;
-    mEncoderOffset = mFrame.data[6] + mFrame.data[7] * 256;
-    if ((mEncoderTemp < 10000) && (mEncoderPast > 50000))
-    {
-        mEncoderMultiturnNum += 1;
-    } else if ((mEncoderTemp > 50000) && (mEncoderPast < 10000))
-    {
-        mEncoderMultiturnNum -= 1;
+        mEncoderPast[motorIndex] = mEncoderTemp[motorIndex];
+        mEncoderTemp[motorIndex] = mFrame.data[2] + mFrame.data[3] * 256;
+        mEncoderRaw[motorIndex] = mFrame.data[4] + mFrame.data[5] * 256;
+        mEncoderOffset[motorIndex] = mFrame.data[6] + mFrame.data[7] * 256;
+        if ((mEncoderTemp[motorIndex] < 10000) && (mEncoderPast[motorIndex] > 50000))
+        {
+            mEncoderMultiturnNum[motorIndex] += 1;
+        } else if ((mEncoderTemp[motorIndex] > 50000) && (mEncoderPast[motorIndex] < 10000))
+        {
+            mEncoderMultiturnNum[motorIndex] -= 1;
+        }
+        mEncoder[motorIndex] = mEncoderTemp[motorIndex] + 65535 * mEncoderMultiturnNum[motorIndex];
+        mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
+        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
     }
-    mEncoder = mEncoderTemp + 65535 * mEncoderMultiturnNum;
-    mAngularPosition = mEncoder * enc2rad / mGearRatio;
-    sharedMemory->motorPosition = mAngularPosition;
 }
 
 void MotorCAN::readMotorErrorStatus()
 {
-    u_int8_t data[8] = {0X9a, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
-    canSend(data);
-    canRead();
-    mMotorTemperature = mFrame.data[1];
-    mMotorVoltage = (mFrame.data[4] + mFrame.data[5] * 256) * 0.1;
-    mMotorErrorCode = mFrame.data[6] + mFrame.data[7] * 256;
-    sharedMemory->motorTemp = mMotorTemperature;
-    sharedMemory->motorVoltage = mMotorVoltage;
-    sharedMemory->motorErrorStatus = mMotorErrorCode;
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
+    {
+        u_int8_t data[8] = {0X9a, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
+        canSend(motorIndex, data);
+        canRead();
+        mMotorTemperature[motorIndex] = mFrame.data[1];
+        mMotorVoltage[motorIndex] = (mFrame.data[4] + mFrame.data[5] * 256) * 0.1;
+        mMotorErrorCode[motorIndex] = mFrame.data[6] + mFrame.data[7] * 256;
+        sharedMemory->motorTemp[motorIndex] = mMotorTemperature[motorIndex];
+        sharedMemory->motorVoltage[motorIndex] = mMotorVoltage[motorIndex];
+        sharedMemory->motorErrorStatus[motorIndex] = mMotorErrorCode[motorIndex];
+    }
 }
 
 void MotorCAN::turnOffMotor()
 {
-    u_int8_t data[8] = {0x80, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
-    canSend(data);
-    canRead();
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
+    {
+        u_int8_t data[8] = {0x80, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
+        canSend(motorIndex, data);
+        canRead();
+    }
     sharedMemory->motorStatus = false;
 }
 
 void MotorCAN::stopMotor()
 {
-    u_int8_t data[8] = {0x81, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
-    canSend(data);
-    canRead();
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
+    {
+        u_int8_t data[8] = {0x81, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
+        canSend(motorIndex, data);
+        canRead();
+    }
 }
 
 void MotorCAN::turnOnMotor()
 {
-    u_int8_t data[8] = {0x88, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
-    canSend(data);
-    canRead();
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
+    {
+        u_int8_t data[8] = {0x88, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
+        canSend(motorIndex, data);
+        canRead();
+    }
     sleep(5);
     sharedMemory->motorStatus = true;
-    std::cout << "motor " << mMotorId - 0x141 << " is turned on" << std::endl;
 }
 
-void MotorCAN::setTorque(double desiredTorque)
+void MotorCAN::setTorque(double *desiredTorque)
 {
-    u_int16_t desiredCurrent = round(torque2int * desiredTorque);
-    u_int8_t currentLowerData;
-    u_int8_t currentUpperData;
-
-    currentLowerData = desiredCurrent % 256;
-    desiredCurrent = desiredCurrent / 256;
-    currentUpperData = desiredCurrent % 256;
-    u_int8_t data[8] = {0Xa1, 0X00, 0X00, 0X00, currentLowerData, currentUpperData, 0X00, 0X00};
-    canSend(data);
-
-    canRead();
-    int16_t currentTorque;
-    int16_t angularVelocity;
-
-    mMotorTemperature = mFrame.data[1];
-    currentTorque = mFrame.data[2] + mFrame.data[3] * 256;
-    mCurrentTorque = currentTorque / torque2int;
-    angularVelocity = mFrame.data[4] + mFrame.data[5] * 256;
-    mAngularVelocity = angularVelocity * D2R / mGearRatio;
-
-    mEncoderPast = mEncoderTemp;
-    mEncoderTemp = mFrame.data[6] + mFrame.data[7] * 256;
-    if ((mEncoderTemp < 10000) && (mEncoderPast > 50000))
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
     {
-        mEncoderMultiturnNum += 1;
-    }
-    else if ((mEncoderTemp > 50000) && (mEncoderPast < 10000))
-    {
-        mEncoderMultiturnNum -= 1;
-    }
-    mEncoder = mEncoderTemp + 65535 * mEncoderMultiturnNum;
-    mAngularPosition = mEncoder * enc2rad / mGearRatio;
+        u_int16_t desiredCurrent = round(torque2int * desiredTorque[motorIndex]);
+        u_int8_t currentLowerData;
+        u_int8_t currentUpperData;
 
-    sharedMemory->motorTemp = mMotorTemperature;
-    sharedMemory->motorDesiredTorque = desiredTorque;
-    sharedMemory->motorTorque = mCurrentTorque;
-    sharedMemory->motorVelocity = mAngularVelocity;
-    sharedMemory->motorPosition = mAngularPosition;
+        currentLowerData = desiredCurrent % 256;
+        desiredCurrent = desiredCurrent / 256;
+        currentUpperData = desiredCurrent % 256;
+        u_int8_t data[8] = {0Xa1, 0X00, 0X00, 0X00, currentLowerData, currentUpperData, 0X00, 0X00};
+        canSend(motorIndex, data);
+
+        canRead();
+        int16_t currentTorque;
+        int16_t angularVelocity;
+
+        mMotorTemperature[motorIndex] = mFrame.data[1];
+        currentTorque = mFrame.data[2] + mFrame.data[3] * 256;
+        mCurrentTorque[motorIndex] = currentTorque / torque2int;
+        angularVelocity = mFrame.data[4] + mFrame.data[5] * 256;
+        mAngularVelocity[motorIndex] = angularVelocity * D2R / mGearRatio;
+
+        mEncoderPast[motorIndex] = mEncoderTemp[motorIndex];
+        mEncoderTemp[motorIndex] = mFrame.data[6] + mFrame.data[7] * 256;
+        if ((mEncoderTemp[motorIndex] < 10000) && (mEncoderPast[motorIndex] > 50000)) {
+            mEncoderMultiturnNum[motorIndex] += 1;
+        } else if ((mEncoderTemp[motorIndex] > 50000) && (mEncoderPast[motorIndex] < 10000)) {
+            mEncoderMultiturnNum[motorIndex] -= 1;
+        }
+        mEncoder[motorIndex] = mEncoderTemp[motorIndex] + 65535 * mEncoderMultiturnNum[motorIndex];
+        mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
+
+        sharedMemory->motorTemp[motorIndex] = mMotorTemperature[motorIndex];
+        sharedMemory->motorDesiredTorque[motorIndex] = desiredTorque[motorIndex];
+        sharedMemory->motorTorque[motorIndex] = mCurrentTorque[motorIndex];
+        sharedMemory->motorVelocity[motorIndex] = mAngularVelocity[motorIndex];
+        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
+    }
 }
 
-void MotorCAN::setVelocity(double desiredVelocity)
+void MotorCAN::setVelocity(double *desiredVelocity)
 {
-    u_int32_t velocityInput = round(desiredVelocity * R2D * 100 * mGearRatio);
-
-    u_int8_t vel0;
-    u_int8_t vel1;
-    u_int8_t vel2;
-    u_int8_t vel3;
-
-    vel0 = velocityInput % 256;
-    velocityInput = velocityInput / 256;
-    vel1 = velocityInput % 256;
-    velocityInput = velocityInput / 256;
-    vel2 = velocityInput % 256;
-    velocityInput = velocityInput / 256;
-    vel3 = velocityInput % 256;
-
-    u_int8_t data[8] = {0Xa2, 0X00, 0X00, 0X00, vel0, vel1, vel2, vel3};
-    canSend(data);
-
-    canRead();
-    int16_t currentTorque;
-    int16_t angularVelocity;
-
-    mMotorTemperature = mFrame.data[1];
-    currentTorque = mFrame.data[2] + mFrame.data[3] * 256;
-    mCurrentTorque = currentTorque / torque2int;
-    angularVelocity = mFrame.data[4] + mFrame.data[5] * 256;
-    mAngularVelocity = angularVelocity * D2R / mGearRatio;
-
-    mEncoderPast = mEncoderTemp;
-    mEncoderTemp = mFrame.data[6] + mFrame.data[7] * 256;
-    if ((mEncoderTemp < 10000) && (mEncoderPast > 50000))
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
     {
-        mEncoderMultiturnNum += 1;
-    }
-    else if ((mEncoderTemp > 50000) && (mEncoderPast < 10000))
-    {
-        mEncoderMultiturnNum -= 1;
-    }
-    mEncoder = mEncoderTemp + 65535 * mEncoderMultiturnNum;
-    mAngularPosition = mEncoder * enc2rad / mGearRatio;
+        u_int32_t velocityInput = round(desiredVelocity[motorIndex] * R2D * 100 * mGearRatio);
 
-    sharedMemory->motorTemp = mMotorTemperature;
-    sharedMemory->motorTorque = mCurrentTorque;
-    sharedMemory->motorVelocity = mAngularVelocity;
-    sharedMemory->motorPosition = mAngularPosition;
+        u_int8_t vel0;
+        u_int8_t vel1;
+        u_int8_t vel2;
+        u_int8_t vel3;
+
+        vel0 = velocityInput % 256;
+        velocityInput = velocityInput / 256;
+        vel1 = velocityInput % 256;
+        velocityInput = velocityInput / 256;
+        vel2 = velocityInput % 256;
+        velocityInput = velocityInput / 256;
+        vel3 = velocityInput % 256;
+
+        u_int8_t data[8] = {0Xa2, 0X00, 0X00, 0X00, vel0, vel1, vel2, vel3};
+        canSend(motorIndex, data);
+
+        canRead();
+        int16_t currentTorque;
+        int16_t angularVelocity;
+
+        mMotorTemperature[motorIndex] = mFrame.data[1];
+        currentTorque = mFrame.data[2] + mFrame.data[3] * 256;
+        mCurrentTorque[motorIndex] = currentTorque / torque2int;
+        angularVelocity = mFrame.data[4] + mFrame.data[5] * 256;
+        mAngularVelocity[motorIndex] = angularVelocity * D2R / mGearRatio;
+
+        mEncoderPast[motorIndex] = mEncoderTemp[motorIndex];
+        mEncoderTemp[motorIndex] = mFrame.data[6] + mFrame.data[7] * 256;
+        if ((mEncoderTemp[motorIndex] < 10000) && (mEncoderPast[motorIndex] > 50000)) {
+            mEncoderMultiturnNum[motorIndex] += 1;
+        } else if ((mEncoderTemp[motorIndex] > 50000) && (mEncoderPast[motorIndex] < 10000)) {
+            mEncoderMultiturnNum[motorIndex] -= 1;
+        }
+        mEncoder[motorIndex] = mEncoderTemp[motorIndex] + 65535 * mEncoderMultiturnNum[motorIndex];
+        mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
+
+        sharedMemory->motorTemp[motorIndex] = mMotorTemperature[motorIndex];
+        sharedMemory->motorTorque[motorIndex] = mCurrentTorque[motorIndex];
+        sharedMemory->motorVelocity[motorIndex] = mAngularVelocity[motorIndex];
+        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
+    }
 }
 
-void MotorCAN::setPosition(double desiredPosition)
+void MotorCAN::setPosition(double *desiredPosition)
 {
-    u_int32_t position_int = round(desiredPosition * R2D * 100 * mGearRatio);
-
-    u_int8_t pos0;
-    u_int8_t pos1;
-    u_int8_t pos2;
-    u_int8_t pos3;
-
-    u_int32_t temp = position_int;
-    pos0 = temp % 256;
-    temp = temp / 256;
-    pos1 = temp % 256;
-    temp = temp / 256;
-    pos2 = temp % 256;
-    temp = temp / 256;
-    pos3 = temp % 256;
-
-    u_int8_t data[8] = {0Xa3, 0X00, 0X00, 0X00, pos0, pos1, pos2, pos3};
-
-    canSend(data);
-
-    canRead();
-
-    mMotorTemperature = mFrame.data[1];
-
-    int16_t currentTorque = mFrame.data[2] + mFrame.data[3] * 256;
-    mCurrentTorque = currentTorque / torque2int;
-
-    int16_t angularVelocity = mFrame.data[4] + mFrame.data[5] * 256;
-    mAngularVelocity = angularVelocity * D2R / mGearRatio;
-
-    mEncoderPast = mEncoderTemp;
-    mEncoderTemp = mFrame.data[6] + mFrame.data[7] * 256;
-    if ((mEncoderTemp < 10000) && (mEncoderPast > 50000))
+    for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
     {
-        mEncoderMultiturnNum += 1;
-    }
-    else if ((mEncoderTemp > 50000) && (mEncoderPast < 10000))
-    {
-        mEncoderMultiturnNum -= 1;
-    }
-    mEncoder = mEncoderTemp + 65535 * mEncoderMultiturnNum;
-    mAngularPosition = mEncoder * enc2rad / mGearRatio;
+        u_int32_t position_int = round(desiredPosition[motorIndex] * R2D * 100 * mGearRatio);
 
-    sharedMemory->motorTemp = mMotorTemperature;
-    sharedMemory->motorTorque = mCurrentTorque;
-    sharedMemory->motorVelocity = mAngularVelocity;
-    sharedMemory->motorPosition = mAngularPosition;
+        u_int8_t pos0;
+        u_int8_t pos1;
+        u_int8_t pos2;
+        u_int8_t pos3;
+
+        u_int32_t temp = position_int;
+        pos0 = temp % 256;
+        temp = temp / 256;
+        pos1 = temp % 256;
+        temp = temp / 256;
+        pos2 = temp % 256;
+        temp = temp / 256;
+        pos3 = temp % 256;
+
+        u_int8_t data[8] = {0Xa3, 0X00, 0X00, 0X00, pos0, pos1, pos2, pos3};
+
+        canSend(motorIndex, data);
+
+        canRead();
+
+        mMotorTemperature[motorIndex] = mFrame.data[1];
+
+        int16_t currentTorque = mFrame.data[2] + mFrame.data[3] * 256;
+        mCurrentTorque[motorIndex] = currentTorque / torque2int;
+
+        int16_t angularVelocity = mFrame.data[4] + mFrame.data[5] * 256;
+        mAngularVelocity[motorIndex] = angularVelocity * D2R / mGearRatio;
+
+        mEncoderPast[motorIndex] = mEncoderTemp[motorIndex];
+        mEncoderTemp[motorIndex] = mFrame.data[6] + mFrame.data[7] * 256;
+        if ((mEncoderTemp[motorIndex] < 10000) && (mEncoderPast[motorIndex] > 50000)) {
+            mEncoderMultiturnNum[motorIndex] += 1;
+        } else if ((mEncoderTemp[motorIndex] > 50000) && (mEncoderPast[motorIndex] < 10000)) {
+            mEncoderMultiturnNum[motorIndex] -= 1;
+        }
+        mEncoder[motorIndex] = mEncoderTemp[motorIndex] + 65535 * mEncoderMultiturnNum[motorIndex];
+        mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
+
+        sharedMemory->motorTemp[motorIndex] = mMotorTemperature[motorIndex];
+        sharedMemory->motorTorque[motorIndex] = mCurrentTorque[motorIndex];
+        sharedMemory->motorVelocity[motorIndex] = mAngularVelocity[motorIndex];
+        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
+    }
 }

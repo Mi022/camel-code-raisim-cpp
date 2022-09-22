@@ -8,6 +8,7 @@
 #include "raisim/World.hpp"
 #include "raisim/RaisimServer.hpp"
 #include "../Utils/SharedMemory.h"
+#include "RobotDescription.h"
 
 class RobotVisualization {
 public:

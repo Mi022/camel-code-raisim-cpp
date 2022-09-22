@@ -17,8 +17,8 @@ void RobotVisualization::updateVisual()
     Eigen::VectorXd initialJointPosition(mRobot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
     initialJointPosition[0] = 0.75;
-    initialJointPosition[1] = sharedMemory->motorPosition;
-    initialJointPosition[2] = 0.0;
+    initialJointPosition[1] = sharedMemory->motorPosition[HIP_IDX];
+    initialJointPosition[2] = sharedMemory->motorPosition[KNEE_IDX];
     mRobot->setGeneralizedCoordinate(initialJointPosition);
 }
 

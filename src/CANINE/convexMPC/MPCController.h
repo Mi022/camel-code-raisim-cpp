@@ -7,10 +7,11 @@
 
 #include "include/CAMEL/Controller.h"
 #include "src/CANINE/canine/CanineRobot.h"
+#include "include/Xbox/XboxController.h"
 
 #include "Gait.h"
 #include "qpsolver.h"
-#include "Trajectory.h"
+#include "SwingLegTrajectory.h"
 #include "EigenTypes.h"
 
 using Eigen::Dynamic;
@@ -38,7 +39,7 @@ public:
     raisim::Vec<3> footPosition[4];
 
 private:
-
+    XboxController joystick = XboxController();
     int *mpcTable;
     int mMPCHorizon;
     double mDT;
@@ -49,7 +50,7 @@ private:
 
     int iteration = 0;
 
-    LegTrajectory legGenerator;
+    SwingLegTrajectory SwinglegGenerator;
 
     double alpha = 1e-10;
     double torqueLimit = 50.0;

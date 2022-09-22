@@ -14,7 +14,6 @@
 #define F_MAX 240
 #define MU 0.6
 
-
 char var_elim[2000];
 char con_elim[2000];
 
@@ -34,7 +33,7 @@ ConvexMPCSolver::~ConvexMPCSolver() {
     free(q_red);
 }
 
-/*!
+/**
  * Set the parameters for MPC controller by qt GUI
  * @param Horizon : MPC Horizon -> init : 5
  * @param Dt      : MPC Contoller time step -> init : 0.005s = 5ms
@@ -48,7 +47,7 @@ void ConvexMPCSolver::setParameters(int Horizon, double Dt){
     _Dt = Dt;
 }
 
-/*!
+/**
  * Set the wieghts for MPC controller by qt GUI
  * @param weightMat : Weights for robot states 12[Q,P,dQ,dP] + gravity
  * @param alpha     : Weights for desired force U
@@ -128,19 +127,6 @@ void ConvexMPCSolver::matrixinitialize(raisim::Mat<3,3> bdyInertia){
 void ConvexMPCSolver::setTrajectory(double currentTime,GaitType currentGait) {
     for(int i = 0; i < _Horizon ; i++)
     {
-/*        xd(i*13,0) = 0.f;
-        xd(i*13+1,0) = 0.f;
-        xd(i*13+2,0) = 0.f;
-
-        xd(i*13+4,0) = 0.0;
-
-        xd(i*13+6,0) = 0.f;
-        xd(i*13+7,0) = 0.f;
-        xd(i*13+8,0) = 0.f;
-
-        xd(i*13+10,0) = 0.f;
-        xd(i*13+11,0) = 0.f;*/
-
         xd(i*13+5,0) = 0.37;
 
         if(currentGait == GaitType::STAND){
@@ -148,12 +134,12 @@ void ConvexMPCSolver::setTrajectory(double currentTime,GaitType currentGait) {
             xd(i*13+9,0) = 0.0;
         }
         else{
-            xd(i*13+3,0) = p[0]+1.0*(_Dt*i);
-            xd(i*13+9,0) = 1.0;
+            xd(i*13+3,0) = p[0]+mdesiredVx*(_Dt*i);
+            xd(i*13+9,0) = mdesiredVx;
         }
     }
 
-    desiredPositionX = xd(3,0);
+    desiredPositionX = mdesiredVx;
     desiredPositionY = xd(4,0);
     desiredPositionZ = xd(5,0);
 
@@ -503,4 +489,9 @@ void ConvexMPCSolver::getGRF(Vec3<double> _f[4]){
         }
         //std::cout << std::endl;
     }
+}
+
+void ConvexMPCSolver::setMdesiredV(double mdesiredVx, double mdesiredVy) {
+    ConvexMPCSolver::mdesiredVx = mdesiredVx;
+    ConvexMPCSolver::mdesiredVy = mdesiredVy;
 }

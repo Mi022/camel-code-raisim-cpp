@@ -3,14 +3,17 @@
 //
 
 #include "MPCController.h"
+#define PERIOD 50.0
+#define VX_MAX 1.5
+#define VY_MAX 0.5
 
 MPCController::MPCController(Robot *robot, double dT):
 Controller(robot),
 mDT(dT), mMPCHorizon(5),
-stand(mMPCHorizon, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100),
-trot(mMPCHorizon, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100),
-pace(mMPCHorizon, Vec4<int>(50,0,50,0), Vec4<int>(50,50,50,50), 100),
-bound(mMPCHorizon, Vec4<int>(0,0,50,50), Vec4<int>(50,50,50,50), 100)
+stand(mMPCHorizon, Vec4<int>(PERIOD,PERIOD,PERIOD,PERIOD), Vec4<int>(PERIOD,PERIOD,PERIOD,PERIOD), PERIOD),
+trot(mMPCHorizon, Vec4<int>(0,PERIOD/2,PERIOD/2,0), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD),
+pace(mMPCHorizon, Vec4<int>(PERIOD/2,0,PERIOD/2,0), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD),
+bound(mMPCHorizon, Vec4<int>(0,0,PERIOD/2,PERIOD/2), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD)
 {
     currentGait = &stand;
     currentGaitName = GaitType::STAND;
@@ -23,7 +26,7 @@ bound(mMPCHorizon, Vec4<int>(0,0,50,50), Vec4<int>(50,50,50,50), 100)
     cmpcSolver.setWeights(weightMat, alpha);
     cmpcSolver.resizeMatrix();
 
-    legGenerator.updateTrajectory(getRobot()->getWorldTime(), 0.25);
+    SwinglegGenerator.updateTrajectory(getRobot()->getWorldTime(), PERIOD/400);
 
     initialize();
 }
@@ -46,6 +49,13 @@ void MPCController::doControl() {
 
     currentGait->setIterations(iteration);
     mpcTable = currentGait->getGaitTable();
+
+    joystick.joyRead();
+    int desiredVCommand[2] = {joystick.joy_axis[0], joystick.joy_axis[1]};
+    double desiredVx = round(-(VX_MAX*desiredVCommand[1]/32767)*10)/10;
+    double desiredVy = round(-(VY_MAX*desiredVCommand[0]/32767)*10)/10;
+    cmpcSolver.setMdesiredV(desiredVx, desiredVy);
+    SwinglegGenerator.setPx(&desiredVx, &desiredVy);
 
     updateState();
     cmpcSolver.setTrajectory(getRobot()->getWorldTime(),currentGaitName);
@@ -76,10 +86,9 @@ void MPCController::updateState(){
 
 void MPCController::setLegcontrol() {
     double currentTime = getRobot()->getWorldTime();
-
-    legGenerator.getPositionTrajectory(currentTime + mDT);
-    desiredPosition[0] = legGenerator.sumX;
-    desiredPosition[1] = legGenerator.sumZ;
+    SwinglegGenerator.getPositionTrajectory(currentTime + mDT);
+    desiredPosition[0] = SwinglegGenerator.sumX;
+    desiredPosition[1] = SwinglegGenerator.sumZ;
 
     double d = sqrt(pow(desiredPosition[0],2)+pow(desiredPosition[1],2));
     double phi = acos(abs(desiredPosition[0])/ d);

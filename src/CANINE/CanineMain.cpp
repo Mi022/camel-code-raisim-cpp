@@ -95,8 +95,8 @@ void *rt_simulation_thread(void *arg)
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
-//            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-//                      << " ms" << std::endl;
+/*            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+                      << " ms" << std::endl;*/
         }
 
     }
@@ -111,8 +111,7 @@ int main(int argc, char *argv[])
     raisim::RaisimServer server(&world);
     server.launchServer(8080);
 
-    int thread_id_timeChecker = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 7, 99,
-                                                   NULL);
+    int thread_id_rt1 = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 6, 99, NULL);
 
     w.show();
     return a.exec();

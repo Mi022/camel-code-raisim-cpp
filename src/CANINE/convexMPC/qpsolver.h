@@ -51,6 +51,12 @@ private:
     int _Horizon;
     double _Dt;
     double _alpha;
+    double mdesiredVx;
+    double mdesiredVy;
+public:
+    void setMdesiredV(double mdesiredVx, double mdesiredVy);
+
+private:
 
     Eigen::Matrix<double,3,3> I_world;
     Eigen::Matrix<double,3,3> I_inv;

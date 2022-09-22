@@ -41,6 +41,7 @@ set(CAMEL_SOURCES
         include/RT/rb_utils.cpp
         include/SimulationUI/qcustomplot.cpp
         include/Filter/LPF.cpp
+        include/Xbox/XboxController.cpp
         )
 
 set(CAMEL_SIMULATION_UI_SOURCES
@@ -62,7 +63,7 @@ set(CMPC_SOURCES
         src/CANINE/convexMPC/Gait.cpp
         src/CANINE/convexMPC/MPCController.cpp
         src/CANINE/convexMPC/qpsolver.cpp
-        src/CANINE/convexMPC/Trajectory.cpp
+        src/CANINE/convexMPC/SwingLegTrajectory.cpp
         )
 set(CANINE_GUI_SOURCES
         src/CANINE/GUI/mainwindow.cpp

@@ -4,7 +4,7 @@
 
 #include "operationMainwindow.h"
 #include "ui_operationMainwindow.h"
-#include "../IceCreamSharedMemory.h"
+#include "../DoubleBarSharedMemory.h"
 #include <iostream>
 
 extern pSHM sharedMemory;

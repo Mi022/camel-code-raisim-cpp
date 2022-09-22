@@ -2,8 +2,8 @@
 // Created by hwayoung on 22. 8. 29.
 //
 
-#ifndef RAISIM_ICECREAMSIMULATION_H
-#define RAISIM_ICECREAMSIMULATION_H
+#ifndef RAISIM_DOUBLEBARSIMULATION_H
+#define RAISIM_DOUBLEBARSIMULATION_H
 
 #include "include/CAMEL/Simulation.h"   //include basic sources
 //#include "UI/simulationMainwindow.h"
@@ -12,11 +12,11 @@
 #include <QApplication>
 
 
-class IceCreamSimulation : public Simulation {
+class DoubleBarSimulation : public Simulation {
 
 public:
-    IceCreamSimulation(raisim::World *world, double dT) : Simulation(world, dT) {;}
+    DoubleBarSimulation(raisim::World *world, double dT) : Simulation(world, dT) {;}
 };
 
 
-#endif //RAISIM_ICECREAMSIMULATION_H
+#endif //RAISIM_DOUBLEBARSIMULATION_H

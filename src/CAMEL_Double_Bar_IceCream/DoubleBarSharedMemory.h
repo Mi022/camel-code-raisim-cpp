@@ -2,8 +2,8 @@
 // Created by hwayoung on 22. 8. 29.
 //
 
-#ifndef RAISIM_ICECREAMSHAREDMEMORY_H
-#define RAISIM_ICECREAMSHAREDMEMORY_H
+#ifndef RAISIM_DOUBLEBARSHAREDMEMORY_H
+#define RAISIM_DOUBLEBARSHAREDMEMORY_H
 
 typedef struct _SHM_
 {
@@ -15,4 +15,4 @@ typedef struct _SHM_
     double jointTorque;
 }SHM, *pSHM;
 
-#endif //RAISIM_ICECREAMSHAREDMEMORY_H
+#endif //RAISIM_DOUBLEBARSHAREDMEMORY_H

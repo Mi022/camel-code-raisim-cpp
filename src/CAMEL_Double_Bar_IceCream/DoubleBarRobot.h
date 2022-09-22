@@ -2,14 +2,14 @@
 // Created by hwayoung on 22. 8. 29.
 //
 
-#ifndef RAISIM_ICECREAMROBOT_H
-#define RAISIM_ICECREAMROBOT_H
+#ifndef RAISIM_DOUBLEBARROBOT_H
+#define RAISIM_DOUBLEBARROBOT_H
 
 #include "include/CAMEL/Robot.h"
 
-class IceCreamRobot : public Robot {
+class DoubleBarRobot : public Robot {
 public:
-    IceCreamRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name){
+    DoubleBarRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name){
         initialize();
         dim = robot->getGeneralizedCoordinateDim();
     }
@@ -21,4 +21,4 @@ public:
 private:
 };
 
-#endif //RAISIM_ICECREAMROBOT_H
+#endif //RAISIM_DOUBLEBARROBOT_H

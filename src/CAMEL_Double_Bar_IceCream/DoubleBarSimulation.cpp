@@ -2,10 +2,11 @@
 // Created by hwayoung on 22. 8. 29.
 //
 
-#include "IceCreamSimulation.h"
-#include "IceCreamRobot.h"
-#include "IceCreamTestController.h"
-#include "IceCreamSharedMemory.h"
+#include "DoubleBarSimulation.h"
+#include "DoubleBarRobot.h"
+#include "DoubleBarTestController.h"
+#include "DoubleBarRBDLController.h"
+#include "DoubleBarSharedMemory.h"
 
 extern MainWindow *MainUI;
 
@@ -16,13 +17,13 @@ std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\
 std::string name = "cuteIceCream";
 
 raisim::World world;
-double simulationDuration = 0.005;
+double simulationDuration = 4.0;
 double dT = 0.005;
 
-IceCreamSimulation sim = IceCreamSimulation(&world, dT);
-IceCreamRobot robot = IceCreamRobot(&world, urdfPath, name);
-IceCreamTestController controller = IceCreamTestController(&robot);
-
+DoubleBarSimulation sim = DoubleBarSimulation(&world, dT);
+DoubleBarRobot robot = DoubleBarRobot(&world, urdfPath, name);
+//DoubleBarTestController controller = DoubleBarTestController(&robot);
+DoubleBarRBDLController controller = DoubleBarRBDLController(&robot);
 double oneCycleSimTime = 0;
 int iteration = 0;
 

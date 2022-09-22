@@ -2,22 +2,24 @@
 // Created by hwayoung on 22. 8. 29.
 //
 
-#ifndef RAISIM_ICECREAMTESTCONTROLLER_H
-#define RAISIM_ICECREAMTESTCONTROLLER_H
+#ifndef RAISIM_DOUBLEBARTESTCONTROLLER_H
+#define RAISIM_DOUBLEBARTESTCONTROLLER_H
 
 #include "include/CAMEL/Controller.h"     //include Controller class, trajectory generator class
 #include "include/TrajectoryGenerator/CubicTrajectoryGenerator.h"
-#include "IceCreamRobot.h"
+#include "DoubleBarRobot.h"
 
-class IceCreamTestController : public Controller {
+class DoubleBarTestController : public Controller {
 public:
-    IceCreamTestController(IceCreamRobot *robot) : Controller(robot) {
-        torque = Eigen::VectorXd(robot->dim - 1);
+    DoubleBarTestController(DoubleBarRobot *robot) : Controller(robot) {
+        torque = Eigen::VectorXd(robot->dim);
         position = getRobot() -> getQ().e();
         velocity = getRobot() -> getQD().e();
 
         desiredPosition = getRobot() -> getQ().e();
         desiredVelocity = getRobot() -> getQD().e();
+
+        PastVelocity = getRobot() -> getQD().e();
 
         mTrajectoryGenerator = CubicTrajectoryGenerator();
         mTrajectoryGenerator.updateTrajectory(position[1], -90*robot->deg2rad, robot->getWorldTime(), 3.0);
@@ -31,6 +33,7 @@ public:
     Eigen::VectorXd velocity;
     Eigen::VectorXd desiredPosition;
     Eigen::VectorXd desiredVelocity;
+    Eigen::VectorXd PastVelocity;
 
     void doControl() override;
     void setTrajectory() override;
@@ -45,4 +48,4 @@ private:
 
 
 
-#endif //RAISIM_ICECREAMTESTCONTROLLER_H
+#endif //RAISIM_DOUBLEBARTESTCONTROLLER_H

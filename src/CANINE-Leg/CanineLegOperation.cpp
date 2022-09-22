@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     sharedMemory = (pSHM) malloc(sizeof(SHM));
     clearSharedMemory();
 
-    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 7, 99,NULL);
+    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 6, 99,NULL);
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
     int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
 

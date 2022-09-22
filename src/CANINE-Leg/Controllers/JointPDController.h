@@ -7,7 +7,10 @@
 
 #include "include/TrajectoryGenerator/CubicTrajectoryGenerator.h"
 #include "include/TrajectoryGenerator/BezierTrajectoryGenerator.h"
+<<<<<<< HEAD
 #include "../Robot/RobotDescription.h"
+=======
+>>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
 #include "../Utils/SharedMemory.h"
 #include "../Utils/MotorCAN.h"
 
@@ -27,6 +30,7 @@ public:
     }
 
 private:
+<<<<<<< HEAD
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
     BezierTrajectoryGenerator mBezierTrajectoryGen;
 
@@ -39,6 +43,19 @@ private:
     double Kd[MOTOR_NUM];
     double mTorque[MOTOR_NUM];
     double mTorqueLimit[MOTOR_NUM];
+=======
+    CubicTrajectoryGenerator mCubicTrajectoryGen;
+    BezierTrajectoryGenerator mBezierTrajectoryGen;
+    MotorCAN *mCan;
+    int mIteration;
+    double mDesiredP[2] = {-0.125,-0.37};
+    double mDesiredPosition;
+    double mDesiredVelocity;
+    double Kp;
+    double Kd;
+    double mTorque;
+    double mTorqueLimit;
+>>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
 
 public:
     void controllerFunction();

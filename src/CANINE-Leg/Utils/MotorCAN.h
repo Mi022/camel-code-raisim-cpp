@@ -21,7 +21,11 @@ public:
     MotorCAN(std::string canName)
     {
         mCanName = canName;
+<<<<<<< HEAD
 
+=======
+        mMotorId = 0x143;
+>>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
         enc2rad = 2.0 * 3.141592 / 65535;
         torque2int = 24.0385;
         mSock = 0;

@@ -4,7 +4,10 @@
 
 #ifndef RAISIM_BEZIERTRAJECTORYGENERATOR_H
 #define RAISIM_BEZIERTRAJECTORYGENERATOR_H
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
 #define PNUM 12
 #include <Eigen/Eigen>
 #include <cmath>
@@ -32,4 +35,8 @@ private:
                        0.15, 0.125};
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
 #endif //RAISIM_BEZIERTRAJECTORYGENERATOR_H

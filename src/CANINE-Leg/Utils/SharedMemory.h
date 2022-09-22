@@ -14,7 +14,39 @@
 #define R2D                 57.2957802
 #define D2R                 0.0174533
 
+<<<<<<< HEAD
 //TODO: immigrate all enums to robot description
+=======
+enum CONTROL_STATE
+{
+    STATE_CONTROL_STOP,
+    STATE_READY,
+    STATE_HOME_READY,
+    STATE_HOME_CONTROL,
+    STATE_PD_READY,
+    STATE_PD_CONTROL
+};
+
+enum VISUAL_STATE
+{
+    STATE_VISUAL_STOP,
+    STATE_OPEN_RAISIM,
+    STATE_UPDATE_VISUAL
+};
+
+enum COMMAND
+{
+    NO_ACT,
+    CAN_ON,
+    VISUAL_ON,
+    MOTOR_ON,
+    MOTOR_OFF,
+    HOME,
+    PD_CMD,
+    CUSTOM_1,
+    CUSTOM_2
+};
+>>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
 
 typedef struct _UI_COMMAND_
 {

@@ -12,7 +12,7 @@
 
 //#include "include/TrajectoryGenerator/QuinticTrajectoryGenerator.h"
 #include "include/TrajectoryGenerator/SincurveTrajectoryGenerator.h"
-#include "include/TrajectoryGenerator/legtrajectory.h"
+#include "include/TrajectoryGenerator/BezierTrajectoryGenerator.h"
 
 using Eigen::Dynamic;
 
@@ -90,7 +90,7 @@ public:
 private:
     //QuinticTrajectoryGenerator mTrajectoryGenerator;
     //SincurveTrajectoryGenerator mTrajectoryGenerator;
-    legtrajectory legGenerator;
+    BezierTrajectoryGenerator legGenerator;
 
     Eigen::MatrixXi gait = Eigen::MatrixXi(2001,4);
 

@@ -42,7 +42,7 @@ void Command::commandFunction()
             }
             case PD_CMD:
             {
-                sharedMemory->controlState = STATE_PD_CONTROL;
+                sharedMemory->controlState = STATE_PD_READY;
                 break;
             }
             case CUSTOM_1:

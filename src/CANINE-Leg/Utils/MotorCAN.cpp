@@ -86,7 +86,7 @@ void MotorCAN::readEncoder()
     }
     mEncoder = mEncoderTemp + 65535 * mEncoderMultiturnNum;
     mAngularPosition = mEncoder * enc2rad / mGearRatio;
-    sharedMemory->motorPosition = mAngularPosition;
+    sharedMemory->motorPosition = mAngularPosition + HIP_POS_OFFSET;
 }
 
 void MotorCAN::readMotorErrorStatus()
@@ -166,7 +166,7 @@ void MotorCAN::setTorque(double desiredTorque)
     sharedMemory->motorDesiredTorque = desiredTorque;
     sharedMemory->motorTorque = mCurrentTorque;
     sharedMemory->motorVelocity = mAngularVelocity;
-    sharedMemory->motorPosition = mAngularPosition;
+    sharedMemory->motorPosition = mAngularPosition + HIP_POS_OFFSET;
 }
 
 void MotorCAN::setVelocity(double desiredVelocity)
@@ -215,7 +215,7 @@ void MotorCAN::setVelocity(double desiredVelocity)
     sharedMemory->motorTemp = mMotorTemperature;
     sharedMemory->motorTorque = mCurrentTorque;
     sharedMemory->motorVelocity = mAngularVelocity;
-    sharedMemory->motorPosition = mAngularPosition;
+    sharedMemory->motorPosition = mAngularPosition + HIP_POS_OFFSET;
 }
 
 void MotorCAN::setPosition(double desiredPosition)
@@ -266,5 +266,5 @@ void MotorCAN::setPosition(double desiredPosition)
     sharedMemory->motorTemp = mMotorTemperature;
     sharedMemory->motorTorque = mCurrentTorque;
     sharedMemory->motorVelocity = mAngularVelocity;
-    sharedMemory->motorPosition = mAngularPosition;
+    sharedMemory->motorPosition = mAngularPosition + HIP_POS_OFFSET;
 }

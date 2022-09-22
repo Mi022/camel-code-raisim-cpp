@@ -25,7 +25,7 @@ void JointPDController::controllerFunction()
         }
         case STATE_HOME_READY:
         {
-            mCubicTrajectoryGen.updateTrajectory(sharedMemory->motorPosition, 0.0, sharedMemory->localTime, 3.0);
+            mCubicTrajectoryGen.updateTrajectory(sharedMemory->motorPosition, 0.881691, sharedMemory->localTime, 3.0);
             sharedMemory->controlState = STATE_HOME_CONTROL;
             break;
         }
@@ -33,6 +33,12 @@ void JointPDController::controllerFunction()
         {
             mCan->readMotorErrorStatus();
             doHomeControl();
+            break;
+        }
+        case STATE_PD_READY:
+        {
+            mBezierTrajectoryGen.updateTrajectory(sharedMemory->localTime, 1);
+            sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }
         case STATE_PD_CONTROL:
@@ -54,7 +60,21 @@ void JointPDController::setPDGain(double Kp, double Kd)
 
 void JointPDController::setTrajectory()
 {
-    mDesiredPosition = 3.141592;
+    mBezierTrajectoryGen.getPositionTrajectory(sharedMemory->localTime);
+    mDesiredP[0] = mBezierTrajectoryGen.sumX;
+    mDesiredP[1] = mBezierTrajectoryGen.sumZ;
+
+    double d = sqrt(pow(mDesiredP[0],2)+pow(mDesiredP[1],2));
+    double phi = acos(abs(mDesiredP[0])/ d);
+    double psi = acos(pow(d,2)/(2*0.23*d));
+
+    if (mDesiredP[0] < 0)
+        mDesiredPosition = 1.57 - phi + psi;
+    else if(mDesiredP[0] == 0)
+        mDesiredPosition = psi;
+    else
+        mDesiredPosition = phi + psi - 1.57;
+
     mDesiredVelocity = 0.0;
 }
 

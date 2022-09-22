@@ -21,11 +21,11 @@ pthread_t NRTThreadVisual;
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
 
-MotorCAN can("can5");
+MotorCAN can("can9");
 Command userCommand(&can);
 JointPDController userController(&can);
 
-std::string urdfPath = "\\home\\camel\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg.urdf";
 raisim::World world;
 raisim::RaisimServer server(&world);
 RobotVisualization userVisual(&world, urdfPath, &server);
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
     sharedMemory = (pSHM) malloc(sizeof(SHM));
     clearSharedMemory();
 
-    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 7, 99,NULL);
+    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 6, 99,NULL);
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
     int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
 

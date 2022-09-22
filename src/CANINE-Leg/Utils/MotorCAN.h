@@ -11,6 +11,7 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include "SharedMemory.h"
+#include "../Robot/RobotDescription.h"
 
 /*
  * two RMD-X8-pro-V2 are used in the robot.
@@ -20,7 +21,7 @@ public:
     MotorCAN(std::string canName)
     {
         mCanName = canName;
-        mMotorId = 0x142;
+        mMotorId = 0x143;
         enc2rad = 2.0 * 3.141592 / 65535;
         torque2int = 24.0385;
         mEncoder = 0;

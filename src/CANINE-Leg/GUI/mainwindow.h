@@ -5,6 +5,7 @@
 #include <QTableWidget>
 #include <QTimer>
 #include <QPen>
+#include "../Robot/RobotDescription.h"
 #include "../Utils/SharedMemory.h"
 
 QT_BEGIN_NAMESPACE

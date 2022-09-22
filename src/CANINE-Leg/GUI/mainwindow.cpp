@@ -80,8 +80,8 @@ void MainWindow::InitTable(QTableWidget *table){
         table->verticalHeaderItem(i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter|Qt::AlignCenter);
         table->verticalHeaderItem(i)->setFont(tableFont);
     }
-    table->verticalHeaderItem(0)->setText("MT 0");
-    table->verticalHeaderItem(1)->setText("MT 1");
+    table->verticalHeaderItem(0)->setText("MT H");
+    table->verticalHeaderItem(1)->setText("MT K");
 
 
     for(int i=0; i<row_num; i++){
@@ -275,14 +275,14 @@ void MainWindow::GraphInitialize(){
 
 void MainWindow::GraphUpdate()
 {
-    ui->PLOT_POS_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition);
-    ui->PLOT_POS_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition);
-    ui->PLOT_VEL_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity);
-    ui->PLOT_VEL_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity);
-    ui->PLOT_TORQUE_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque);
-    ui->PLOT_TORQUE_HIP->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorTorque);
-    ui->PLOT_TORQUE_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque);
-    ui->PLOT_TORQUE_KNEE->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorTorque);
+    ui->PLOT_POS_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[HIP_IDX]);
+    ui->PLOT_POS_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[KNEE_IDX]);
+    ui->PLOT_VEL_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[HIP_IDX]);
+    ui->PLOT_VEL_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[KNEE_IDX]);
+    ui->PLOT_TORQUE_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[HIP_IDX]);
+    ui->PLOT_TORQUE_HIP->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorTorque[HIP_IDX]);
+    ui->PLOT_TORQUE_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[KNEE_IDX]);
+    ui->PLOT_TORQUE_KNEE->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorTorque[KNEE_IDX]);
 
     ui->PLOT_POS_HIP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
     ui->PLOT_POS_KNEE->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
@@ -310,32 +310,34 @@ void MainWindow::DisplayUpdate()
         ui->LE_CAN_STATUS->setStyleSheet("background-color:red");
     }
 
-    int row = 0;
-    ui->TW_MOTOR->item(row, 0)->setText(QString().sprintf("id : %d", sharedMemory->motorId));
-    if(sharedMemory->motorStatus)
+    ui->TW_MOTOR->item(0, 0)->setText(QString().sprintf("id : 0x%x", MOTOR_HIP_ID));
+    ui->TW_MOTOR->item(1, 0)->setText(QString().sprintf("id : 0x%x", MOTOR_KNEE_ID));
+    for(int index = 0; index < MOTOR_NUM; index++)
     {
-        ui->TW_MOTOR->item(row, 0)->setBackgroundColor(QColor(75, 75, 255));
-    }
-    else
-    {
-        ui->TW_MOTOR->item(row, 0)->setBackgroundColor(QColor(255, 75, 75));
-    }
+        if(sharedMemory->motorStatus)
+        {
+            ui->TW_MOTOR->item(index, 0)->setBackgroundColor(QColor(75, 75, 255));
+        }
+        else
+        {
+            ui->TW_MOTOR->item(index, 0)->setBackgroundColor(QColor(255, 75, 75));
+        }
 
-    ui->TW_MOTOR->item(row, 1)->setText(QString().sprintf("%d", sharedMemory->motorErrorStatus));
-    if(sharedMemory->motorErrorStatus != 0)
-    {
-        ui->TW_MOTOR->item(row, 1)->setBackgroundColor(QColor(255, 100, 100));
+        ui->TW_MOTOR->item(index, 1)->setText(QString().sprintf("%d", sharedMemory->motorErrorStatus[index]));
+        if(sharedMemory->motorErrorStatus[index] != 0)
+        {
+            ui->TW_MOTOR->item(index, 1)->setBackgroundColor(QColor(255, 100, 100));
+        }
+        else
+        {
+            ui->TW_MOTOR->item(index, 1)->setBackgroundColor(QColor(100, 255, 100));
+        }
+        ui->TW_MOTOR->item(index, 2)->setText(QString().sprintf("%d", sharedMemory->motorTemp[index]));
+        ui->TW_MOTOR->item(index, 3)->setText(QString().sprintf("%.1f", sharedMemory->motorVoltage[index]));
+        ui->TW_MOTOR->item(index, 4)->setText(QString().sprintf("%.1f", sharedMemory->motorPosition[index] * R2D));
+        ui->TW_MOTOR->item(index, 5)->setText(QString().sprintf("%.1f", sharedMemory->motorDesiredTorque[index]));
+        ui->TW_MOTOR->item(index, 6)->setText(QString().sprintf("%.1f", sharedMemory->motorTorque[index]));
     }
-    else
-    {
-        ui->TW_MOTOR->item(row, 1)->setBackgroundColor(QColor(100, 255, 100));
-    }
-
-    ui->TW_MOTOR->item(row, 2)->setText(QString().sprintf("%d", sharedMemory->motorTemp));
-    ui->TW_MOTOR->item(row, 3)->setText(QString().sprintf("%.1f", sharedMemory->motorVoltage));
-    ui->TW_MOTOR->item(row, 4)->setText(QString().sprintf("%.1f", sharedMemory->motorPosition * R2D));
-    ui->TW_MOTOR->item(row, 5)->setText(QString().sprintf("%.1f", sharedMemory->motorDesiredTorque));
-    ui->TW_MOTOR->item(row, 6)->setText(QString().sprintf("%.1f", sharedMemory->motorTorque));
 }
 
 void MainWindow::on_BT_CAN_ON_clicked()

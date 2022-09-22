@@ -14,34 +14,7 @@
 #define R2D                 57.2957802
 #define D2R                 0.0174533
 
-enum CONTROL_STATE
-{
-    STATE_CONTROL_STOP,
-    STATE_READY,
-    STATE_HOME_READY,
-    STATE_HOME_CONTROL,
-    STATE_PD_CONTROL
-};
-
-enum VISUAL_STATE
-{
-    STATE_VISUAL_STOP,
-    STATE_OPEN_RAISIM,
-    STATE_UPDATE_VISUAL
-};
-
-enum COMMAND
-{
-    NO_ACT,
-    CAN_ON,
-    VISUAL_ON,
-    MOTOR_ON,
-    MOTOR_OFF,
-    HOME,
-    PD_CMD,
-    CUSTOM_1,
-    CUSTOM_2
-};
+//TODO: immigrate all enums to robot description
 
 typedef struct _UI_COMMAND_
 {
@@ -56,17 +29,16 @@ typedef struct _SHM_
     bool newCommand;
     bool canStatus;
     bool motorStatus;
-    int motorErrorStatus;
-    int motorId;
     int controlState;
     int visualState;
-    int motorTemp;
+    int motorErrorStatus[2];
+    int motorTemp[2];
     double localTime;
-    double motorPosition;
-    double motorVelocity;
-    double motorTorque;
-    double motorDesiredTorque;
-    double motorVoltage;
+    double motorPosition[2];
+    double motorVelocity[2];
+    double motorTorque[2];
+    double motorDesiredTorque[2];
+    double motorVoltage[2];
 }SHM, *pSHM;
 
 typedef struct _CUSTOM_DATA_ {

@@ -25,7 +25,7 @@ MotorCAN can("can9");
 Command userCommand(&can);
 JointPDController userController(&can);
 
-std::string urdfPath = "\\home\\camel\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\hs\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_single_leg_left\\camel_single_leg.urdf";
 raisim::World world;
 raisim::RaisimServer server(&world);
 RobotVisualization userVisual(&world, urdfPath, &server);

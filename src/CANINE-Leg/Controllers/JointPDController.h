@@ -6,6 +6,7 @@
 #define RAISIM_JOINTPDCONTROLLER_H
 
 #include "include/TrajectoryGenerator/CubicTrajectoryGenerator.h"
+#include "include/TrajectoryGenerator/BezierTrajectoryGenerator.h"
 #include "../Robot/RobotDescription.h"
 #include "../Utils/SharedMemory.h"
 #include "../Utils/MotorCAN.h"
@@ -27,9 +28,11 @@ public:
 
 private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
+    BezierTrajectoryGenerator mBezierTrajectoryGen;
 
     MotorCAN *mCan;
     int mIteration;
+    double mDesiredP[MOTOR_NUM] = {-0.125, -0.37};
     double mDesiredPosition[MOTOR_NUM];
     double mDesiredVelocity[MOTOR_NUM];
     double Kp[MOTOR_NUM];

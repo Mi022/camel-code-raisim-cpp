@@ -23,7 +23,7 @@ void IceCreamTestController::setTrajectory() {
 //    desiredPosition[1] = mTrajectoryGenerator.getPositionTrajectory(getRobot()->getWorldTime());
 //    desiredVelocity[1] = mTrajectoryGenerator.getVelocityTrajectory(getRobot()->getWorldTime());
 
-    desiredPosition << 0.0, -90*getRobot()->deg2rad;
+    desiredPosition << 0.0, -90*3.141592/180.0;
     desiredVelocity << 0.0, 0.0;
 }
 

@@ -83,14 +83,38 @@ void iceCream(){
     std::cout<<"body: "<<std::endl<<inertia<<std::endl;
 
 }
+
+void doubleIceCream(){
+    Eigen::Matrix3d  inertia = Eigen::Matrix3d();
+    inertia.setZero();
+    double mass;
+
+    mass = 0.743*2+7.043/2;
+    std::cout<<"body mass: "<<mass<<std::endl;
+
+    mass = 1.229;
+    std::cout<<"thigh mass: "<<mass<<std::endl;
+
+    mass = 0.183 + 0.024;
+    std::cout<<"calf mass: "<<mass<<std::endl;
+
+    boxInertia(inertia, 5.0075, {0.482, 0.122265 ,0.111});
+    std::cout<<"body: "<<std::endl<<inertia<<std::endl;
+
+    boxInertia(inertia, 1.229, {0.079, 0.09 ,0.23});
+    std::cout<<"thigh: "<<std::endl<<inertia<<std::endl;
+
+    cylinderInertia(inertia, 0.207, 0.028/2.0, 0.23, Z);
+    std::cout<<"calf: "<<std::endl<<inertia<<std::endl;
+}
 int main (){
     Eigen::Matrix3d  inertia = Eigen::Matrix3d();
     inertia.setZero();
 //    sphereInertia(inertia, 5.0, 0.3);
 //    boxInertia(inertia,5.0, {0.1, 0.2, 0.3});
 
-//    canine();
-    iceCream();
+    canine();
+    doubleIceCream();
 //    double rodLength = 0.35;
 //    double rodMass = 1.2;
 //    double bodyMass = 2.5;

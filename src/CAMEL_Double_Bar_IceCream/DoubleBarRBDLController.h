@@ -11,6 +11,7 @@
 
 #include "include/CAMEL/Controller.h"
 #include "DoubleBarRobot.h"
+#include "DoubleBarSteadyStateCalculator.h"
 
 class DoubleBarRBDLController : public Controller {
 public:
@@ -19,6 +20,8 @@ public:
         torque = Eigen::VectorXd(robot->dim);
         position = getRobot() -> getQ().e();
         velocity = getRobot() -> getQD().e();
+        DoubleBarSteadyStateCalculator steadyStateCalculator = DoubleBarSteadyStateCalculator(model, position, velocity);
+        std::cout<<"optimal tau: "<<steadyStateCalculator.tau<<std::endl;
 
         desiredPosition = Eigen::VectorXd(robot->dim).setZero();
         desiredVelocity = Eigen::VectorXd(robot->dim).setZero();

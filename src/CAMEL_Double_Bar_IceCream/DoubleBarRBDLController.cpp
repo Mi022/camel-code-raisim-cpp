@@ -29,9 +29,9 @@ void DoubleBarRBDLController::computeControlInput() {
     std::cout<<"Tau_After : "<<std::endl<<torque<<std::endl;
 }
 
-// set computed force(torque) to the robot
 void DoubleBarRBDLController::setControlInput() {
 //    torque[0] = 0;
+    torque<<0, 1.15859, -0.0116645;
     getRobot()->robot->setGeneralizedForce(torque);
     std::cout<<"Tau : "<<std::endl<<torque<<std::endl;
 }

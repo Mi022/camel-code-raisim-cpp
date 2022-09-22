@@ -162,6 +162,7 @@ set(ICE_CREAM_SOURCES
         src/CAMEL_Double_Bar_IceCream/DoubleBarTestController.cpp
         src/CAMEL_Double_Bar_IceCream/DoubleBarRBDLController.cpp
         src/CAMEL_Double_Bar_IceCream/UI_RealTimePlot/operationMainwindow.cpp
+        src/CAMEL_Double_Bar_IceCream/DoubleBarSteadyStateCalculator.cpp
         )
 add_executable(camel-DoubleBar ${CAMEL_SOURCES} ${ICE_CREAM_SOURCES})
 target_link_libraries(camel-DoubleBar ${CAMEL_LIBS} ${RBDL_LIBRARY} ${RBDL_URDFREADER_LIBRARY})

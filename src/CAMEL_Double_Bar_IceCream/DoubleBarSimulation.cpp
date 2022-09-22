@@ -17,7 +17,7 @@ std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\
 std::string name = "cuteIceCream";
 
 raisim::World world;
-double simulationDuration = 4.0;
+double simulationDuration = 0.005;
 double dT = 0.005;
 
 DoubleBarSimulation sim = DoubleBarSimulation(&world, dT);
@@ -29,10 +29,10 @@ int iteration = 0;
 
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
-    sharedMemory->jointPosition = controller.position[1];
-    sharedMemory->jointVelocity = controller.velocity[1];
-    sharedMemory->jointTorque = controller.torque[1];
-    sharedMemory->desiredJointPosition = controller.desiredPosition[1];
+    sharedMemory->jointPosition = controller.position[0];
+    sharedMemory->jointVelocity = controller.position[1];
+    sharedMemory->jointTorque = controller.torque[0];
+    sharedMemory->desiredJointPosition = controller.position[2];
     sharedMemory->desiredJointVelocity = controller.desiredVelocity[1];
 }
 

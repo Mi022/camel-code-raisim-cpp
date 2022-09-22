@@ -35,14 +35,10 @@ void JointPDController::controllerFunction()
         }
         case STATE_HOME_READY:
         {
-<<<<<<< HEAD
             /*mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->motorPosition[HIP_IDX], 45.0 * D2R, sharedMemory->localTime, 1.0);
             mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->motorPosition[KNEE_IDX], -90.0 * D2R, sharedMemory->localTime, 1.0);*/
             mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->motorPosition[HIP_IDX], 0.881691, sharedMemory->localTime, 1.0);
             mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->motorPosition[KNEE_IDX], -1.11338, sharedMemory->localTime, 1.0);
-=======
-            mCubicTrajectoryGen.updateTrajectory(sharedMemory->motorPosition, 0.881691, sharedMemory->localTime, 3.0);
->>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
             sharedMemory->controlState = STATE_HOME_CONTROL;
             break;
         }
@@ -89,7 +85,6 @@ void JointPDController::setTrajectory()
     double psi = acos(pow(d,2)/(2*0.23*d));
 
     if (mDesiredP[0] < 0)
-<<<<<<< HEAD
         mDesiredPosition[0] = 1.57 - phi + psi;
     else if(mDesiredP[0] == 0)
         mDesiredPosition[0] = psi;
@@ -99,15 +94,6 @@ void JointPDController::setTrajectory()
 
     mDesiredVelocity[0] = 0.0;
     mDesiredVelocity[1] = 0.0;
-=======
-        mDesiredPosition = 1.57 - phi + psi;
-    else if(mDesiredP[0] == 0)
-        mDesiredPosition = psi;
-    else
-        mDesiredPosition = phi + psi - 1.57;
-
-    mDesiredVelocity = 0.0;
->>>>>>> 51bb5117ac89922faadf7256bca56ced31c74b94
 }
 
 void JointPDController::computeControlInput()

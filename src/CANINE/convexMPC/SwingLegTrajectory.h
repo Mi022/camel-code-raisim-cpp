@@ -14,7 +14,7 @@ public:
     void updateTrajectory(double currentTime,double timeDuration);
     void getPositionTrajectory(double currentTime);
     double factorial(double value);
-    void setPx(const double* desiredVx, const double* desiredVy);
+    void setPx(double desiredVx, double desiredVy);
 
     double sumX = 0.0;
     double sumY = 0.0;

@@ -46,6 +46,7 @@ public:
     double desiredRotationZ;
 
     double stopPosX = 0.0;
+    double stopPosY = 0.0;
 
 private:
     int _Horizon;

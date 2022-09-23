@@ -5,7 +5,7 @@
 #include "MPCController.h"
 #define PERIOD 50.0
 #define VX_MAX 1.5
-#define VY_MAX 0.5
+#define VY_MAX 1.5
 
 MPCController::MPCController(Robot *robot, double dT):
 Controller(robot),
@@ -54,8 +54,9 @@ void MPCController::doControl() {
     int desiredVCommand[2] = {joystick.joy_axis[0], joystick.joy_axis[1]};
     double desiredVx = round(-(VX_MAX*desiredVCommand[1]/32767)*10)/10;
     double desiredVy = round(-(VY_MAX*desiredVCommand[0]/32767)*10)/10;
+
     cmpcSolver.setMdesiredV(desiredVx, desiredVy);
-    SwinglegGenerator.setPx(&desiredVx, &desiredVy);
+    SwinglegGenerator.setPx(desiredVx, desiredVy);
 
     updateState();
     cmpcSolver.setTrajectory(getRobot()->getWorldTime(),currentGaitName);
@@ -87,25 +88,11 @@ void MPCController::updateState(){
 void MPCController::setLegcontrol() {
     double currentTime = getRobot()->getWorldTime();
     SwinglegGenerator.getPositionTrajectory(currentTime + mDT);
-    desiredPosition[0] = SwinglegGenerator.sumX;
-    desiredPosition[1] = SwinglegGenerator.sumZ;
-
-    double d = sqrt(pow(desiredPosition[0],2)+pow(desiredPosition[1],2));
-    double phi = acos(abs(desiredPosition[0])/ d);
-    double psi = acos(pow(d,2)/(2*0.23*d));
 
     double jointPos[3];
     double jointVel[3];
 
     jointPos[0] = 0.f;
-    if (desiredPosition[0] < 0)
-        jointPos[1] = 1.57 - phi + psi;
-    else if(desiredPosition[0] == 0)
-        jointPos[1] = psi;
-    else
-        jointPos[1] = phi + psi - 1.57;
-    jointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
-
 
     jointVel[0] = 0.f;
     jointVel[1] = 0.f;
@@ -113,8 +100,8 @@ void MPCController::setLegcontrol() {
 
     double Pgain[3];
     double Dgain[3];
-    Pgain[0] = 5;
-    Dgain[0] = 0.5;
+    Pgain[0] = 20;
+    Dgain[0] = 1;
 
     Pgain[1] = 20;
     Dgain[1] = 1;
@@ -124,8 +111,60 @@ void MPCController::setLegcontrol() {
 
     double posError[3];
     double velError[3];
+
+
     for (int i = 0; i < 4; i++){
         if (mpcTable[i] == 0){
+            desiredPosition[0] = SwinglegGenerator.sumX;
+            desiredPosition[1] = SwinglegGenerator.sumY;
+            desiredPosition[2] = SwinglegGenerator.sumZ;
+
+            double alpha;
+            double beta;
+
+            if(i == 0 || i == 2) //Right Leg
+            {
+                desiredPosition[1] -= 0.107496;
+                alpha = acos(abs(desiredPosition[1])/sqrt(pow(desiredPosition[1],2)+pow(desiredPosition[2],2)));
+                beta = acos(0.107496/sqrt(pow(desiredPosition[1],2)+pow(desiredPosition[2],2)));
+                if (desiredPosition[1] >= 0)
+                {
+                    jointPos[0] = 3.14-beta-alpha;
+                }
+                else
+                {
+                    jointPos[0] = alpha-beta;
+                }
+            }
+            else  //Left Leg
+            {
+                desiredPosition[1] += 0.107496;
+                alpha = acos(abs(desiredPosition[1])/sqrt(pow(desiredPosition[1],2)+pow(desiredPosition[2],2)));
+                beta = acos(0.107496/sqrt(pow(desiredPosition[1],2)+pow(desiredPosition[2],2)));
+                if (desiredPosition[1] >= 0)
+                {
+                    jointPos[0] = beta - alpha;
+                }
+                else
+                {
+                    jointPos[0] = alpha+beta-3.14;
+                }
+            }
+
+            double zdot = -sqrt(pow(desiredPosition[1],2)+pow(desiredPosition[2],2)-pow(0.107496,2));
+            double d = sqrt(pow(desiredPosition[0],2)+pow(zdot,2));
+            double phi = acos(abs(desiredPosition[0])/ d);
+            double psi = acos(pow(d,2)/(2*0.23*d));
+            if (desiredPosition[0] <= 0)
+            {
+                jointPos[1] = 1.57 - phi + psi;
+            }
+            else
+            {
+                jointPos[1] = phi + psi - 1.57;
+            }
+            jointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
+
             for(int j=0; j<3; j++)
             {
                 posError[j] = jointPos[j] - position[7+i*3+j];

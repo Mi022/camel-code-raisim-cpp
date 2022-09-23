@@ -129,13 +129,19 @@ void ConvexMPCSolver::setTrajectory(double currentTime,GaitType currentGait) {
     {
         xd(i*13+5,0) = 0.37;
 
-        if(currentGait == GaitType::STAND){
+        if(currentGait == GaitType::STAND)
+        {
             xd(i*13+3,0) = stopPosX;
+            xd(i*13+4,0) = stopPosY;
             xd(i*13+9,0) = 0.0;
+            xd(i*13+10,0) = 0.0;
         }
-        else{
+        else
+        {
             xd(i*13+3,0) = p[0]+mdesiredVx*(_Dt*i);
+            xd(i*13+4,0) = p[1]+mdesiredVy*(_Dt*i);
             xd(i*13+9,0) = mdesiredVx;
+            xd(i*13+10,0) = mdesiredVy;
         }
     }
 

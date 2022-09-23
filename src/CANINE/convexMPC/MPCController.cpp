@@ -4,16 +4,17 @@
 
 #include "MPCController.h"
 #define PERIOD 50.0
-#define VX_MAX 1.5
+#define VX_MAX 2.7
 #define VY_MAX 1.5
 
-MPCController::MPCController(Robot *robot, double dT):
-Controller(robot),
-mDT(dT), mMPCHorizon(5),
-stand(mMPCHorizon, Vec4<int>(PERIOD,PERIOD,PERIOD,PERIOD), Vec4<int>(PERIOD,PERIOD,PERIOD,PERIOD), PERIOD),
-trot(mMPCHorizon, Vec4<int>(0,PERIOD/2,PERIOD/2,0), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD),
-pace(mMPCHorizon, Vec4<int>(PERIOD/2,0,PERIOD/2,0), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD),
-bound(mMPCHorizon, Vec4<int>(0,0,PERIOD/2,PERIOD/2), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD)
+MPCController::MPCController(Robot *robot, double dT)
+ : Controller(robot)
+ , mDT(dT)
+ , mMPCHorizon(5)
+ , stand(mMPCHorizon, Vec4<int>(PERIOD,PERIOD,PERIOD,PERIOD), Vec4<int>(PERIOD,PERIOD,PERIOD,PERIOD), PERIOD)
+ , trot(mMPCHorizon, Vec4<int>(0,PERIOD/2,PERIOD/2,0), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD)
+ , pace(mMPCHorizon, Vec4<int>(PERIOD/2,0,PERIOD/2,0), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD)
+ , bound(mMPCHorizon, Vec4<int>(0,0,PERIOD/2,PERIOD/2), Vec4<int>(PERIOD/2,PERIOD/2,PERIOD/2,PERIOD/2), PERIOD)
 {
     currentGait = &stand;
     currentGaitName = GaitType::STAND;

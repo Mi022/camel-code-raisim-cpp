@@ -18,6 +18,7 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../rsc" DESTINATION ${CMAKE_BINARY_DIR}/c
 
 include_directories(${EIGEN3_INCLUDE_DIRS})
 include_directories("qpOASES/include")
+#include_directories("include")
 include_directories( ${RBDL_INCLIDE_DIR})
 
 add_subdirectory(qpOASES)
@@ -163,6 +164,7 @@ set(ICE_CREAM_SOURCES
         src/CAMEL_Double_Bar_IceCream/DoubleBarRBDLController.cpp
         src/CAMEL_Double_Bar_IceCream/UI_RealTimePlot/operationMainwindow.cpp
         src/CAMEL_Double_Bar_IceCream/DoubleBarSteadyStateCalculator.cpp
+        src/CAMEL_Double_Bar_IceCream/DoubleBarStablePointFinder.cpp
         )
 add_executable(camel-DoubleBar ${CAMEL_SOURCES} ${ICE_CREAM_SOURCES})
 target_link_libraries(camel-DoubleBar ${CAMEL_LIBS} ${RBDL_LIBRARY} ${RBDL_URDFREADER_LIBRARY})

@@ -23,10 +23,6 @@ void DoubleBarStablePointFinder::updatePosition()
 {
     Eigen::VectorXd nextPosition = Eigen::VectorXd::Zero(mPosition.size());
     Eigen::VectorXd mGradient = Eigen::VectorXd::Zero(mPosition.size());
-    std::cout<<"hi_start update"<< std::endl;
-    std::cout<<"gradientH(0): "<<gradientL(0)<< std::endl;
-    std::cout<<"gradientH(1): "<<gradientL(1)<< std::endl;
-    std::cout<<"gradientH(2): "<<gradientL(2)<< std::endl;
     mGradient[0] = gradientL(0);
     mGradient[1] = gradientL(1);
     mGradient[2] = gradientL(2);
@@ -35,15 +31,13 @@ void DoubleBarStablePointFinder::updatePosition()
     nextPosition[1] = mPosition[1] - mStepSize* mGradient[1];
     nextPosition[2] = mPosition[2] - mStepSize* mGradient[2];
     mRMSGradient = pow(mGradient.dot(mGradient) / mGradient.size() , 0.5);
-    std::cout<<"mRMSGradient: "<<mRMSGradient<< std::endl;
 
     mPosition = nextPosition;
 }
 
-void DoubleBarStablePointFinder::findStableState()
+void DoubleBarStablePointFinder::FindStableState()
 {
     while(true){
-        std::cout<<"L(Position): "<<L(mPosition)<< std::endl;
         if(mRMSGradient < mTerminateCondition) {
             std::cout<<"Gradient Descent Optimizer is completed. (Terminate condition)"<<std::endl;
             break;
@@ -52,7 +46,6 @@ void DoubleBarStablePointFinder::findStableState()
             std::cout<<"Gradient Descent Optimizer is failed. (Over maximum iteration)"<<std::endl;
             break;
         }
-        std::cout<<"iteration: "<<mIteration<< std::endl;
         updatePosition();
         mIteration++;
     }

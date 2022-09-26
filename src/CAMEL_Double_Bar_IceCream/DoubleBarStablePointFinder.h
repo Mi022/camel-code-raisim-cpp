@@ -14,17 +14,15 @@ public:
     {
         mIteration = 0;
         mDelta = 1e-3;
-        mStepSize = 8*1e-2;
-        mTerminateCondition = 1e-4;
-        mMaximumIteration = 1000;
+        mStepSize = 1*1e-3;
+        mTerminateCondition = 5*1e-5;
+        mMaximumIteration = 10000;
         mRMSGradient = 10000;
-
-        findStableState();
     }
+    void FindStableState();
     const Eigen::VectorXd &getPosition() const;
 
 private:
-    void findStableState();
     double L(Eigen::VectorXd position);
     double gradientL(int tauIndex);
     void updatePosition();

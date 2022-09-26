@@ -34,7 +34,6 @@ void DoubleBarSteadyStateCalculator::updateTau()
 void DoubleBarSteadyStateCalculator::SolveTorque()
 {
     while(true){
-        std::cout<<"h(tau): "<<h(mTau)<< std::endl;
         if(mRMSGradient < mTerminateCondition) {
             std::cout<<"Gradient Descent Optimizer is completed. (Terminate condition)"<<std::endl;
             break;
@@ -44,7 +43,6 @@ void DoubleBarSteadyStateCalculator::SolveTorque()
             break;
         }
         std::cout<<"iteration: "<<mIteration<< std::endl;
-        updateTau();
         mIteration++;
     }
 }

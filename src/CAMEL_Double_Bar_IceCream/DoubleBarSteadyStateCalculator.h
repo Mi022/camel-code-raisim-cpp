@@ -24,8 +24,6 @@ public:
         mMaximumIteration = 10000;
         mRMSGradient = 10000;
         RigidBodyDynamics::InverseDynamics(*model, mDesiredPosition, mDesiredVelocity, mQDDot, mTau);
-
-//        solveTorque();
     }
     void SolveTorque();
 

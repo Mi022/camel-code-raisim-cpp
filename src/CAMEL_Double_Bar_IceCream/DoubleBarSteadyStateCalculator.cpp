@@ -4,40 +4,37 @@
 
 #include "DoubleBarSteadyStateCalculator.h"
 
-double DoubleBarSteadyStateCalculator::h(Eigen::VectorXd tau) {
-    Eigen::VectorXd QDDot = Eigen::VectorXd::Zero (mModel->qdot_size);
-    RigidBodyDynamics::ForwardDynamics(*mModel, mDesiredPosition, mDesiredVelocity, tau, QDDot);
-    return QDDot.transpose()*QDDot;
+double DoubleBarSteadyStateCalculator::h(Eigen::VectorXd tau)
+{
+    RigidBodyDynamics::ForwardDynamics(*mModel, mDesiredPosition, mDesiredVelocity, tau, mQDDot);
+    return mQDDot.transpose()*mQDDot;
 }
 
-double DoubleBarSteadyStateCalculator::gradientH(int tauIndex) {
-    Eigen::VectorXd deltaTau = tau;
+double DoubleBarSteadyStateCalculator::gradientH(int tauIndex)
+{
+    Eigen::VectorXd deltaTau = mTau;
     deltaTau[tauIndex] += mDelta;
-    return (h(deltaTau) - h(tau))/mDelta;
+    return (h(deltaTau) - h(mTau))/mDelta;
 }
 
-void DoubleBarSteadyStateCalculator::updateTau() {
-    Eigen::VectorXd nextTau = Eigen::VectorXd::Zero(tau.size());
-    Eigen::VectorXd mGradient = Eigen::VectorXd::Zero(tau.size()-1);
-    std::cout<<"hi_start update"<< std::endl;
-    std::cout<<"gradientH(1): "<<gradientH(1)<< std::endl;
-    std::cout<<"gradientH(2): "<<gradientH(2)<< std::endl;
-    std::cout<<"tau[1] - mStepSize* gradientH(1): "<<tau[1] - mStepSize* gradientH(1)<< std::endl;
-    std::cout<<"tau[2] - mStepSize* gradientH(2): "<<tau[2] - mStepSize* gradientH(2)<< std::endl;
+void DoubleBarSteadyStateCalculator::updateTau()
+{
+    Eigen::VectorXd nextTau = Eigen::VectorXd::Zero(mTau.size());
+    Eigen::VectorXd mGradient = Eigen::VectorXd::Zero(mTau.size()-1);
     mGradient[0] = gradientH(1);
     mGradient[1] = gradientH(2);
 
-    nextTau[1] = tau[1] - mStepSize* mGradient[0];
-    nextTau[2] = tau[2] - mStepSize* mGradient[1];
+    nextTau[1] = mTau[1] - mStepSize* mGradient[0];
+    nextTau[2] = mTau[2] - mStepSize* mGradient[1];
     mRMSGradient = pow(mGradient.dot(mGradient) / mGradient.size() , 0.5);
 
-    tau = nextTau;
-    std::cout<<"tau: "<<tau<< std::endl;
+    mTau = nextTau;
 }
 
-void DoubleBarSteadyStateCalculator::solve() {
+void DoubleBarSteadyStateCalculator::SolveTorque()
+{
     while(true){
-        std::cout<<"h(tau): "<<h(tau)<< std::endl;
+        std::cout<<"h(tau): "<<h(mTau)<< std::endl;
         if(mRMSGradient < mTerminateCondition) {
             std::cout<<"Gradient Descent Optimizer is completed. (Terminate condition)"<<std::endl;
             break;
@@ -49,6 +46,9 @@ void DoubleBarSteadyStateCalculator::solve() {
         std::cout<<"iteration: "<<mIteration<< std::endl;
         updateTau();
         mIteration++;
-
     }
+}
+
+const Eigen::VectorXd &DoubleBarSteadyStateCalculator::getTau() const {
+    return mTau;
 }

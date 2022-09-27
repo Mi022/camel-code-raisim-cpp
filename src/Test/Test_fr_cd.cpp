@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
     /// create objects
     world.addGround();
-    auto testrobot = world.addArticulatedSystem("\\home\\cha\\git\\repository-group\\raisimLib\\camel-code-raisim-cpp\\rsc\\test_a1_single_leg_right\\camel_single_leg.urdf");
+    auto testrobot = world.addArticulatedSystem("\\home\\cha\\git\\repository-group\\raisimLib\\camel-code-raisim-cpp\\rsc\\test_a1_single_leg_right\\camel_single_leg_fixed.urdf");
     Eigen::VectorXd torque(testrobot->getDOF());
     Eigen::VectorXd desiredPosition(testrobot->getDOF());
     Eigen::VectorXd desiredVelocity(testrobot->getDOF());
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     jointNominalConfig <<  0, 0;
     jointVelocityTarget.setZero();
 
-    desiredPosition << pi/6, pi/3;
+    desiredPosition << pi/3, pi/6;
     desiredVelocity << 0, 0;
 
     testrobot->setGeneralizedCoordinate(jointNominalConfig);
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
         torque = pGain*(desiredPosition - currentPosition) + dGain*(desiredVelocity - currentVelocity);
         testrobot->setGeneralizedForce(torque);
 
-        if (i > 2000 && i < 10000) {
+        if (i > 2000 && i < 6000) {
             testrobot->setExternalForce(testrobot->getBodyIdx("lower_leg"), {0, 0, -0.1}, {0, 0, -30});
         } else {
             testrobot->setExternalForce(testrobot->getBodyIdx("lower_leg"), {0, 0, -0.1}, {0, 0, 0});
@@ -83,10 +83,15 @@ int main(int argc, char* argv[]) {
                             frcd.MassMat(testrobot->getGeneralizedCoordinate()[0], testrobot->getGeneralizedCoordinate()[1]) *
                             dqMat);
         momentumPrev = momentum;
+//        if(i%100==0) {
+//            std::cout << i << ">> " << "joint1: " << residual[0] << "," << " joint2: " << residual[1]
+//                      << ", motor torque : " << torque[0] << ", " << torque[1] << " beta :"<< beta[0]<<","<<beta[1]<<" raisim mass : "<<testrobot->getMassMatrix()<<" my mass : "<<frcd.MassMat(testrobot->getGeneralizedCoordinate()[0], testrobot->getGeneralizedCoordinate()[1]) <<std::endl;
+//        }
         if(i%100==0) {
-            std::cout << i << ">> " << "joint1: " << residual[0] << "," << " joint2: " << residual[1]
-                      << ", motor torque : " << torque[0] << ", " << torque[1] << " beta :"<< beta[0]<<","<<beta[1]<<" raisim mass : "<<testrobot->getMassMatrix()<<" my mass : "<<frcd.MassMat(testrobot->getGeneralizedCoordinate()[0], testrobot->getGeneralizedCoordinate()[1]) <<std::endl;
+            std::cout << i << ") " << "joint1: " << residual[0] << "," << " joint2: " << residual[1]
+                      << ", motor torque : " << torque[0] << ", " << torque[1] << " beta :"<< beta[0]<<","<<beta[1]<<std::endl;
         }
     }
     server.killServer();
+    return 0;
 }

@@ -72,19 +72,14 @@ void raisimSimulation() {
 
         clock_gettime(CLOCK_REALTIME, &TIME_TIC);
         controller.doControl();
-        //sharedMemory->beta = FrontRightExteranlTorqueObserver.Beta(robot.getQ()[1], robot.getQD()[1], robot.getQ()[2], robot.getQD()[2]);
         beta = FrontRightExteranlTorqueObserver.Beta(robot.getQ()[1], robot.getQD()[1], robot.getQ()[2], robot.getQD()[2]);
         clock_gettime(CLOCK_REALTIME, &TIME_TOC);
-        //std::cout << "MPC calculation time : " << timediff_us(&TIME_TIC, &TIME_TOC) * 0.001 << " ms" << std::endl;
-//        std::cout << robot.getQ()[0]<<", "<< robot.getQ()[1]*180/3.141592<<", "<< robot.getQ()[2]*180/3.141592<< std::endl;
-        robot.robot->setExternalForce(robot.robot->getBodyIdx("lower_leg"),{0,0,-0.1},{-20,0,-20});
+//        robot.robot->setExternalForce(robot.robot->getBodyIdx("hip_2"),{0,0,-0.1},{20,0,-20});
         world.integrate();
         updateSHM();
         tempTorque[0] = controller.torque[1];
         tempTorque[1] = controller.torque[2];
         iteration++;
-
-        //std::cout << sharedMemory->firstRun << std::endl;
 
         if (firstRun == true) {
             momentumPrev[0] = 0;
@@ -99,7 +94,6 @@ void raisimSimulation() {
         momentum = momentumPrev + tempTorque*dT - beta*dT + residual*dT;
         residual = gainK*(-momentum + FrontRightExteranlTorqueObserver.MassMat(sharedMemory->jointPosition[0],sharedMemory->jointPosition[1])*dqMat);
         momentumPrev = momentum;
-//        FrontRightExteranlTorqueObserver.MassMat(robot.getQ()[1],robot.getQ()[2]);
         std::cout << "joint 1 : "<<residual[0] << " joint 2 : " << residual[1] <<" torque1 :" <<controller.torque[1] <<" torque2 :" <<controller.torque[2] <<" beta 1 : "<<beta[0]<<" beta 2 : "<<beta[1] <<std::endl;
 
 

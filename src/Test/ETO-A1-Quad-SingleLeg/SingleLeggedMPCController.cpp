@@ -14,7 +14,6 @@ void SingleLeggedMPCController::doControl() {
     setTrajectory();
     solve();
     computeControlInput();
-    //FrontRightExteranlTorqueObserver->Beta();
 
     setControlInput();
     resetMPCVariables();
@@ -27,7 +26,6 @@ void SingleLeggedMPCController::setTrajectory() {
         mTrajectorySequence(0,i) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
         mTrajectorySequence(1,i) = mTrajectoryGenerator.getVelocityTrajectory(currentTime + mDT * i);
     }
-//    std::cout<<"mTrajectorySequence : \n"<<mTrajectorySequence<<std::endl;
     desiredPosition = mTrajectorySequence(0,0);
     desiredVelocity = mTrajectorySequence(1,0);
 }

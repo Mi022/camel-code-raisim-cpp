@@ -4,6 +4,12 @@
 
 #include "DoubleBarSteadyStateCalculator.h"
 
+void DoubleBarSteadyStateCalculator::getModelFromURDF(std::string urdfPath) {
+    mModel = new RigidBodyDynamics::Model();
+    bool modelLoaded = RigidBodyDynamics::Addons::URDFReadFromFile(urdfPath.c_str(), mModel, false);
+    std::cout<<"check: "<<modelLoaded<<std::endl;
+}
+
 double DoubleBarSteadyStateCalculator::h(Eigen::VectorXd tau)
 {
     RigidBodyDynamics::ForwardDynamics(*mModel, mDesiredPosition, mDesiredVelocity, tau, mQDDot);
@@ -42,7 +48,7 @@ void DoubleBarSteadyStateCalculator::SolveTorque()
             std::cout<<"Gradient Descent Optimizer is failed. (Over maximum iteration)"<<std::endl;
             break;
         }
-        std::cout<<"iteration: "<<mIteration<< std::endl;
+        updateTau();
         mIteration++;
     }
 }

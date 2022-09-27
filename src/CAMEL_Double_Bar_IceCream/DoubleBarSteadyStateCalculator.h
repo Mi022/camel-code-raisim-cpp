@@ -9,27 +9,33 @@
 #include <rbdl/rbdl_utils.h>
 #include <rbdl/addons/urdfreader/urdfreader.h>
 
-class DoubleBarSteadyStateCalculator {
+class DoubleBarSteadyStateCalculator
+{
 public:
-    DoubleBarSteadyStateCalculator(RigidBodyDynamics::Model* model, Eigen::VectorXd desiredPosition, Eigen::VectorXd desiredVelocity)
-    : mModel(model) ,mDesiredPosition(desiredPosition), mDesiredVelocity(desiredVelocity)
+    DoubleBarSteadyStateCalculator(std::string urdfPath, Eigen::VectorXd desiredPosition, Eigen::VectorXd desiredVelocity)
+            : mDesiredPosition(desiredPosition)
+            , mDesiredVelocity(desiredVelocity)
     {
-        mQDDot = Eigen::VectorXd::Zero (mModel->qdot_size);
-        mTau = Eigen::VectorXd::Zero (model->qdot_size);
+        getModelFromURDF(urdfPath);
+
+        mQDDot = Eigen::VectorXd::Zero(mModel->qdot_size);
+        mTau = Eigen::VectorXd::Zero(mModel->qdot_size);
 
         mIteration = 0;
         mDelta = 1e-3;
-        mStepSize = 5*1e-5;
+        mStepSize = 5 * 1e-5;
         mTerminateCondition = 1e-6;
         mMaximumIteration = 10000;
         mRMSGradient = 10000;
-        RigidBodyDynamics::InverseDynamics(*model, mDesiredPosition, mDesiredVelocity, mQDDot, mTau);
+        RigidBodyDynamics::InverseDynamics(*mModel, mDesiredPosition, mDesiredVelocity, mQDDot, mTau);
     }
+
     void SolveTorque();
 
-    const Eigen::VectorXd &getTau() const;
+    const Eigen::VectorXd& getTau() const;
 
 private:
+    void getModelFromURDF(std::string urdfPath);
     double h(Eigen::VectorXd tau);
     double gradientH(int tauIndex);
     void updateTau();

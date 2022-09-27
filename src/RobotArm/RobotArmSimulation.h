@@ -4,17 +4,22 @@
 
 #ifndef RAISIM_ROBOTARMSIMULATION_H
 #define RAISIM_ROBOTARMSIMULATION_H
+
 #include "include/CAMEL/Simulation.h"
 #include "RobotArmRobot.h"
 #include "RobotArmPDController.h"
 #include "Eigen/Eigen"
+
 using namespace Eigen;
 
-class RobotArmSimulation : public Simulation {
+class RobotArmSimulation : public Simulation
+{
 
 public:
 
-    RobotArmSimulation(raisim::World *world, double dT) : Simulation(world, dT) {
+    RobotArmSimulation(raisim::World* world, double dT)
+        : Simulation(world, dT)
+    {
 
     }
 

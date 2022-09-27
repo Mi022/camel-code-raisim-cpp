@@ -4,10 +4,12 @@
 
 #ifndef RAISIM_ROBOTARMFORWARDKINEMATICS_H
 #define RAISIM_ROBOTARMFORWARDKINEMATICS_H
+
 #include "Eigen/Eigen"
 #include "src/RobotArm/RemoveMatrix.h"
 
-class RobotArmForwardKinematics {
+class RobotArmForwardKinematics
+{
 
 public:
 
@@ -16,7 +18,8 @@ public:
 
 private:
 
-    enum Axes{
+    enum Axes
+    {
         ROLL,
         PITCH,
         YAW
@@ -24,13 +27,13 @@ private:
 
     Eigen::MatrixXd rotationMatrix(int axes, double radian);
     Eigen::MatrixXd translationMatrix(double x, double y, double z);
-    Eigen::MatrixXd mT01 = Eigen::MatrixXd(4,4);
-    Eigen::MatrixXd mT12 = Eigen::MatrixXd(4,4);
-    Eigen::MatrixXd mT23 = Eigen::MatrixXd(4,4);
-    Eigen::MatrixXd mT34 = Eigen::MatrixXd(4,4);
-    Eigen::MatrixXd mT45 = Eigen::MatrixXd(4,4);
-    Eigen::MatrixXd mT56 = Eigen::MatrixXd(4,4);
-    Eigen::MatrixXd mT67 = Eigen::MatrixXd(4,4);
+    Eigen::MatrixXd mT01 = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mT12 = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mT23 = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mT34 = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mT45 = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mT56 = Eigen::MatrixXd(4, 4);
+    Eigen::MatrixXd mT67 = Eigen::MatrixXd(4, 4);
 
 };
 

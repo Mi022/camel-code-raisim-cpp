@@ -4,10 +4,12 @@
 
 #ifndef RAISIM_LINEINTERPOLATION_H
 #define RAISIM_LINEINTERPOLATION_H
+
 #include "Eigen/Eigen"
 
 
-class LineInterpolation {
+class LineInterpolation
+{
 
 public:
     Eigen::VectorXd interpolation(float start, float end, int splitSize);

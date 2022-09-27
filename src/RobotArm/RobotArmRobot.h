@@ -8,11 +8,15 @@
 #include "include/CAMEL/Robot.h"
 #include "src/RobotArm/RobotArmMotionPlanning.h"
 
-class RobotArmRobot : public Robot {
+class RobotArmRobot : public Robot
+{
 public:
 
-    RobotArmRobot(raisim::World *world, std::string urdfPath, std::string name) : Robot(world, urdfPath, name) {
-        if(name == "robotArm"){
+    RobotArmRobot(raisim::World* world, std::string urdfPath, std::string name)
+        : Robot(world, urdfPath, name)
+    {
+        if (name == "robotArm")
+        {
             initialize();
         }
     }

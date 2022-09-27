@@ -4,12 +4,14 @@
 
 #ifndef RAISIM_DISTANCECALCULATOR_H
 #define RAISIM_DISTANCECALCULATOR_H
+
 #include "Eigen/Eigen"
 #include <cmath>
 
-class DistanceCalculator {
+class DistanceCalculator
+{
 public:
-    float distance (Eigen::MatrixXd point1,Eigen::MatrixXd point2);
+    float distance(Eigen::MatrixXd point1, Eigen::MatrixXd point2);
 
 };
 

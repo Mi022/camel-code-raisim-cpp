@@ -6,6 +6,7 @@
 #include "DoubleBarRobot.h"
 #include "DoubleBarTestController.h"
 #include "DoubleBarRBDLController.h"
+#include "DoubleBarLQRController.hpp"
 #include "DoubleBarSharedMemory.h"
 
 extern MainWindow *MainUI;
@@ -13,27 +14,28 @@ extern MainWindow *MainUI;
 pthread_t thread_simulation;
 pSHM sharedMemory;
 
-std::string urdfPath = "\\home\\hwayoung\\raisimLib\\camel-code-raisim-cpp\\rsc\\camel_double_bar_IceCream.urdf";
+std::string urdfPath = "/home/hwayoung/raisimLib/camel-code-raisim-cpp/rsc/camel_double_bar_IceCream.urdf";
 std::string name = "cuteIceCream";
 
 raisim::World world;
-double simulationDuration = 0.005;
+double simulationDuration = 5.0;
 double dT = 0.005;
 
 DoubleBarSimulation sim = DoubleBarSimulation(&world, dT);
 DoubleBarRobot robot = DoubleBarRobot(&world, urdfPath, name);
 //DoubleBarTestController controller = DoubleBarTestController(&robot);
-DoubleBarRBDLController controller = DoubleBarRBDLController(&robot);
+//DoubleBarRBDLController controller = DoubleBarRBDLController(&robot, urdfPath);
+DoubleBarLQRController controller = DoubleBarLQRController(&robot, dT, urdfPath);
 double oneCycleSimTime = 0;
 int iteration = 0;
 
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
-    sharedMemory->jointPosition = controller.position[0];
-    sharedMemory->jointVelocity = controller.position[1];
-    sharedMemory->jointTorque = controller.torque[0];
-    sharedMemory->desiredJointPosition = controller.position[2];
-    sharedMemory->desiredJointVelocity = controller.desiredVelocity[1];
+    sharedMemory->jointPosition = 0;
+    sharedMemory->jointVelocity = 0;
+    sharedMemory->jointTorque = 0;
+    sharedMemory->desiredJointPosition = 0;
+    sharedMemory->desiredJointVelocity = 0;
 }
 
 void resetSimulationVars() {
@@ -81,6 +83,9 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     MainWindow w;
     sharedMemory = (pSHM) malloc(sizeof(SHM));
+//    sim = DoubleBarSimulation(&world, dT);
+//    robot = DoubleBarRobot(&world, urdfPath, name);
+//    controller = DoubleBarLQRController(&robot, dT, urdfPath);
     int thread_id_simulation = generate_rt_thread(thread_simulation, rt_simulation_thread, "simulation_thread", 1, 99,
                                                   NULL);
     raisim::RaisimServer server(&world);

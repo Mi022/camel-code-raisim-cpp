@@ -10,22 +10,35 @@
 #include <rbdl/addons/urdfreader/urdfreader.h>
 
 #include "include/CAMEL/Controller.h"
+
 #include "DoubleBarRobot.h"
+#include "DoubleBarStablePointFinder.h"
 #include "DoubleBarSteadyStateCalculator.h"
 
-class DoubleBarRBDLController : public Controller {
+class DoubleBarRBDLController : public Controller
+{
 public:
-    DoubleBarRBDLController(DoubleBarRobot *robot) : Controller(robot) {
+    DoubleBarRBDLController(DoubleBarRobot* robot, std::string urdfPath)
+        : Controller(robot)
+    {
         getModelFromURDF();
-        torque = Eigen::VectorXd(robot->dim);
-        position = getRobot() -> getQ().e();
-        velocity = getRobot() -> getQD().e();
-        DoubleBarSteadyStateCalculator steadyStateCalculator = DoubleBarSteadyStateCalculator(model, position, velocity);
-        std::cout<<"optimal tau: "<<steadyStateCalculator.tau<<std::endl;
+        torque = Eigen::VectorXd(robot->getDim());
+        position = getRobot()->getQ().e();
+        velocity = getRobot()->getQD().e();
+        DoubleBarStablePointFinder stablePointFinder = DoubleBarStablePointFinder(position, robot);
+        stablePointFinder.FindStableState();
+        std::cout << "optimal stable point: " << std::endl << stablePointFinder.getPosition() << std::endl;
+        position = stablePointFinder.getPosition();
+        desiredPosition = stablePointFinder.getPosition();
+        DoubleBarSteadyStateCalculator steadyStateCalculator = DoubleBarSteadyStateCalculator(urdfPath, position, velocity);
+        steadyStateCalculator.SolveTorque();
+        std::cout << "optimal tau: " << steadyStateCalculator.getTau() << std::endl;
+        torque = steadyStateCalculator.getTau();
+        std::cout << "COM: " << robot->robot->getCOM() << std::endl;
 
-        desiredPosition = Eigen::VectorXd(robot->dim).setZero();
-        desiredVelocity = Eigen::VectorXd(robot->dim).setZero();
-        desiredAccerelation = Eigen::VectorXd(robot->dim).setZero();
+        desiredPosition = Eigen::VectorXd(robot->getDim()).setZero();
+        desiredVelocity = Eigen::VectorXd(robot->getDim()).setZero();
+        desiredAccerelation = Eigen::VectorXd(robot->getDim()).setZero();
     }
 
     Eigen::VectorXd torque;

@@ -7,12 +7,11 @@
 void DoubleBarRBDLController::doControl() {
     setTrajectory();
     updateState();
-    computeControlInput();
+//    computeControlInput();
     setControlInput();
 }
 
 void DoubleBarRBDLController::setTrajectory() {
-    desiredPosition << -30*3.141592/180, -2*30*3.141592/180, -(90-30)*3.141592/180;
     desiredVelocity.setZero();
     desiredAccerelation = (desiredVelocity - velocity)/0.005;
 }
@@ -31,7 +30,7 @@ void DoubleBarRBDLController::computeControlInput() {
 
 void DoubleBarRBDLController::setControlInput() {
 //    torque[0] = 0;
-    torque<<0, 1.15859, -0.0116645;
+//    torque<<0, 1.15859, -0.0116645;
     getRobot()->robot->setGeneralizedForce(torque);
     std::cout<<"Tau : "<<std::endl<<torque<<std::endl;
 }

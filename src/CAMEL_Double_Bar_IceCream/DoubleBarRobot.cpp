@@ -10,7 +10,7 @@ void DoubleBarRobot::initialize() {
     std::cout<<initialJointPosition.size()<<std::endl;
     initialJointPosition.setZero();
     initialJointVelocity.setZero();
-    double kneeAngle = 5;
+    double kneeAngle = 30;
 
     //base-pitch
     initialJointPosition[0] = kneeAngle*deg2rad;
@@ -24,3 +24,11 @@ void DoubleBarRobot::initialize() {
 }
 
 const double DoubleBarRobot::deg2rad = 3.141592 / 180;
+
+const double DoubleBarRobot::getDeg2Rad() {
+    return deg2rad;
+}
+
+int DoubleBarRobot::getDim() const {
+    return dim;
+}

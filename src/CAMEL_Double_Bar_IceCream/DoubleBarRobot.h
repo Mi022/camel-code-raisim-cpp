@@ -15,8 +15,12 @@ public:
     }
 
     void initialize() override;
-    int dim;
+    static const double getDeg2Rad();
+    int getDim() const;
+
+protected:
     static const double deg2rad;
+    int dim;
 
 private:
 };

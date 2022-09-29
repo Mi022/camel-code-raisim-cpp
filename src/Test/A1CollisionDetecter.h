@@ -7,75 +7,37 @@
 
 #include "raisim/World.hpp"
 
-class A1CollisionDetecter {
+class A1CollisionDetecter
+{
 public:
-    A1CollisionDetecter(){
-        mlink1 = 0.2;
-        mmass1 = 1.013;
-        mclink1 = 0.027;
-        minertia1 = 0.0085;
-        mlink2 = 0.22;
-        mmass2 = 0.172;
-        mclink2 = 0.134;
-        minertia2 = 0.0058;
-    }
+    A1CollisionDetecter();
+    void UpdateBeta(double generalizedPositionOfJoint1, double generalizedVelocityOfJoint1, double generalizedPositionOfJoint2, double generalizedVelocityOfJoint2);
+    Eigen::Matrix2d GetCoriloisMat(double generalizedPositionOfJoint1, double generalizedVelocityOfJoint1, double generalizedPositionOfJoint2, double generalizedVelocityOfJoint2);
+    Eigen::Vector2d GetGravityMat(double generalizedPositionOfJoint1, double generalizedPositionOfJoint2);
+    Eigen::Matrix2d GetMassMat(double generalizedPositionOfJoint1, double generalizedPositionOfJoint2);
+    void UpdateState(raisim::VecDyn generalizedPosition, raisim::VecDyn generalizedVelocity, Eigen::Vector2d torque);
+    Eigen::Vector2d GetResidualVector();
+    Eigen::Vector2d GetBeta();
 
 private:
-    double mlink1;
-    double mlink2;
-    double mmass1;
-    double mmass2;
-    double mclink1;
-    double mclink2;
-    double minertia1;
-    double minertia2;
-
-public:
-    /**
-     *
-     * @param thighLength the length of first link(a1's thigh)
-     * @param calfLength  the length of second link(a1's calf)
-     * @param thighMass   the mass of first link(a1's thigh)
-     * @param calfMass    the mass of second link(a1's calf)
-     */
-    void changeConfig(double thighLength, double calfLength, double thighMass, double calfMass, double thighComLength, double calfComLength);
-
-    /**
-     *
-     * @param q1    the position of first joint
-     * @param dq1   the velocity of first joint
-     * @param q2    the position of second joint
-     * @param dq2   the velocity of second joint
-     * @return      2x1 beta matrix which consist of gravity matrix and transpose of coriolis matrix
-     */
-    Eigen::Vector2d Beta(double q1, double dq1, double q2, double dq2);
-
-
-    /**
-     *
-     * @param q1    the position of first joint
-     * @param dq1   the velocity of first joint
-     * @param q2    the position of second joint
-     * @param dq2   the velocity of second joint
-     * @return      2x2 corilois matrix
-     */
-    Eigen::Matrix2d CoriloisMat(double q1, double dq1, double q2, double dq2);
-
-    /**
-     *
-     * @param q1    the position of first joint
-     * @param q2    the position of second joint
-     * @return      2x1 gravity matrix
-     */
-    Eigen::Vector2d GravityMat(double q1, double q2);
-
-    /**
-     *
-     * @param q1    the position of first joint
-     * @param q2    the position of second joint
-     * @return      2x2 mass matrix
-     */
-    Eigen::Matrix2d MassMat(double q1, double q2);
+    const double mLink1 = 0.2;
+    const double mLink2 = 0.22;
+    const double mMass1 = 1.013;
+    const double mMass2 = 0.172;
+    const double mLinkC1 = 0.027;
+    const double mLinkC2 = 0.134;
+    const double mInertia1 = 0.0085;
+    const double mInertia2 = 0.0058;
+    const double mDT = 0.005;
+    bool mbFirstRun;
+    Eigen::Vector2d mMomentum;
+    Eigen::Vector2d mMomentumPrev;
+    Eigen::Vector2d mResidual;
+    Eigen::Matrix2d mGain;
+    Eigen::Vector2d mTempTorque;
+    Eigen::Vector2d mGeneralizedPosition;
+    Eigen::Vector2d mGeneralizedVelocity;
+    Eigen::Vector2d mBeta;
 
 };
 

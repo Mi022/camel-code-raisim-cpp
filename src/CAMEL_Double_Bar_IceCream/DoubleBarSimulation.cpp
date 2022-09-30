@@ -31,11 +31,22 @@ int iteration = 0;
 
 void realTimePlot() {
     sharedMemory->simTime = world.getWorldTime();
-    sharedMemory->jointPosition = 0;
-    sharedMemory->jointVelocity = 0;
-    sharedMemory->jointTorque = 0;
-    sharedMemory->desiredJointPosition = 0;
-    sharedMemory->desiredJointVelocity = 0;
+    sharedMemory->PositionHip = controller.GetX()[2] + controller.GetDesiredPosition()[2];//position-hip
+    sharedMemory->PositionKnee = controller.GetX()[1] + controller.GetDesiredPosition()[1];//position-knee
+    sharedMemory->PositionBase = controller.GetX()[0] + controller.GetDesiredPosition()[0];//position-base
+    sharedMemory->DesiredPositionHip = controller.GetDesiredPosition()[2];//desired position-hip
+    sharedMemory->DesiredPositionKnee = controller.GetDesiredPosition()[1];//desired position-knee
+    sharedMemory->DesiredPositionBase = controller.GetDesiredPosition()[0];//desired position-base
+    sharedMemory->VelocityHip = controller.GetX()[5] + controller.GetDesiredVelocity()[2];
+    sharedMemory->VelocityKnee = controller.GetX()[4] + controller.GetDesiredVelocity()[1];
+    sharedMemory->VelocityBase = controller.GetX()[3] + controller.GetDesiredVelocity()[0];
+    sharedMemory->DesiredVelocityHip = controller.GetDesiredVelocity()[2];
+    sharedMemory->DesiredVelocityKnee = controller.GetDesiredVelocity()[1];
+    sharedMemory->DesiredVelocityBase = controller.GetDesiredVelocity()[0];
+    sharedMemory->TorqueHip = controller.GetTorque()[2];
+    sharedMemory->TorqueKnee = controller.GetTorque()[1];
+    sharedMemory->DesiredTorqueHip = controller.GetDesiredTorque()[2];
+    sharedMemory->DesiredTorqueKnee = controller.GetDesiredTorque()[1];
 }
 
 void resetSimulationVars() {

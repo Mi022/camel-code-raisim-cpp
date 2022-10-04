@@ -90,10 +90,10 @@ void *rt_simulation_thread(void *arg) {
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
 //    std::cout << "bf #while" << std::endl;
     std::cout << "control freq : "<< 1/double(PERIOD_US) *1e6 << std::endl;
-    obstacleRadius << 0.01, 0.01 , 0.01;
+    obstacleRadius << 0.1, 0.1 , 0.1;
     obstacleCenter <<  -0.5,  0.0,  0.2,
                         0.0,  0.5,  0.15,
-                        -0.1,  0.02,  0.6;
+                        -0.1,  0.02,  0.4;
     robotArmCollisionChecker.setObstacle(obstacleRadius, obstacleCenter);
 
     auto obstacle1 = world.addSphere(obstacleRadius(0), 0.0);

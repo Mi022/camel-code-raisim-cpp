@@ -40,7 +40,7 @@ void RobotArmMotionPlanning::generatePoint()
 void RobotArmMotionPlanning::makeTree()
 {
     generatePoint();
-    float jointDistance = 0.7;
+    float jointDistance = 1.0;
     float eeDistance = 0.5;
     Eigen::MatrixXd currentPoint;
     Eigen::MatrixXd nextPoint;
@@ -59,6 +59,7 @@ void RobotArmMotionPlanning::makeTree()
         {
             currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
             nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
+//            currentDistance = distance.distance(armPose.row(i), armPose.row(j));
             currentDistance = distance.distance(currentPoint.row(5), nextPoint.row(5)) + distance.distance(currentPoint.row(4), nextPoint.row(4)) + distance.distance(currentPoint.row(3), nextPoint.row(3)) + distance.distance(currentPoint.row(2), nextPoint.row(2)) + distance.distance(currentPoint.row(1), nextPoint.row(1)) + distance.distance(currentPoint.row(0), nextPoint.row(0));
             if (currentDistance > 0.00001 and currentDistance < jointDistance)
             {
@@ -210,6 +211,7 @@ void RobotArmMotionPlanning::dijkstra()
     }
 
     cout << "jointDistanceSum : " << jointDistanceSum << endl;
+    cout << "linkpointDistanceSum : " << uD.back() << endl;
 
     searchEnd = time(NULL);
 

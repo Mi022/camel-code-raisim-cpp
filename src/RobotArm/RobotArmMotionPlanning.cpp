@@ -10,15 +10,16 @@ using namespace std;
 
 void RobotArmMotionPlanning::generatePoint()
 {
-    int randNum = 500;
+    int randNum = 100;
     armPose.row(0) = startJoint;
     int currentIndex = 0;
     for (int i = 0; i < randNum; i++)
     {
         Eigen::MatrixXd joint = 180 * Eigen::MatrixXd::Random(1, 6);
-//        for (int j = 0; j < 6; ++j) {
-//            joint.col(j) = (max(abs(startJoint(j)),abs(goalJoint(j))) + 20.0)*Eigen::VectorXd::Random(1);
-//        }
+        cout << joint << endl;
+
+        //TODO
+        //왜 collision checker 에서 다 걸릴까 pare도 안될 -> ee값의 limit가 문제였다.
         if (collisionChecker->jointChecker(joint))
         {
             currentIndex += 1;
@@ -42,8 +43,8 @@ void RobotArmMotionPlanning::generatePoint()
 void RobotArmMotionPlanning::makeTree()
 {
     generatePoint();
-    float jointDistance = 400;
-    float eeDistance = 0.5;
+    float jointDistance = 230;
+    float eeDistance = 3.0f;
     Eigen::MatrixXd currentPoint;
     Eigen::MatrixXd nextPoint;
     float currentJointDistance;
@@ -65,12 +66,11 @@ void RobotArmMotionPlanning::makeTree()
                 currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
                 nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
                 currentEEDistance = distance.distance(currentPoint.row(6), nextPoint.row(6));
-                if (currentEEDistance > 0.00001 and currentEEDistance < eeDistance)
+                if (currentEEDistance > 0 and currentEEDistance < eeDistance)
                 {
-                    pareAdd(0, 0) = i;
-                    pareAdd(0, 1) = j;
-                    pareAdd(0, 2) = currentJointDistance;
-                    pare.row(count) = pareAdd;
+                    pare(count,0) = i;
+                    pare(count,1) = j;
+                    pare(count,2) = currentJointDistance;
                     pare.conservativeResize(pare.rows() + 1, pare.cols());
                     count++;
                     childTree(i, treeNum) = j;
@@ -87,8 +87,8 @@ void RobotArmMotionPlanning::makeTree()
     std::cout << "pare" << std::endl;
     std::cout << pare.rows() << std::endl;
 
-//    std::cout << "childTree" << std::endl;
-//    std::cout << childTree << std::endl;
+    std::cout << "childTree" << std::endl;
+    std::cout << childTree << std::endl;
 
     std::cout << endl << "The end Make Tree" << std::endl;
     std::cout << "The time is " << (double)(treeEnd - treeStart) << "ms" << std::endl;
@@ -195,24 +195,24 @@ void RobotArmMotionPlanning::dijkstra()
     }
     reverse(findTree.begin(), findTree.end());
 
+    Eigen::MatrixXd endEffector;
+    wayPoints.conservativeResize(findTree.size(), 6);
+
     for (int i = 0; i < findTree.size(); i++)
     {
         cout << "findTree " << i << endl;
         cout << armPose.row(findTree[i]) << endl;
-    }
-    Eigen::MatrixXd endEffector;
-    wayPoints.conservativeResize(findTree.size(), 6);
-    for (int i = 0; i < findTree.size(); i++)
-    {
+        cout << "tree link point" << endl;
+        cout << forwardKinematics.forwardKinematics(armPose.row(findTree[i])) << endl;
         wayPoints.row(i) = armPose.row(findTree[i]);
     }
+
     for (int i = 0; i < findTree.size() - 1; i++)
     {
         jointDistanceSum = jointDistanceSum + distance.distance(wayPoints.row(i), wayPoints.row(i + 1));
     }
-    jointDistanceSum = jointDistanceSum + distance.distance(wayPoints.row(wayPoints.rows() - 2), wayPoints.row(wayPoints.rows() - 1));
 
-    cout << "jointDistance : " << jointDistanceSum << endl;
+    cout << "jointDistanceSum : " << jointDistanceSum << endl;
 
     searchEnd = time(NULL);
 

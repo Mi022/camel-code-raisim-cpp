@@ -19,8 +19,8 @@ class RobotArmMotionPlanning
 public:
     RobotArmMotionPlanning(RobotArmCollisionChecker* collisionChecker, RobotArmTrajectoryGenerator* trajectoryGenerator)
     {
-        startJoint << 0.0, 2.79, -1.57, 0.0, 1.98, 0.0;
-        goalJoint << 3.14, 2.2, -2.6, 2.0, 3.14, 0.0;
+        startJoint << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
+        goalJoint << 3.14, 1.8, -2.6, 2.0, 3.14, 0.0;
         startJoint = (180 / 3.141592) * startJoint;
         goalJoint = (180 / 3.141592) * goalJoint;
         this->collisionChecker = collisionChecker;
@@ -30,7 +30,6 @@ public:
     Eigen::MatrixXd armPose = Eigen::MatrixXd(1, 6);
     int len;
     Eigen::MatrixXd pare = Eigen::MatrixXd::Zero(1, 3);
-    Eigen::MatrixXd pareAdd = Eigen::MatrixXd::Zero(1, 3);
     Eigen::MatrixXd childTree;
     std::vector<int> findTree;
     Eigen::MatrixXd wayPoints;

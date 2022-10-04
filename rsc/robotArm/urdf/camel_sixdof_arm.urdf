@@ -14,7 +14,7 @@
 
     <link name="1">
         <visual>
-            <origin rpy="0 0 0" xyz = "-0.54 -0.295 0"/>
+            <origin rpy="0 0 0" xyz = "0 0 0"/>
             <geometry>
                 <mesh filename = "1.stl" scale ="0.001 0.001 0.001"/>
             </geometry>
@@ -27,7 +27,7 @@
     </link>
 
     <joint name="joint1" type="revolute">
-        <origin rpy="0 0 0" xyz="-0.485 -0.265 0.05"/>
+        <origin rpy="0 0 0" xyz="0.055 0.03 0.05"/>
         <parent link="1"/>
         <child link="2"/>
         <axis xyz="0 0 1"/>

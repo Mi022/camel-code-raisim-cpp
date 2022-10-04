@@ -33,7 +33,6 @@ private:
     Eigen::MatrixXd mT34 = Eigen::MatrixXd(4, 4);
     Eigen::MatrixXd mT45 = Eigen::MatrixXd(4, 4);
     Eigen::MatrixXd mT56 = Eigen::MatrixXd(4, 4);
-    Eigen::MatrixXd mT67 = Eigen::MatrixXd(4, 4);
 
 };
 

@@ -16,7 +16,6 @@ void RobotArmMotionPlanning::generatePoint()
     for (int i = 0; i < randNum; i++)
     {
         Eigen::MatrixXd joint = 180 * Eigen::MatrixXd::Random(1, 6);
-        cout << joint << endl;
 
         if (collisionChecker->jointChecker(joint))
         {
@@ -41,11 +40,11 @@ void RobotArmMotionPlanning::generatePoint()
 void RobotArmMotionPlanning::makeTree()
 {
     generatePoint();
-    float jointDistance = 230;
-    float eeDistance = 0.03;
+    float jointDistance = 0.7;
+    float eeDistance = 0.5;
     Eigen::MatrixXd currentPoint;
     Eigen::MatrixXd nextPoint;
-    float currentJointDistance;
+    float currentDistance;
     float currentEEDistance;
     int count = 0;
     int treeNum;
@@ -58,17 +57,17 @@ void RobotArmMotionPlanning::makeTree()
         treeNum = 0;
         for (int j = 0; j < len; j++)
         {
-            currentJointDistance = distance.distance(armPose.row(i), armPose.row(j));
-            if (currentJointDistance > 0.00001 and currentJointDistance < jointDistance)
+            currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
+            nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
+            currentDistance = distance.distance(currentPoint.row(5), nextPoint.row(5)) + distance.distance(currentPoint.row(4), nextPoint.row(4)) + distance.distance(currentPoint.row(3), nextPoint.row(3)) + distance.distance(currentPoint.row(2), nextPoint.row(2)) + distance.distance(currentPoint.row(1), nextPoint.row(1)) + distance.distance(currentPoint.row(0), nextPoint.row(0));
+            if (currentDistance > 0.00001 and currentDistance < jointDistance)
             {
-                currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
-                nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
-                currentEEDistance = distance.distance(currentPoint.row(6), nextPoint.row(6));
+                currentEEDistance = distance.distance(currentPoint.row(5), nextPoint.row(5));
                 if (currentEEDistance > 0.001 and currentEEDistance < eeDistance)
                 {
-                    pare(count,0) = i;
-                    pare(count,1) = j;
-                    pare(count,2) = currentJointDistance;
+                    pare(count, 0) = i;
+                    pare(count, 1) = j;
+                    pare(count, 2) = currentDistance;
                     pare.conservativeResize(pare.rows() + 1, pare.cols());
                     count++;
                     childTree(i, treeNum) = j;

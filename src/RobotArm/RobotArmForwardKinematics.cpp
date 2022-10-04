@@ -33,15 +33,11 @@ Eigen::MatrixXd RobotArmForwardKinematics::translationMatrix(double x, double y,
     return matrix;
 }
 
-
 Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joint)
 {
     float pi = 3.14159265359;
     joint = (pi / 180) * joint;
-    Eigen::MatrixXd linkPoint(7, 4);
-    Eigen::VectorXd linkLength(8);
-    Eigen::VectorXd start(4);
-    start << 0, 0, 0, 1;
+    Eigen::MatrixXd linkPoint(6, 4);
 
     mT01 = translationMatrix(0.055, 0.03, 0.05) *  rotationMatrix(YAW, joint(0));
     mT12 = translationMatrix(-0.0008, -0.023, 0.04) * rotationMatrix(PITCH, joint(1));
@@ -50,13 +46,12 @@ Eigen::MatrixXd RobotArmForwardKinematics::forwardKinematics(Eigen::MatrixXd joi
     mT45 = translationMatrix(0.0, 0.0, 0.14) * rotationMatrix(PITCH, joint(4));
     mT56 = translationMatrix(0.0, 0.02, 0.095) * rotationMatrix(YAW, joint(5));
 
-    linkPoint.row(0) = mT01.col(3);
+    linkPoint.row(0) = (mT01).col(3);
     linkPoint.row(1) = (mT01 * mT12).col(3);
     linkPoint.row(2) = (mT01 * mT12 * mT23).col(3);
     linkPoint.row(3) = (mT01 * mT12 * mT23 * mT34).col(3);
     linkPoint.row(4) = (mT01 * mT12 * mT23 * mT34 * mT45).col(3);
     linkPoint.row(5) = (mT01 * mT12 * mT23 * mT34 * mT45 * mT56).col(3);
-    linkPoint.row(6) = (mT01 * mT12 * mT23 * mT34 * mT45 * mT56 * mT67).col(3);
 
     linkPoint = removeMatrix.removeColumn(linkPoint, linkPoint.cols());
 

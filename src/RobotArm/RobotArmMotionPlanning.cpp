@@ -10,7 +10,7 @@ using namespace std;
 
 void RobotArmMotionPlanning::generatePoint()
 {
-    int randNum = 100;
+    int randNum = 500;
     armPose.row(0) = startJoint;
     int currentIndex = 0;
     for (int i = 0; i < randNum; i++)
@@ -18,8 +18,6 @@ void RobotArmMotionPlanning::generatePoint()
         Eigen::MatrixXd joint = 180 * Eigen::MatrixXd::Random(1, 6);
         cout << joint << endl;
 
-        //TODO
-        //왜 collision checker 에서 다 걸릴까 pare도 안될 -> ee값의 limit가 문제였다.
         if (collisionChecker->jointChecker(joint))
         {
             currentIndex += 1;
@@ -44,7 +42,7 @@ void RobotArmMotionPlanning::makeTree()
 {
     generatePoint();
     float jointDistance = 230;
-    float eeDistance = 3.0f;
+    float eeDistance = 0.03;
     Eigen::MatrixXd currentPoint;
     Eigen::MatrixXd nextPoint;
     float currentJointDistance;
@@ -66,7 +64,7 @@ void RobotArmMotionPlanning::makeTree()
                 currentPoint = forwardKinematics.forwardKinematics(armPose.row(i));
                 nextPoint = forwardKinematics.forwardKinematics(armPose.row(j));
                 currentEEDistance = distance.distance(currentPoint.row(6), nextPoint.row(6));
-                if (currentEEDistance > 0 and currentEEDistance < eeDistance)
+                if (currentEEDistance > 0.001 and currentEEDistance < eeDistance)
                 {
                     pare(count,0) = i;
                     pare(count,1) = j;
@@ -186,6 +184,7 @@ void RobotArmMotionPlanning::dijkstra()
 
     int find_idx = parentTree.size() - 1;
     float jointDistanceSum = 0;
+    float endEffectorDistance = 0;
     findTree.push_back(find_idx);
 
     while (find_idx != 0)
@@ -195,7 +194,6 @@ void RobotArmMotionPlanning::dijkstra()
     }
     reverse(findTree.begin(), findTree.end());
 
-    Eigen::MatrixXd endEffector;
     wayPoints.conservativeResize(findTree.size(), 6);
 
     for (int i = 0; i < findTree.size(); i++)

@@ -52,6 +52,7 @@ void updateSHM()
     sharedMemory->jointTorque[0] = controller.torque[0];
     sharedMemory->jointTorque[1] = controller.torque[1];
 
+
 }
 
 void resetSimVarialbes()
@@ -70,7 +71,7 @@ void raisimSimulation()
         controller.doControl();
         FrontRightExteranlTorqueObserver.UpdateBeta(robot.getQ()[1], robot.getQD()[1], robot.getQ()[2], robot.getQD()[2]);
         clock_gettime(CLOCK_REALTIME, &TIME_TOC);
-        robot.robot->setExternalForce(robot.robot->getBodyIdx("hip_2"), { 0, 0, -0.1 }, { 20, 0, -20 });
+        robot.robot->setExternalForce(robot.robot->getBodyIdx("hip_2"), { 0, 0, -0.1 }, { -10, 0, 10 });
         world.integrate();
         updateSHM();
         iteration++;

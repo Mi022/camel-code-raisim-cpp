@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     jointNominalConfig << 0, 0;
     jointVelocityTarget.setZero();
 
-    desiredPosition << 0, 0;
+    desiredPosition << pi/3, pi/6;
     desiredVelocity << 0, 0;
 
     testrobot->setGeneralizedCoordinate(jointNominalConfig);

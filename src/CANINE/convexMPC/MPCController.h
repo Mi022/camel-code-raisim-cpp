@@ -36,6 +36,11 @@ public:
     ConvexMPCSolver cmpcSolver;
     raisim::VecDyn position = raisim::VecDyn(19);
 
+    //get torque
+    raisim::VecDyn GetTorque();
+
+    //get mpcTable
+    int* GetMpcTable();
 private:
 
     int *mpcTable;

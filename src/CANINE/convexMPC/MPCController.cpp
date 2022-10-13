@@ -107,6 +107,7 @@ void MPCController::setLegcontrol() {
                 posError[j] = jointPos[j] - position[7+i*3+j];
                 velError[j] = jointVel[j] - velocity[6+i*3+j];
                 Legtemptorque[i*3+j] = Pgain[j] * posError[j] + Dgain[j] * velError[j];
+
             }
         }
         else
@@ -182,3 +183,13 @@ void MPCController::resetWeight(Vec13<double> w, double a) {
     alpha = a;
     cmpcSolver.setWeights(weightMat, alpha);
 }
+
+raisim::VecDyn MPCController::GetTorque()
+{
+    return torque;
+};
+
+int* MPCController::GetMpcTable()
+{
+    return mpcTable;
+};

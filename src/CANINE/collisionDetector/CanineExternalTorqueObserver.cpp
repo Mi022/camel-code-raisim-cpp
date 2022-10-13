@@ -1,11 +1,10 @@
 //
-// Created by cha on 22. 9. 14.
+// Created by cha on 22. 10. 4.
 //
 
-#include "A1CollisionDetecter.h"
+#include "CanineExternalTorqueObserver.hpp"
 
-A1CollisionDetecter::A1CollisionDetecter()
-{
+CanineExternalTorqueObserver::CanineExternalTorqueObserver(){
     mMomentum << 0, 0;
     mMomentumPrev << 0, 0;
     mResidual << 0, 0;
@@ -16,12 +15,13 @@ A1CollisionDetecter::A1CollisionDetecter()
     mbFirstRun << 1;
 }
 
+
 /**
  * Get beta matrix.
  *
  * @return 2x1 beta matrix
  */
-Eigen::Vector2d A1CollisionDetecter::GetBeta()
+Eigen::Vector2d CanineExternalTorqueObserver::GetBeta()
 {
     return mBeta;
 }
@@ -34,7 +34,7 @@ Eigen::Vector2d A1CollisionDetecter::GetBeta()
      * @param dq2   the velocity of second joint
      * @return      2x2 corilois matrix
      */
-Eigen::Matrix2d A1CollisionDetecter::GetCoriloisMat(double q1, double dq1, double q2, double dq2)
+Eigen::Matrix2d CanineExternalTorqueObserver::GetCoriloisMat(double q1, double dq1, double q2, double dq2)
 {
     Eigen::Matrix2d coriolisMat;
     q1 = -q1 - 3.141592 / 2;
@@ -52,7 +52,7 @@ Eigen::Matrix2d A1CollisionDetecter::GetCoriloisMat(double q1, double dq1, doubl
      * @param q2    the position of second joint
      * @return      2x1 gravity matrix
      */
-Eigen::Vector2d A1CollisionDetecter::GetGravityMat(double q1, double q2)
+Eigen::Vector2d CanineExternalTorqueObserver::GetGravityMat(double q1, double q2)
 {
     Eigen::Vector2d gravityMat;
     gravityMat[0] = (mMass1 * mLinkC1 + mMass2 * mLink1) * 9.8 * std::sin(q1) + mMass2 * mLinkC2 * 9.8 * std::sin(q1 + q2);
@@ -66,7 +66,7 @@ Eigen::Vector2d A1CollisionDetecter::GetGravityMat(double q1, double q2)
      * @param q2    the position of second joint
      * @return      2x2 mass matrix
      */
-Eigen::Matrix2d A1CollisionDetecter::GetMassMat(double q1, double q2)
+Eigen::Matrix2d CanineExternalTorqueObserver::GetMassMat(double q1, double q2)
 {
     Eigen::Matrix2d massMat;
     q1 = -q1 - 3.141592 / 2;
@@ -82,7 +82,7 @@ Eigen::Matrix2d A1CollisionDetecter::GetMassMat(double q1, double q2)
  *
  * @return 2x1 rsidual vector.
  */
-Eigen::Vector2d A1CollisionDetecter::GetResidualVector()
+Eigen::Vector2d CanineExternalTorqueObserver::GetResidualVector()
 {
     return mResidual;
 }
@@ -97,7 +97,7 @@ Eigen::Vector2d A1CollisionDetecter::GetResidualVector()
      * @param dq2   the velocity of second joint
      * @return      2x1 beta matrix which consist of gravity matrix and transpose of coriolis matrix
      */
-void A1CollisionDetecter::UpdateBeta(double q1, double dq1, double q2, double dq2)
+void CanineExternalTorqueObserver::UpdateBeta(double q1, double dq1, double q2, double dq2)
 {
     Eigen::VectorXd dqMat = Eigen::VectorXd(2);
     dqMat[0] = dq1;
@@ -112,7 +112,7 @@ void A1CollisionDetecter::UpdateBeta(double q1, double dq1, double q2, double dq
  * @param generalizedVelocity generalized velocity of the robot
  * @param torque calculated torque to activate the robot's joints
  */
-void A1CollisionDetecter::UpdateState(raisim::VecDyn generalizedPosition, raisim::VecDyn generalizedVelocity, double torque1, double torque2)
+void CanineExternalTorqueObserver::UpdateState(raisim::VecDyn generalizedPosition, raisim::VecDyn generalizedVelocity, double torque1, double torque2)
 {
     mGeneralizedPosition[0] = generalizedPosition[14];
     mGeneralizedPosition[1] = generalizedPosition[15];
@@ -132,4 +132,3 @@ void A1CollisionDetecter::UpdateState(raisim::VecDyn generalizedPosition, raisim
     mResidual = mGain * (-mMomentum + this->GetMassMat(mGeneralizedPosition[0], mGeneralizedPosition[1]) * mGeneralizedVelocity);
     mMomentumPrev = mMomentum;
 }
-

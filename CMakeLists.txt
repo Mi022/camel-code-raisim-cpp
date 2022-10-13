@@ -55,7 +55,7 @@ set(CAMEL_A1_SIMULATION_UI_SOURCES
 set(CANINE_SOURCES
         src/CANINE/CanineMain.cpp
         src/CANINE/canine/CanineRobot.cpp
-        )
+        src/CANINE/collisionDetector/CanineExternalTorqueObserver.cpp src/CANINE/collisionDetector/CanineExternalTorqueObserver.hpp)
 
 set(CMPC_SOURCES
         src/CANINE/convexMPC/EigenTypes.h
@@ -63,13 +63,13 @@ set(CMPC_SOURCES
         src/CANINE/convexMPC/MPCController.cpp
         src/CANINE/convexMPC/qpsolver.cpp
         src/CANINE/convexMPC/Trajectory.cpp
-        )
+        src/CANINE/collisionDetector/CanineExternalTorqueObserver.cpp src/CANINE/collisionDetector/CanineExternalTorqueObserver.hpp)
 set(CANINE_GUI_SOURCES
         src/CANINE/GUI/mainwindow.cpp
         include/SimulationUI/qcustomplot.cpp
-        )
+        src/CANINE/collisionDetector/CanineExternalTorqueObserver.cpp src/CANINE/collisionDetector/CanineExternalTorqueObserver.hpp)
 
-add_executable(camel-CANINE ${CAMEL_SOURCES} ${CANINE_SOURCES} ${CMPC_SOURCES} ${CANINE_GUI_SOURCES})
+add_executable(camel-CANINE ${CAMEL_SOURCES} ${CANINE_SOURCES} ${CMPC_SOURCES} ${CANINE_GUI_SOURCES} src/CANINE/collisionDetector/CanineExternalTorqueObserver.cpp src/CANINE/collisionDetector/CanineExternalTorqueObserver.hpp)
 target_link_libraries(camel-CANINE ${CAMEL_LIBS})
 
 # ====== CANINE ======/ #

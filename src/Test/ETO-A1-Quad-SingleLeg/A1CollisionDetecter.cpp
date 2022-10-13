@@ -24,7 +24,7 @@ A1CollisionDetecter::A1CollisionDetecter()
 Eigen::Vector2d A1CollisionDetecter::GetBeta()
 {
     return mBeta;
-};
+}
 
 /**
      *
@@ -44,7 +44,7 @@ Eigen::Matrix2d A1CollisionDetecter::GetCoriloisMat(double q1, double dq1, doubl
     coriolisMat(1, 0) = mMass2 * mLink1 * mLinkC2 * std::sin(q2) * dq1;
     coriolisMat(1, 1) = 0;
     return coriolisMat;
-};
+}
 
 /**
      *
@@ -58,7 +58,7 @@ Eigen::Vector2d A1CollisionDetecter::GetGravityMat(double q1, double q2)
     gravityMat[0] = (mMass1 * mLinkC1 + mMass2 * mLink1) * 9.8 * std::sin(q1) + mMass2 * mLinkC2 * 9.8 * std::sin(q1 + q2);
     gravityMat[1] = mMass2 * mLinkC2 * 9.8 * std::sin(q1 + q2);
     return gravityMat;
-};
+}
 
 /**
      *
@@ -76,7 +76,7 @@ Eigen::Matrix2d A1CollisionDetecter::GetMassMat(double q1, double q2)
     massMat(1, 0) = mMass2 * (mLinkC2 * mLinkC2 + mLink1 * mLinkC2 * std::cos(q2)) + mInertia2;
     massMat(1, 1) = mMass2 * mLinkC2 * mLinkC2 + mInertia2;
     return massMat;
-};
+}
 
 /**
  *
@@ -85,7 +85,7 @@ Eigen::Matrix2d A1CollisionDetecter::GetMassMat(double q1, double q2)
 Eigen::Vector2d A1CollisionDetecter::GetResidualVector()
 {
     return mResidual;
-};
+}
 
 
 
@@ -103,7 +103,7 @@ void A1CollisionDetecter::UpdateBeta(double q1, double dq1, double q2, double dq
     dqMat[0] = dq1;
     dqMat[1] = dq2;
     mBeta = GetGravityMat(q1, q2) - GetCoriloisMat(q1, dq1, q2, dq2).transpose() * dqMat;
-};
+}
 
 /**
  * Update robot's state and calculate residual vector, which isn't zero when the external torque occur.
@@ -131,5 +131,5 @@ void A1CollisionDetecter::UpdateState(raisim::VecDyn generalizedPosition, raisim
     mMomentum = mMomentumPrev + mTempTorque * mDT - mBeta * mDT + mResidual * mDT;
     mResidual = mGain * (-mMomentum + this->GetMassMat(mGeneralizedPosition[0], mGeneralizedPosition[1]) * mGeneralizedVelocity);
     mMomentumPrev = mMomentum;
-};
+}
 
